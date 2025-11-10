@@ -617,6 +617,15 @@
         </button>
       </div>
     </div>
+    
+    <!-- EMERGENCY PANIC BUTTON -->
+    <div class="p-3 border-t border-white/10 bg-rose-500/10">
+      <button onclick="triggerEmergency()" class="w-full rounded-xl px-4 py-3 btn bg-rose-600 hover:bg-rose-700 transition-all flex items-center justify-center gap-2 font-semibold text-white shadow-lg">
+        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        <span>🚨 EMERGENCY</span>
+      </button>
+      <p class="text-xs text-slate-400 text-center mt-2">Press only if you feel unsafe</p>
+    </div>
   </div>
 
   <!-- FLOATING CHAT BUTTON -->
@@ -1020,6 +1029,144 @@
       }
     }
 
+    // ============================================================================
+    // EMERGENCY PANIC BUTTON SYSTEM
+    // ============================================================================
+    
+    let emergencyAlertActive = false;
+
+    async function triggerEmergency() {
+      if (emergencyAlertActive) {
+        alert('Emergency alert already sent! Help is on the way.');
+        return;
+      }
+
+      const confirmed = confirm(
+        '🚨 EMERGENCY ALERT\n\n' +
+        'This will immediately notify:\n' +
+        '• CONEKTA Admin Team\n' +
+        '• Your Emergency Contact\n' +
+        '• Local Authorities (if configured)\n\n' +
+        'Are you in danger and need help?'
+      );
+
+      if (!confirmed) return;
+
+      emergencyAlertActive = true;
+
+      try {
+        let location = { latitude: null, longitude: null, county: null, town: null };
+
+        if (navigator.geolocation) {
+          try {
+            const position = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
+                timeout: 5000,
+                enableHighAccuracy: true
+              });
+            });
+            location.latitude = position.coords.latitude;
+            location.longitude = position.coords.longitude;
+          } catch (geoError) {
+            console.warn('Could not get location:', geoError);
+          }
+        }
+
+        const customerId = localStorage.getItem('conekta_customer_id') || 'web_user_' + mamaDennisSessionId;
+
+        const res = await fetch(`${BACKEND_URL}/api/emergency/alert`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            customer_id: customerId,
+            provider_id: localStorage.getItem('conekta_active_provider_id') || null,
+            job_id: localStorage.getItem('conekta_active_job_id') || null,
+            location_county: location.county,
+            location_town: location.town,
+            location_address: null,
+            latitude: location.latitude,
+            longitude: location.longitude
+          })
+        });
+
+        if (!res.ok) throw new Error('Failed to send emergency alert');
+
+        const data = await res.json();
+
+        alert(
+          '✅ EMERGENCY ALERT SENT!\n\n' +
+          'Help is on the way!\n\n' +
+          '• Admin team notified\n' +
+          '• Emergency contact notified\n' +
+          '• Alert ID: ' + data.alert_id.substring(0, 8) + '...\n\n' +
+          'Stay safe! Do not leave the premises if possible.'
+        );
+
+        const messages = document.getElementById('chatMessages');
+        const emergencyMsg = document.createElement('div');
+        emergencyMsg.className = 'text-center';
+        emergencyMsg.innerHTML = `
+          <div class="inline-block rounded-lg px-4 py-3 bg-rose-600 text-white font-semibold shadow-lg">
+            🚨 EMERGENCY ALERT SENT<br>
+            <span class="text-xs">Help is on the way. Stay safe!</span>
+          </div>
+        `;
+        messages.appendChild(emergencyMsg);
+        messages.scrollTop = messages.scrollHeight;
+
+        const emergencyBtn = document.querySelector('button[onclick="triggerEmergency()"]');
+        if (emergencyBtn) {
+          emergencyBtn.disabled = true;
+          emergencyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          emergencyBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i><span>ALERT SENT</span>';
+          lucide.createIcons();
+        }
+
+      } catch (err) {
+        console.error('Emergency alert error:', err);
+        emergencyAlertActive = false;
+
+        alert(
+          '⚠️ EMERGENCY ALERT FAILED\n\n' +
+          'Could not send alert through the system.\n\n' +
+          'CALL IMMEDIATELY:\n' +
+          '• Police: 999 or 112\n' +
+          '• CONEKTA Support: +254 700 000 000\n\n' +
+          'Error: ' + err.message
+        );
+
+        const messages = document.getElementById('chatMessages');
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'text-center';
+        errorMsg.innerHTML = `
+          <div class="inline-block rounded-lg px-4 py-3 bg-amber-600 text-white font-semibold">
+            ⚠️ Alert system error<br>
+            <span class="text-xs">Call 999 or +254 700 000 000</span>
+          </div>
+        `;
+        messages.appendChild(errorMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    function storeCustomerId(customerId) {
+      localStorage.setItem('conekta_customer_id', customerId);
+    }
+
+    function setActiveJob(jobId, providerId) {
+      localStorage.setItem('conekta_active_job_id', jobId);
+      localStorage.setItem('conekta_active_provider_id', providerId);
+    }
+
+    function clearActiveJob() {
+      localStorage.removeItem('conekta_active_job_id');
+      localStorage.removeItem('conekta_active_provider_id');
+    }
+
+    // ============================================================================
+    // EVENT LISTENERS & INITIALIZATION
+    // ============================================================================
+
     // Allow Enter key to send message
     document.addEventListener('DOMContentLoaded', () => {
       const chatInput = document.getElementById('chatInput');
@@ -1043,6 +1190,108 @@
         closeModuleModal();
       }
     });
+
+    // ============================================================================
+    // BUTTON CONNECTIONS - CONNECT FRONTEND TO BACKEND APIs
+    // ============================================================================
+
+    // Property Listing (RentConnect)
+    async function loadProperties(filters = {}) {
+      const params = new URLSearchParams(filters);
+      const response = await fetch(`${BACKEND_URL}/api/rentconnect/properties?${params}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        displayProperties(data.properties);
+      }
+    }
+
+    function displayProperties(properties) {
+      const container = document.getElementById('propertiesContainer');
+      if (!container) return;
+      
+      container.innerHTML = properties.map(prop => `
+        <div class="glass rounded-2xl p-6 module-card">
+          <h3 class="text-xl font-bold mb-2">${prop.title}</h3>
+          <p class="text-slate-300">${prop.property_type} • ${prop.bedrooms} BR • ${prop.bathrooms} BA</p>
+          <p class="text-slate-400">📍 ${prop.town}, ${prop.county}</p>
+          <p class="text-2xl font-bold text-teal-400 my-3">KES ${prop.rent_amount.toLocaleString()}/month</p>
+          ${prop.virtual_tour_url ? '<button onclick="viewVirtualTour(\'' + prop.virtual_tour_url + '\')" class="btn bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl">🌐 360° Tour</button>' : ''}
+          <button onclick="viewPropertyDetails('${prop.id}')" class="btn bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-xl">View Details</button>
+        </div>
+      `).join('');
+    }
+
+    function viewVirtualTour(url) {
+      window.open(url, '_blank');
+    }
+
+    function viewPropertyDetails(propertyId) {
+      window.location.href = `/properties.html?id=${propertyId}`;
+    }
+
+    // Service Providers (KaziFlow)
+    async function loadProviders(filters = {}) {
+      const params = new URLSearchParams(filters);
+      const response = await fetch(`${BACKEND_URL}/api/kaziflow/providers?${params}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        displayProviders(data.providers);
+      }
+    }
+
+    function displayProviders(providers) {
+      const container = document.getElementById('providersContainer');
+      if (!container) return;
+      
+      container.innerHTML = providers.map(prov => `
+        <div class="glass rounded-2xl p-6 module-card">
+          <h3 class="text-xl font-bold mb-2">${prov.name}</h3>
+          <p class="text-slate-300">🛠️ ${prov.category}</p>
+          <p class="text-slate-400">📍 ${prov.town}, ${prov.county}</p>
+          <p class="text-purple-400 font-semibold">🛡️ ${prov.ubaru_badge} Certified</p>
+          <p class="text-teal-400">⭐ Trust Score: ${prov.trust_score}/100</p>
+          <button onclick="contactProvider('${prov.phone}')" class="btn bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-xl mt-3">Contact via WhatsApp</button>
+        </div>
+      `).join('');
+    }
+
+    function contactProvider(phone) {
+      window.open(`https://wa.me/${phone.replace('+', '')}?text=Hi! I found you on CONEKTA. I need your services.`, '_blank');
+    }
+
+    // Short-Stay Listings
+    async function loadShortStays(filters = {}) {
+      const params = new URLSearchParams(filters);
+      const response = await fetch(`${BACKEND_URL}/api/shortstay/properties?${params}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        displayShortStays(data.properties);
+      }
+    }
+
+    function displayShortStays(properties) {
+      const container = document.getElementById('shortStaysContainer');
+      if (!container) return;
+      
+      container.innerHTML = properties.map(prop => `
+        <div class="glass rounded-2xl p-6 module-card">
+          <h3 class="text-xl font-bold mb-2">${prop.title}</h3>
+          <p class="text-slate-300">${prop.property_type} • ${prop.bedrooms} BR • ${prop.bathrooms} BA</p>
+          <p class="text-slate-400">👥 Max ${prop.max_guests} guests</p>
+          <p class="text-slate-400">📍 ${prop.town}, ${prop.county}</p>
+          <p class="text-2xl font-bold text-teal-400 my-3">KES ${prop.price_per_night.toLocaleString()}/night</p>
+          ${prop.virtual_tour_url ? '<button onclick="viewVirtualTour(\'' + prop.virtual_tour_url + '\')" class="btn bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl">🌐 360° Tour</button>' : ''}
+          <button onclick="bookShortStay('${prop.id}')" class="btn bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-xl">Book Now</button>
+        </div>
+      `).join('');
+    }
+
+    function bookShortStay(propertyId) {
+      alert('Booking system coming soon! Property ID: ' + propertyId);
+    }
   </script>
 
 </body>
