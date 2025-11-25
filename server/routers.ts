@@ -188,10 +188,19 @@ export const appRouter = router({
         session_id: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        return fetchFromBackend("/api/website-chat/message", {
-          method: "POST",
-          body: JSON.stringify(input),
-        });
+        try {
+          return await fetchFromBackend("/api/website-chat/message", {
+            method: "POST",
+            body: JSON.stringify(input),
+          });
+        } catch (error) {
+          console.error("Chat API error:", error);
+          // Fallback response when backend is unavailable
+          return {
+            response: "Hello! I'm Mama Dennis, your AI assistant. I'm currently experiencing connectivity issues with my main system. Please try again in a moment, or contact us directly via WhatsApp at +254 707 446 155. How can I help you today?",
+            session_id: input.session_id || `fallback-${Date.now()}`,
+          };
+        }
       }),
   }),
 

@@ -195,3 +195,22 @@
 - [x] Check if tRPC query is failing
 - [x] Verify mock fallback is working
 - [x] Test and confirm 3 fundis appear (working on dev server)
+
+## Phase 28: Fix Mama Dennis Chat Connection Error
+- [ ] Debug why chat is showing "trouble connecting"
+- [ ] Check backend API endpoint for chat
+- [ ] Fix chat router in routers.ts
+- [ ] Test chat functionality end-to-end
+
+## Phase 29: URGENT LEGAL FIX - Terms & Privacy Documents
+- [x] Remove ALL references to Finland
+- [x] Replace "Dennis Muchiri" with "Proprietor"
+- [x] Change from "Finnish and Kenyan law" to "Kenyan law" ONLY
+- [x] Fix business structure description
+- [x] Update Privacy Policy with same fixes (verified clean - no issues found)
+- [x] Committed to git (ready for GitHub push when credentials available)
+
+## Phase 30: Fix TypeScript Error in Mama Dennis Chat Widget
+- [x] Fix MamaDennisChatWidget.tsx mutation error
+- [x] Update chat component to use correct tRPC mutation syntax (useMutation hook)
+- [ ] Test chat widget functionality (needs backend connection)

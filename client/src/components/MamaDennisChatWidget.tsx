@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { trpc } from "@/lib/trpc";
 
 interface Message {
   id: string;
@@ -24,6 +25,9 @@ export default function MamaDennisChatWidget() {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Setup mutation hook
+  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,21 +49,12 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Call real Mama Dennis API
+    // Call Mama Dennis via tRPC
     try {
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/mama-dennis/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          session_id: `web-${Date.now()}`,
-          user_id: 'web-user',
-        }),
+      const data = await sendMessageMutation.mutateAsync({
+        message: inputMessage,
+        session_id: `web-${Date.now()}`,
       });
-
-      const data = await response.json();
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
