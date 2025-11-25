@@ -45,17 +45,41 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate Mama Dennis response (replace with actual API call)
-    setTimeout(() => {
+    // Call real Mama Dennis API
+    try {
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/mama-dennis/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: inputMessage,
+          session_id: `web-${Date.now()}`,
+          user_id: 'web-user',
+        }),
+      });
+
+      const data = await response.json();
+      
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: getMamaResponse(inputMessage),
+        text: data.response || "Sorry, I'm having trouble connecting. Please try again!",
         sender: "mama",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, mamaResponse]);
+    } catch (error) {
+      console.error('Mama Dennis API error:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp!",
+        sender: "mama",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const getMamaResponse = (userInput: string): string => {

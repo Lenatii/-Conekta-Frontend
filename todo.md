@@ -142,3 +142,9 @@
 - [ ] Fix chat widget cutting off at bottom
 - [ ] Ensure full messages are visible
 - [ ] Test chat widget responsiveness
+
+## Phase 19: Connect Mama Dennis to Real Backend API
+- [ ] Replace mock responses with real API calls
+- [ ] Connect to Mama Dennis backend endpoint
+- [ ] Ensure same personality as WhatsApp version
+- [ ] Test geo-location and AI matching features
