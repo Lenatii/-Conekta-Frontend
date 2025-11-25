@@ -137,3 +137,8 @@
 - [ ] Fix login button OAuth callback (currently 404)
 - [ ] Make social media buttons visible in header
 - [ ] Test all buttons work properly
+
+## Phase 18: Fix Mama Dennis Chat Widget
+- [ ] Fix chat widget cutting off at bottom
+- [ ] Ensure full messages are visible
+- [ ] Test chat widget responsiveness
