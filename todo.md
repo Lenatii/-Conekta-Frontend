@@ -119,7 +119,8 @@
 - [ ] Test all backend connections end-to-end
 
 ## Phase 15: Fix Missing Pages (URGENT)
-- [ ] Create Short-Stay page (currently 404)
-- [ ] Create UBARU verification page (currently 404)
-- [ ] Fix any other broken navigation links
-- [ ] Test all pages work without 404 errors
+- [x] Create Short-Stay page (currently 404)
+- [x] Create UBARU verification page (currently 404)
+- [x] Add WhatsApp Chat button to navigation (gradient purple-to-teal)
+- [x] Fix any other broken navigation links
+- [x] Test all pages work without 404 errors
