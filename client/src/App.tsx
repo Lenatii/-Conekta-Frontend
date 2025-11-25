@@ -6,6 +6,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Properties from "./pages/Properties";
+import PropertyDetail from "./pages/PropertyDetail";
+import Fundis from "./pages/Fundis";
+import MamaDennisWidget from "./components/MamaDennisWidget";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -13,6 +16,8 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path="/properties" component={Properties} />
+      <Route path="/properties/:id" component={PropertyDetail} />
+      <Route path="/fundis" component={Fundis} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -35,6 +40,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <MamaDennisWidget />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

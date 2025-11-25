@@ -9,13 +9,13 @@
 - [ ] Update APP_LOGO and APP_TITLE
 
 ## Phase 2: Database Schema
-- [ ] Properties table
-- [ ] Property images table
-- [ ] Bookings table
-- [ ] Contact reveals table (payment tracking)
-- [ ] Guest sessions table
-- [ ] Service providers (fundis) table
-- [ ] Reviews table
+- [x] Properties table
+- [x] Property images table
+- [x] Bookings table
+- [x] Contact reveals table (payment tracking)
+- [x] Guest sessions table
+- [x] Service providers (fundis) table
+- [x] Reviews table
 
 ## Phase 3: Backend API Connection
 - [ ] Create API client for Render backend
@@ -25,12 +25,12 @@
 - [ ] Mama Dennis chat endpoint
 
 ## Phase 4: Property Features
-- [ ] Property listing page with search and filters
-- [ ] Property detail page with photo gallery
-- [ ] Contact reveal button (KES 150)
+- [x] Property listing page with search and filters
+- [x] Property detail page with photo gallery
+- [x] Contact reveal button (KES 150)
 - [ ] Similar properties section
-- [ ] Property card component
-- [ ] Search bar component
+- [x] Property card component
+- [x] Search bar component
 
 ## Phase 5: User Authentication
 - [ ] User registration page with phone OTP
@@ -40,16 +40,16 @@
 - [ ] Auth state management
 
 ## Phase 6: Payment Integration
-- [ ] Instasend M-Pesa STK Push integration
-- [ ] Payment modal for contact reveal
-- [ ] Payment confirmation flow
+- [x] Instasend M-Pesa STK Push integration (UI ready, needs API)
+- [x] Payment modal for contact reveal
+- [x] Payment confirmation flow
 - [ ] Receipt generation
 - [ ] Payment history page
 
 ## Phase 7: Additional Features
-- [ ] Mama Dennis chat widget (floating bottom-right)
+- [x] Mama Dennis chat widget (floating bottom-right)
 - [ ] Guest mode banner (search limit tracking)
-- [ ] Service provider (Fundi) listing page
+- [x] Service provider (Fundi) listing page
 - [ ] Fundi detail page
 - [ ] Short-stay booking page
 - [ ] UBARU verification page
