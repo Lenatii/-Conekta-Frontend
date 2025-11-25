@@ -11,6 +11,8 @@ import Fundis from "./pages/Fundis";
 import FundiProfile from "./pages/FundiProfile";
 import ShortStay from "./pages/ShortStay";
 import Ubaru from "./pages/Ubaru";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
@@ -24,6 +26,8 @@ function Router() {
       <Route path="/fundis/:id" component={FundiProfile} />
       <Route path="/stays" component={ShortStay} />
       <Route path="/verify" component={Ubaru} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

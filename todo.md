@@ -148,3 +148,17 @@
 - [ ] Connect to Mama Dennis backend endpoint
 - [ ] Ensure same personality as WhatsApp version
 - [ ] Test geo-location and AI matching features
+
+## Phase 20: Expand Service Providers & Add Vetting Messaging
+- [x] Add full list of service categories (all types from backend)
+- [ ] Generate professional profile pictures for all service types (in progress)
+- [x] Add vetting process messaging to Fundis page
+- [x] Highlight short course training program
+- [x] Emphasize customer service and professional standards
+- [x] Show CONEKTA's competitive advantage (better trained providers)
+
+## Phase 21: Legal Pages (URGENT - 404 errors)
+- [x] Create Terms & Conditions page
+- [x] Create Privacy Policy page
+- [x] Add routes to App.tsx
+- [x] Test all footer links work
