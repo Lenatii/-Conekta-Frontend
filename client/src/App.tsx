@@ -9,6 +9,8 @@ import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import Fundis from "./pages/Fundis";
 import FundiProfile from "./pages/FundiProfile";
+import ShortStay from "./pages/ShortStay";
+import Ubaru from "./pages/Ubaru";
 import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
@@ -20,6 +22,8 @@ function Router() {
       <Route path="/properties/:id" component={PropertyDetail} />
       <Route path="/fundis" component={Fundis} />
       <Route path="/fundis/:id" component={FundiProfile} />
+      <Route path="/stays" component={ShortStay} />
+      <Route path="/verify" component={Ubaru} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

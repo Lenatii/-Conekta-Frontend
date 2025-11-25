@@ -117,3 +117,9 @@
 - [ ] Add authentication headers to API calls
 - [ ] Handle loading and error states
 - [ ] Test all backend connections end-to-end
+
+## Phase 15: Fix Missing Pages (URGENT)
+- [ ] Create Short-Stay page (currently 404)
+- [ ] Create UBARU verification page (currently 404)
+- [ ] Fix any other broken navigation links
+- [ ] Test all pages work without 404 errors
