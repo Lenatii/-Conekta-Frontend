@@ -183,3 +183,15 @@
 - [x] Delete current images (still showing white people)
 - [x] Generate with extremely explicit African features prompts
 - [x] Verify all faces are authentically Kenyan Black African
+
+## Phase 26: URGENT - Fix T&C and Privacy 404 Errors
+- [ ] Verify Terms.tsx and Privacy.tsx files exist
+- [ ] Check App.tsx routes are correct
+- [ ] Test /terms and /privacy URLs
+- [ ] Fix any routing issues
+
+## Phase 27: URGENT - Fix Fundis Not Displaying (0 providers found)
+- [x] Debug why fundis list is empty
+- [x] Check if tRPC query is failing
+- [x] Verify mock fallback is working
+- [x] Test and confirm 3 fundis appear (working on dev server)
