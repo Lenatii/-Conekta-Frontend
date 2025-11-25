@@ -162,3 +162,8 @@
 - [x] Create Privacy Policy page
 - [x] Add routes to App.tsx
 - [x] Test all footer links work
+
+## Phase 22: URGENT - Remove White People Pictures
+- [x] Identify all fundis with non-Kenyan pictures
+- [x] Remove or replace with placeholder
+- [x] Ensure only Kenyan Black African men are shown
