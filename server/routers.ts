@@ -7,6 +7,78 @@ import { z } from "zod";
 // Import API client
 const API_BASE_URL = "https://conekta-complete-system.onrender.com";
 
+// Mock fundis data (fallback when backend is empty)
+function getMockFundis() {
+  return [
+    {
+      id: 1,
+      title: "Expert Plumber - John Mwangi",
+      description: "Expert plumber with 10+ years experience. Specializing in installations, repairs, and maintenance.",
+      category: "Plumber",
+      rate: 800,
+      rate_type: "hourly",
+      location: "Nakuru CBD",
+      county: "Nakuru",
+      town: "Nakuru",
+      availability: "available",
+      verified: true,
+      rating_avg: 5.0,
+      rating_count: 127,
+      jobs_completed: 127,
+      provider: {
+        name: "John Mwangi",
+        phone: "+254 712 345 678",
+        avatar: "/fundi-john.jpg",
+      },
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 2,
+      title: "Licensed Electrician - Peter Ochieng",
+      description: "Licensed electrician. Wiring, installations, and electrical repairs for homes and offices.",
+      category: "Electrician",
+      rate: 1000,
+      rate_type: "hourly",
+      location: "Milimani",
+      county: "Nakuru",
+      town: "Nakuru",
+      availability: "available",
+      verified: true,
+      rating_avg: 5.0,
+      rating_count: 89,
+      jobs_completed: 89,
+      provider: {
+        name: "Peter Ochieng",
+        phone: "+254 723 456 789",
+        avatar: "/fundi-peter.jpg",
+      },
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 3,
+      title: "Professional Carpenter - David Kimani",
+      description: "Professional carpenter. Custom furniture, repairs, and installations.",
+      category: "Carpenter",
+      rate: 700,
+      rate_type: "hourly",
+      location: "Pipeline",
+      county: "Nakuru",
+      town: "Nakuru",
+      availability: "available",
+      verified: true,
+      rating_avg: 4.0,
+      rating_count: 56,
+      jobs_completed: 56,
+      provider: {
+        name: "David Kimani",
+        phone: "+254 734 567 890",
+        avatar: "/fundi-david.jpg",
+      },
+      created_at: new Date().toISOString(),
+    },
+  ];
+}
+
 async function fetchFromBackend(endpoint: string, options: RequestInit = {}) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -69,21 +141,42 @@ export const appRouter = router({
   fundis: router({
     search: publicProcedure
       .input(z.object({
-        service_type: z.string().optional(),
+        category: z.string().optional(),
         location: z.string().optional(),
+        verified_only: z.boolean().optional(),
       }))
       .query(async ({ input }) => {
-        const params = new URLSearchParams();
-        if (input.service_type) params.append("service_type", input.service_type);
-        if (input.location) params.append("location", input.location);
+        try {
+          const params = new URLSearchParams();
+          if (input.category && input.category !== "all") params.append("category", input.category);
+          if (input.location && input.location !== "all") params.append("location", input.location);
+          if (input.verified_only) params.append("verified_only", "true");
 
-        return fetchFromBackend(`/api/fundis?${params.toString()}`);
+          const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
+          
+          // If backend returns data, use it
+          if (data && Array.isArray(data) && data.length > 0) {
+            return data;
+          }
+          
+          // Fallback to mock data if backend is empty
+          return getMockFundis();
+        } catch (error) {
+          console.error("Backend API error, using mock data:", error);
+          return getMockFundis();
+        }
       }),
 
     getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
-        return fetchFromBackend(`/api/fundis/${input.id}`);
+        try {
+          return await fetchFromBackend(`/api/services/${input.id}`);
+        } catch (error) {
+          // Fallback to mock data
+          const mockFundis = getMockFundis();
+          return mockFundis.find((f: any) => f.id === input.id) || null;
+        }
       }),
   }),
 

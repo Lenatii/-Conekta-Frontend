@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function FundisPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,69 +34,37 @@ export default function FundisPage() {
     "WiFi Installation"
   ];
 
-  // Expanded mock data - will connect to backend later
-  const mockFundis = [
-    {
-      id: 1,
-      name: "John Mwangi",
-      serviceType: "Plumber",
-      description: "Expert plumber with 10+ years experience. Specializing in installations, repairs, and maintenance.",
-      location: "Nakuru CBD",
-      city: "Nakuru",
-      hourlyRate: 800,
-      rating: 5,
-      totalJobs: 127,
-      isVerified: true,
-      phone: "+254 712 345 678",
-      avatar: "/fundi-john.jpg",
-      certifications: ["UBARU Certified", "Customer Service Training"]
-    },
-    {
-      id: 2,
-      name: "Peter Ochieng",
-      serviceType: "Electrician",
-      description: "Licensed electrician. Wiring, installations, and electrical repairs for homes and offices.",
-      location: "Milimani",
-      city: "Nakuru",
-      hourlyRate: 1000,
-      rating: 5,
-      totalJobs: 89,
-      isVerified: true,
-      phone: "+254 723 456 789",
-      avatar: "/fundi-peter.jpg",
-      certifications: ["UBARU Certified", "Professional Standards Training"]
-    },
-    {
-      id: 3,
-      name: "David Kimani",
-      serviceType: "Carpenter",
-      description: "Professional carpenter. Custom furniture, repairs, and installations.",
-      location: "Pipeline",
-      city: "Nakuru",
-      hourlyRate: 700,
-      rating: 4,
-      totalJobs: 56,
-      isVerified: true,
-      phone: "+254 734 567 890",
-      avatar: "/fundi-david.jpg",
-      certifications: ["UBARU Certified", "Customer Service Excellence"]
-    }
-  ];
+  // Fetch fundis from backend API (with mock fallback)
+  const { data: fundisData, isLoading } = trpc.fundis.search.useQuery({
+    category: serviceType,
+    location: location,
+  });
 
-  // Filter fundis based on search and filters
-  const filteredFundis = mockFundis.filter(fundi => {
+  // Transform backend data to match frontend format
+  const fundis = (fundisData || []).map((service: any) => ({
+    id: service.id,
+    name: service.provider?.name || "Unknown Provider",
+    serviceType: service.category,
+    description: service.description || service.title,
+    location: service.location,
+    city: service.town || service.county || "Nakuru",
+    hourlyRate: service.rate,
+    rating: service.rating_avg || 0,
+    totalJobs: service.jobs_completed || 0,
+    isVerified: service.verified || false,
+    phone: service.provider?.phone || "",
+    avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
+    certifications: service.verified ? ["UBARU Certified", "Customer Service Training"] : []
+  }));
+
+  // Filter fundis based on search query
+  const filteredFundis = fundis.filter((fundi: any) => {
     const matchesSearch = searchQuery === "" || 
       fundi.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       fundi.serviceType.toLowerCase().includes(searchQuery.toLowerCase()) ||
       fundi.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesService = serviceType === "all" || 
-      fundi.serviceType.toLowerCase() === serviceType.toLowerCase();
-    
-    const matchesLocation = location === "all" || 
-      fundi.location.toLowerCase().includes(location.toLowerCase());
-    
-    return matchesSearch && matchesService && matchesLocation;
+    return matchesSearch;
   });
 
   const serviceTypeIcons: Record<string, string> = {
@@ -212,9 +181,17 @@ export default function FundisPage() {
             </p>
           </div>
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Loading service providers...</p>
+            </div>
+          )}
+
           {/* Fundis Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredFundis.map((fundi) => (
+          {!isLoading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredFundis.map((fundi) => (
               <Card key={fundi.id} className="overflow-hidden hover:border-primary/50 transition-all group">
                 <CardContent className="p-6">
                   {/* Header */}
@@ -299,11 +276,12 @@ export default function FundisPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Empty State */}
-          {filteredFundis.length === 0 && (
+          {!isLoading && filteredFundis.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-4">No service providers found matching your criteria</p>
               <Button variant="outline" onClick={() => {
