@@ -28,7 +28,7 @@ function getMockFundis() {
       provider: {
         name: "John Mwangi",
         phone: "+254 712 345 678",
-        avatar: "/fundi-john.jpg",
+        avatar: "/fundi-john-v2.jpg",
       },
       created_at: new Date().toISOString(),
     },
@@ -50,7 +50,7 @@ function getMockFundis() {
       provider: {
         name: "Peter Ochieng",
         phone: "+254 723 456 789",
-        avatar: "/fundi-peter.jpg",
+        avatar: "/fundi-peter-v2.jpg",
       },
       created_at: new Date().toISOString(),
     },
@@ -72,7 +72,7 @@ function getMockFundis() {
       provider: {
         name: "David Kimani",
         phone: "+254 734 567 890",
-        avatar: "/fundi-david.jpg",
+        avatar: "/fundi-david-v2.jpg",
       },
       created_at: new Date().toISOString(),
     },
