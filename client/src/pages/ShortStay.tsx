@@ -1,12 +1,40 @@
 import { Link } from "wouter";
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Users, Wifi, Coffee, Car } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { MapPin, Star, Users, Wifi, Coffee, Car, Calendar as CalendarIcon } from "lucide-react";
+import { format, differenceInDays } from "date-fns";
 
 export default function ShortStay() {
+  const [selectedStay, setSelectedStay] = useState<any>(null);
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
+  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [contactRevealed, setContactRevealed] = useState(false);
+
+  const handleCheckAvailability = (stay: any) => {
+    setSelectedStay(stay);
+    setIsAvailabilityModalOpen(true);
+  };
+
+  const handlePayToReveal = () => {
+    setIsAvailabilityModalOpen(false);
+    setIsPaymentModalOpen(true);
+  };
+
+  const confirmPayment = () => {
+    // TODO: Call payment API (KES 150)
+    setTimeout(() => {
+      setContactRevealed(true);
+      setIsPaymentModalOpen(false);
+    }, 2000);
+  };
   // Mock data - will connect to backend later
   const mockStays = [
     {
@@ -139,9 +167,7 @@ export default function ShortStay() {
                         </div>
                         <div className="text-xs text-muted-foreground">per night</div>
                       </div>
-                      <Link href={`/stays/${stay.id}`}>
-                        <Button>Book Now</Button>
-                      </Link>
+                      <Button onClick={() => handleCheckAvailability(stay)}>Check Availability</Button>
                     </div>
 
                     <div className="text-xs text-muted-foreground">
@@ -173,6 +199,114 @@ export default function ShortStay() {
       </main>
 
       <Footer />
+
+      {/* Availability Check Modal */}
+      <Dialog open={isAvailabilityModalOpen} onOpenChange={setIsAvailabilityModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Check Availability - {selectedStay?.title}</DialogTitle>
+            <DialogDescription>
+              Select your desired dates to check availability
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Check-in Date</label>
+                <Calendar
+                  mode="single"
+                  selected={checkIn}
+                  onSelect={setCheckIn}
+                  disabled={(date) => date < new Date()}
+                  className="rounded-md border"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Check-out Date</label>
+                <Calendar
+                  mode="single"
+                  selected={checkOut}
+                  onSelect={setCheckOut}
+                  disabled={(date) => !checkIn || date <= checkIn}
+                  className="rounded-md border"
+                />
+              </div>
+            </div>
+
+            {checkIn && checkOut && (
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="pt-6">
+                  <div className="text-center space-y-2">
+                    <div className="text-green-600 font-semibold text-lg">✓ Available!</div>
+                    <div className="text-sm text-muted-foreground">
+                      {differenceInDays(checkOut, checkIn)} nights • KES {(differenceInDays(checkOut, checkIn) * selectedStay?.pricePerNight).toLocaleString()} total
+                    </div>
+                    <div className="pt-4 border-t">
+                      <p className="text-sm mb-3">Pay <strong>KES 150</strong> to reveal host contact and book directly</p>
+                      <Button onClick={handlePayToReveal} className="w-full">
+                        Pay & Reveal Contact
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Modal */}
+      <Dialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reveal Host Contact</DialogTitle>
+            <DialogDescription>
+              Pay KES 150 via M-Pesa to get host's WhatsApp number
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center space-y-3">
+                  <div className="text-2xl font-bold">KES 150</div>
+                  <div className="text-sm text-muted-foreground">
+                    One-time fee to reveal contact
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Button onClick={confirmPayment} className="w-full" style={{background: '#25D366'}}>
+              Pay KES 150 via M-Pesa
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Contact Revealed Modal */}
+      <Dialog open={contactRevealed} onOpenChange={setContactRevealed}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Contact Revealed!</DialogTitle>
+            <DialogDescription>
+              You can now contact the host directly
+            </DialogDescription>
+          </DialogHeader>
+          <Card>
+            <CardContent className="pt-6 space-y-4">
+              <div className="text-center">
+                <div className="font-semibold mb-2">Host: {selectedStay?.host}</div>
+                <div className="text-sm text-muted-foreground mb-4">WhatsApp: +254 712 345 678</div>
+              </div>
+              <a href="https://wa.me/254712345678?text=Hi, I'm interested in booking your property" target="_blank" rel="noopener noreferrer">
+                <Button className="w-full" style={{background: '#25D366'}}>
+                  Chat on WhatsApp
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

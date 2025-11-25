@@ -124,3 +124,11 @@
 - [x] Add WhatsApp Chat button to navigation (gradient purple-to-teal)
 - [x] Fix any other broken navigation links
 - [x] Test all pages work without 404 errors
+
+## Phase 16: Short-Stay Availability Calendar
+- [x] Add calendar component to Short-Stay page
+- [x] Implement date selection (check-in/check-out)
+- [x] Show availability status on calendar
+- [x] Calculate total price based on selected dates
+- [x] Implement pay-to-reveal flow (KES 150)
+- [ ] Connect to backend availability API
