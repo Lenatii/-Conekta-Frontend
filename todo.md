@@ -167,3 +167,8 @@
 - [x] Identify all fundis with non-Kenyan pictures
 - [x] Remove or replace with placeholder
 - [x] Ensure only Kenyan Black African men are shown
+
+## Phase 23: FIX - Replace ALL White People Pictures
+- [x] Delete fundi-john.jpg, fundi-peter.jpg, fundi-david.jpg (ALL are white)
+- [x] Generate 3 NEW Kenyan Black African men portraits
+- [x] Verify all faces are authentically Kenyan
