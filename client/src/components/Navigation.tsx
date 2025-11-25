@@ -82,36 +82,7 @@ export default function Navigation() {
             </Button>
           </a>
 
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            {isAuthenticated ? (
-              <>
-                <Link href="/dashboard">
-                  <a className="text-foreground/80 hover:text-primary transition-colors">
-                    Dashboard
-                  </a>
-                </Link>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => logout()}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <a href={getLoginUrl()}>
-                  <Button variant="outline" size="sm">
-                    Login
-                  </Button>
-                </a>
-                <Link href="/register">
-                  <Button size="sm">Get Started</Button>
-                </Link>
-              </>
-            )}
-          </div>
+          {/* Auth removed - backend not deployed */}
 
           {/* Mobile Menu Button */}
           <button
@@ -150,33 +121,7 @@ export default function Navigation() {
               </a>
             </Link>
             <div className="pt-4 border-t border-border/50 space-y-2">
-              {isAuthenticated ? (
-                <>
-                  <Link href="/dashboard">
-                    <Button variant="outline" className="w-full">
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => logout()}
-                  >
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <a href={getLoginUrl()} className="block">
-                    <Button variant="outline" className="w-full">
-                      Login
-                    </Button>
-                  </a>
-                  <Link href="/register">
-                    <Button className="w-full">Get Started</Button>
-                  </Link>
-                </>
-              )}
+              {/* Auth removed - backend not deployed */}
             </div>
           </div>
         )}

@@ -132,3 +132,8 @@
 - [x] Calculate total price based on selected dates
 - [x] Implement pay-to-reveal flow (KES 150)
 - [ ] Connect to backend availability API
+
+## Phase 17: Fix Login & Social Media Buttons (URGENT)
+- [ ] Fix login button OAuth callback (currently 404)
+- [ ] Make social media buttons visible in header
+- [ ] Test all buttons work properly
