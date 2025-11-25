@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -15,8 +15,9 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/">
-            <a className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <div className="text-2xl font-bold">
+            <a className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <img src="/conekta-logo.png" alt="CONEKTA Africa" className="h-16 w-auto" />
+              <div className="text-xl font-bold hidden sm:block">
                 <span className="text-primary">CONEKTA</span>
                 <span className="text-muted-foreground text-sm ml-2">Africa</span>
               </div>
@@ -24,7 +25,23 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Social Media Icons */}
+            <div className="flex items-center space-x-3 mr-2">
+              <a href="https://facebook.com/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a href="https://instagram.com/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a href="https://twitter.com/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Twitter className="h-4 w-4" />
+              </a>
+              <a href="https://linkedin.com/company/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Linkedin className="h-4 w-4" />
+              </a>
+            </div>
+            <div className="h-6 w-px bg-border" />
             <Link href="/properties">
               <a className="text-foreground/80 hover:text-primary transition-colors">
                 Properties

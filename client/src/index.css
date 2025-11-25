@@ -79,18 +79,20 @@
 }
 
 .dark {
-  /* CONEKTA Brand Colors - Teal/Cyan Accent */
+  /* CONEKTA Brand Colors - Purple + Teal Gradient */
+  --brand-purple: #7c5cff;
+  --brand-teal: #00e0b8;
   --primary: oklch(0.65 0.15 180); /* Teal #00e0b8 */
   --primary-foreground: oklch(0.1 0.01 240); /* Dark blue-black */
   --sidebar-primary: oklch(0.65 0.15 180);
   --sidebar-primary-foreground: oklch(0.1 0.01 240);
   
-  /* Dark Blue-Black Background (matching conekta.co.ke) */
-  --background: oklch(0.1 0.01 240); /* #0a0e1a dark blue-black */
+  /* Dark Blue-Black Background (matching original HTML #070816) */
+  --background: oklch(0.06 0.01 240); /* #070816 very dark blue-black */
   --foreground: oklch(0.95 0.01 180); /* Light text */
   
-  /* Cards and Surfaces */
-  --card: oklch(0.15 0.015 240); /* Slightly lighter than background */
+  /* Cards and Surfaces (matching #0b0f2a) */
+  --card: oklch(0.08 0.015 240); /* #0b0f2a slightly lighter than background */
   --card-foreground: oklch(0.95 0.01 180);
   --popover: oklch(0.15 0.015 240);
   --popover-foreground: oklch(0.95 0.01 180);
@@ -139,6 +141,10 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: radial-gradient(1200px 800px at 80% -10%, rgba(124,92,255,.25), transparent 60%),
+                radial-gradient(1000px 600px at -10% 10%, rgba(0,224,184,.18), transparent 60%),
+                #070816;
+    overflow-x: hidden;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -154,6 +160,93 @@
 }
 
 @layer components {
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(10px);
+  }
+  
+  .btn {
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(124,92,255,.4);
+  }
+  
+  .shine {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shine:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 200px at -20% -20%, rgba(255,255,255,.12), transparent 40%),
+                radial-gradient(500px 200px at 120% 120%, rgba(255,255,255,.08), transparent 40%); pointer-events: none;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(90deg, #c9c5ff, #9ef7e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .pill {
+    background: linear-gradient(90deg, rgba(124,92,255,.25), rgba(0,224,184,.25));
+    border: 1px solid rgba(255,255,255,.16);
+  }
+  
+  .badge {
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  
+  .module-card {
+    transition: all 0.3s ease;
+  }
+  
+  .module-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(124,92,255,.3);
+  }
+  
+  .social-icon {
+    transition: all 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    transform: scale(1.2) rotate(5deg);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /**
   /**
    * Custom container utility that centers content and adds responsive padding.
    *
@@ -193,5 +286,96 @@
       padding-right: 2rem;
       max-width: 1280px; /* Standard content width */
     }
+  }
+
+  /* Glass Morphism Effect (from original HTML) */
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Purple + Teal Gradient Background */
+  .gradient-bg {
+    background: radial-gradient(1200px 800px at 80% -10%, rgba(124,92,255,.25), transparent 60%),
+                radial-gradient(1000px 600px at -10% 10%, rgba(0,224,184,.18), transparent 60%),
+                #070816;
+  }
+
+  /* Gradient Text Effect */
+  .gradient-text {
+    background: linear-gradient(90deg, #c9c5ff, #9ef7e8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Pill Badge with Purple + Teal Gradient */
+  .pill {
+    background: linear-gradient(90deg, rgba(124,92,255,.25), rgba(0,224,184,.25));
+    border: 1px solid rgba(255,255,255,.16);
+  }
+
+  /* Shine Effect */
+  .shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shine:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 200px at -20% -20%, rgba(255,255,255,.12), transparent 40%),
+                radial-gradient(500px 200px at 120% 120%, rgba(255,255,255,.08), transparent 40%);
+    pointer-events: none;
+  }
+
+  /* Button Hover Effect */
+  .btn-gradient {
+    background: linear-gradient(90deg, #7c5cff, #00e0b8);
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(124,92,255,.4);
+  }
+
+  /* Module Card Hover */
+  .module-card {
+    transition: all 0.3s ease;
+  }
+
+  .module-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(124,92,255,.3);
+  }
+
+  /* Float Animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Fade In Up Animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
   }
 }

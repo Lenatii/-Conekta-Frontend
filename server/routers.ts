@@ -106,13 +106,20 @@ export const appRouter = router({
   payment: router({
     revealContact: publicProcedure
       .input(z.object({
-        property_id: z.number(),
+        entity_id: z.string(),
+        entity_type: z.string(), // "fundi" or "property"
         phone_number: z.string(),
+        amount: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return fetchFromBackend("/api/payments/reveal-contact", {
+        return fetchFromBackend("/api/v1/payments/initiate", {
           method: "POST",
-          body: JSON.stringify(input),
+          body: JSON.stringify({
+            user_phone: input.phone_number,
+            entity_id: input.entity_id,
+            entity_type: input.entity_type,
+            amount: input.amount || 150,
+          }),
         });
       }),
   }),

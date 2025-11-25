@@ -8,7 +8,8 @@ import Home from "./pages/Home";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
 import Fundis from "./pages/Fundis";
-import MamaDennisWidget from "./components/MamaDennisWidget";
+import FundiProfile from "./pages/FundiProfile";
+import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/properties" component={Properties} />
       <Route path="/properties/:id" component={PropertyDetail} />
       <Route path="/fundis" component={Fundis} />
+      <Route path="/fundis/:id" component={FundiProfile} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -40,7 +42,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
-          <MamaDennisWidget />
+          <MamaDennisChatWidget />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

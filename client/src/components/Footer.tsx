@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Linkedin, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -96,19 +97,70 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="font-semibold mb-4">Get in Touch</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>📧 hello@conekta.africa</li>
-              <li>📱 +254 797 446 155</li>
-              <li>📍 Nakuru • Nairobi</li>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:hello@conekta.africa" className="hover:text-primary transition">hello@conekta.africa</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-primary" />
+                <a href="tel:+254797446155" className="hover:text-primary transition">+254 797 446 155</a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                <span>Nakuru • Nairobi</span>
+              </li>
+              <li className="mt-2">
+                <a 
+                  href="https://wa.me/254797446155?text=Hi%2C%20I%20need%20help%20with%20CONEKTA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-white hover:opacity-90 transition"
+                  style={{background: '#25D366'}}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Chat on WhatsApp
+                </a>
+              </li>
             </ul>
-            <div className="mt-4 flex space-x-4">
-              <a
-                href="https://wa.me/254797446155"
-                target="_blank"
+            
+            {/* Social Media Icons */}
+            <div className="flex gap-3 mt-6">
+              <a 
+                href="https://facebook.com/conektaafrica" 
+                target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:opacity-80 transition-opacity"
+                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition"
+                aria-label="Facebook"
               >
-                WhatsApp
+                <Facebook className="w-5 h-5 text-muted-foreground hover:text-primary" />
+              </a>
+              <a 
+                href="https://instagram.com/conektaafrica" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary" />
+              </a>
+              <a 
+                href="https://twitter.com/conektaafrica" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-5 h-5 text-muted-foreground hover:text-primary" />
+              </a>
+              <a 
+                href="https://linkedin.com/company/conektaafrica" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5 text-muted-foreground hover:text-primary" />
               </a>
             </div>
           </div>

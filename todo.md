@@ -50,7 +50,11 @@
 - [x] Mama Dennis chat widget (floating bottom-right)
 - [ ] Guest mode banner (search limit tracking)
 - [x] Service provider (Fundi) listing page
-- [ ] Fundi detail page
+- [x] Fundi detail page (URGENT - currently 404 error)
+- [x] Restore purple + teal gradient colors from original HTML
+- [x] Apply glass morphism effects from original design
+- [x] Add floating animations from original design
+- [ ] Update all components to match original beautiful styling (Home page needs update)
 - [ ] Short-stay booking page
 - [ ] UBARU verification page
 
@@ -78,3 +82,38 @@
 - [x] Add robots.txt
 - [x] Optimize page titles and descriptions
 - [x] Add Open Graph tags for social sharing
+
+## Phase 11: Logo and Branding
+- [x] Generate CONEKTA logo with purple+teal gradient
+- [x] Add logo to Navigation component
+- [x] Make logo visible and prominent
+- [x] Update APP_LOGO constant in const.ts
+
+## Phase 12: Button Functionality & WhatsApp Integration
+- [x] Test Contact Us button functionality
+- [x] Test WhatsApp buttons (header, footer, chat widget)
+- [x] Test social media buttons (Facebook, Instagram, Twitter, LinkedIn)
+- [x] Style WhatsApp button with green color (#25D366)
+- [x] Make WhatsApp button more inviting and prominent
+- [x] Add proper WhatsApp links with pre-filled messages
+
+## Phase 13: Pay-to-Reveal Contact Flow (Business Model)
+- [x] Remove direct WhatsApp links from fundi profiles
+- [x] Add payment modal for KES 150 M-Pesa payment
+- [ ] Integrate with backend payment API (TODO: Connect to Render backend)
+- [x] Show contact after successful payment
+- [ ] Store payment records in database (TODO: Backend integration)
+- [ ] Prevent duplicate payments for same fundi (TODO: Backend integration)
+- [ ] Add "Already purchased" indicator for paid contacts (TODO: Backend integration)
+
+## Phase 14: Backend Integration (Render)
+- [x] Test backend endpoints at https://conekta-complete-system.onrender.com
+- [x] Create API client utility for backend calls (tRPC configured)
+- [x] Integrate M-Pesa payment API for pay-to-reveal (Intasend)
+- [ ] Connect Properties page to backend API (using mock data for now)
+- [ ] Connect Fundis page to backend API (using mock data for now)
+- [ ] Deploy backend with all API routes to Render
+- [ ] Add real data to backend database
+- [ ] Add authentication headers to API calls
+- [ ] Handle loading and error states
+- [ ] Test all backend connections end-to-end
