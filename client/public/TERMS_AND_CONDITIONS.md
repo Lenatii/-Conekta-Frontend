@@ -18,10 +18,10 @@ By accessing or using CONEKTA Technologies platform ("Platform"), including Rent
 ## 2. PLATFORM OPERATOR AND BUSINESS STRUCTURE
 
 ### 2.1 Sole Proprietorship
-CONEKTA Technologies is operated as a **sole proprietorship** by Dennis Muchiri ("Operator", "we", "us", "our"), registered in Finland and operating in Kenya.
+CONEKTA Technologies is operated as a **sole proprietorship** by the Proprietor ("Operator", "we", "us", "our"), registered and operating in Kenya.
 
 ### 2.2 Limited Liability Disclaimer
-**IMPORTANT:** As a sole proprietorship, the Operator has **unlimited personal liability** under Finnish and Kenyan law. These Terms are designed to **limit exposure** to the maximum extent permitted by law.
+**IMPORTANT:** As a sole proprietorship, the Operator has **unlimited personal liability** under Kenyan law. These Terms are designed to **limit exposure** to the maximum extent permitted by law.
 
 ---
 
@@ -254,7 +254,7 @@ Violation may result in:
 ## 11. INTELLECTUAL PROPERTY
 
 ### 11.1 Mama Dennis AI Ownership
-**Mama Dennis AI** is the intellectual property of **Dennis Muchiri**, exclusively licensed to CONEKTA Technologies.
+**Mama Dennis AI** is the intellectual property of the Proprietor, exclusively licensed to CONEKTA Technologies.
 
 **Prohibited:**
 - Reverse engineering
@@ -319,7 +319,7 @@ Upon termination:
 ## 14. INDEMNIFICATION
 
 ### 14.1 User Indemnification
-**YOU AGREE TO INDEMNIFY AND HOLD HARMLESS** CONEKTA Technologies and Dennis Muchiri from:
+**YOU AGREE TO INDEMNIFY AND HOLD HARMLESS** CONEKTA Technologies and the Proprietor from:
 - Claims arising from your use of the Platform
 - Your violation of these Terms
 - Your violation of third-party rights
@@ -387,7 +387,7 @@ We may update these Terms at any time. Continued use after changes constitutes a
 ## 20. CONTACT INFORMATION
 
 **CONEKTA Technologies**  
-Operated by: Dennis Muchiri  
+Operated by: Proprietor  
 Email: hello@conekta.africa  
 WhatsApp: [To be provided at launch]  
 
