@@ -61,3 +61,20 @@
 - [ ] Cross-browser testing
 - [ ] Performance optimization
 - [ ] SEO optimization
+
+## Phase 9: Backend Integration (In Progress)
+- [x] Create API client for Render backend
+- [x] Add tRPC routers for backend
+- [ ] Connect property listing to real data
+- [ ] Connect property detail to real data
+- [ ] Connect Mama Dennis chat to backend AI
+- [ ] Connect payment flow to Instasend
+- [ ] Test full integration
+
+## Phase 10: SEO Optimization
+- [x] Add meta tags for Google indexing
+- [x] Add structured data (JSON-LD)
+- [x] Add sitemap.xml
+- [x] Add robots.txt
+- [x] Optimize page titles and descriptions
+- [x] Add Open Graph tags for social sharing

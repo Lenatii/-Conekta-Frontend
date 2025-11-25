@@ -1,0 +1,15 @@
+# robots.txt for CONEKTA Africa
+# Allow all search engines to index the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.conekta.co.ke/sitemap.xml
+
+# Disallow admin pages (if any)
+Disallow: /admin/
+Disallow: /api/
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1
