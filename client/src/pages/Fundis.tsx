@@ -28,7 +28,7 @@ export default function FundisPage() {
       totalJobs: 127,
       isVerified: true,
       phone: "+254 712 345 678",
-      avatar: "/api/placeholder/100/100",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
     },
     {
       id: 2,
@@ -42,7 +42,7 @@ export default function FundisPage() {
       totalJobs: 89,
       isVerified: true,
       phone: "+254 723 456 789",
-      avatar: "/api/placeholder/100/100",
+      avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=faces",
     },
     {
       id: 3,
@@ -56,7 +56,7 @@ export default function FundisPage() {
       totalJobs: 56,
       isVerified: false,
       phone: "+254 734 567 890",
-      avatar: "/api/placeholder/100/100",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
     },
   ];
 
