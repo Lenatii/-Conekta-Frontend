@@ -47,17 +47,51 @@ export default function MamaDennisWidget() {
     setInput("");
     setIsLoading(true);
 
-    // Simulate API call - will connect to Render backend later
-    setTimeout(() => {
+    try {
+      // Get or create session ID from localStorage
+      let sessionId = localStorage.getItem('mama_dennis_session_id');
+      if (!sessionId) {
+        sessionId = `web-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('mama_dennis_session_id', sessionId);
+      }
+
+      // Call real Mama Dennis backend
+      const response = await fetch('https://conekta-backend.onrender.com/api/webchat/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage.content,
+          session_id: sessionId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "I'm here to help you find properties! Try asking me about:\n\n🏠 2 bedroom apartments in Nakuru\n💰 Properties under KES 20,000\n📍 Rentals in Milimani\n\nWhat are you looking for?",
+        content: data.response,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error calling Mama Dennis:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp: +254797446155",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
