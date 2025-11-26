@@ -213,4 +213,33 @@
 ## Phase 30: Fix TypeScript Error in Mama Dennis Chat Widget
 - [x] Fix MamaDennisChatWidget.tsx mutation error
 - [x] Update chat component to use correct tRPC mutation syntax (useMutation hook)
-- [ ] Test chat widget functionality (needs backend connection)
+- [x] Test chat widget functionality (needs backend connection)
+
+## Phase 33: Connect Website Chat to Mama Dennis v1_integrated
+- [x] Create new website_mama_chat.py endpoint using v1_integrated
+- [x] Add router to main.py
+- [x] Update website chat router to call /api/website-mama-chat/message
+- [x] Verify Instasend payment integration included
+- [x] Push to GitHub and trigger Render deployment
+- [ ] Test website chat after Render deployment completes
+
+## Phase 31: Fix Mama Dennis Chat Integration (URGENT)
+- [ ] Check current chat router implementation
+- [ ] Find v1 Cognitive Engine endpoint URL
+- [ ] Update chat router to use v1 backend (same as WhatsApp flow)
+- [ ] Test conversational flow matches WhatsApp version
+- [ ] Verify WhatsApp button links to correct number
+- [ ] Test end-to-end chat functionality
+
+## Phase 31: Verify Mama Dennis v1 Integration (URGENT)
+- [ ] Check if chat router is using v1 Cognitive Engine endpoint
+- [ ] Verify WhatsApp button links to correct Mama Dennis number
+- [ ] Test that website chat has same conversational flow as WhatsApp
+- [ ] Fix any integration issues found
+
+## Phase 32: Fix Mama Dennis WhatsApp Memory Issue (CRITICAL)
+- [ ] WAITING FOR USER INSTRUCTIONS
+- [ ] Issue: Mama Dennis repeating questions (bedrooms, location, budget)
+- [ ] Issue: Not remembering existing users (asks for UBARU ID again)
+- [ ] Conversation history not persisting properly
+- [ ] Need to identify what changed and revert if necessary

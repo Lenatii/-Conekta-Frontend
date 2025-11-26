@@ -189,7 +189,7 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         try {
-          return await fetchFromBackend("/api/website-chat/message", {
+          return await fetchFromBackend("/api/website-mama-chat/message", {
             method: "POST",
             body: JSON.stringify(input),
           });
