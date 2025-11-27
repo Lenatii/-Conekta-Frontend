@@ -51,6 +51,14 @@ export default function PropertyDetailPage() {
 
   const [selectedImage, setSelectedImage] = useState(0);
 
+  // Filter out empty/placeholder images - only show actual uploaded photos
+  const actualImages = property.images.filter(
+    (img) => img && img !== "" && !img.includes("/api/placeholder")
+  );
+  
+  // If no images, use a default placeholder
+  const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
+
   const handleRevealContact = () => {
     if (!isAuthenticated) {
       window.location.href = getLoginUrl();
@@ -98,7 +106,7 @@ export default function PropertyDetailPage() {
               {/* Main Image */}
               <div className="relative h-96 bg-muted rounded-lg overflow-hidden">
                 <img
-                  src={property.images[selectedImage]}
+                  src={displayImages[selectedImage]}
                   alt={property.title}
                   className="w-full h-full object-cover"
                 />
@@ -110,20 +118,22 @@ export default function PropertyDetailPage() {
                 )}
               </div>
 
-              {/* Thumbnail Gallery */}
-              <div className="grid grid-cols-5 gap-2">
-                {property.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative h-20 bg-muted rounded overflow-hidden border-2 transition-all ${
-                      selectedImage === index ? "border-primary" : "border-transparent"
-                    }`}
-                  >
-                    <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              {/* Thumbnail Gallery - Only show if there are multiple images */}
+              {displayImages.length > 1 && (
+                <div className="grid grid-cols-5 gap-2">
+                  {displayImages.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`relative h-20 bg-muted rounded overflow-hidden border-2 transition-all ${
+                        selectedImage === index ? "border-primary" : "border-transparent"
+                      }`}
+                    >
+                      <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Description */}
               <Card>

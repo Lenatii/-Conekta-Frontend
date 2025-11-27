@@ -198,13 +198,20 @@ export default function PropertiesPage() {
 
           {/* Property Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockProperties.map((property) => (
+            {mockProperties.map((property) => {
+              // Filter out empty/placeholder images
+              const actualImages = property.images.filter(
+                (img) => img && img !== "" && !img.includes("/api/placeholder")
+              );
+              const displayImage = actualImages.length > 0 ? actualImages[0] : "/api/placeholder/800/600";
+              
+              return (
               <Link key={property.id} href={`/properties/${property.id}`}>
                 <Card className="overflow-hidden hover:border-primary/50 transition-all group cursor-pointer">
                   {/* Image */}
                   <div className="relative h-48 bg-muted">
                     <img
-                      src={property.images[0]}
+                      src={displayImage}
                       alt={property.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     />
@@ -281,7 +288,8 @@ export default function PropertiesPage() {
                   </CardContent>
                 </Card>
               </Link>
-            ))}
+            );
+            })}
           </div>
 
           {/* Empty State */}
