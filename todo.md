@@ -262,3 +262,12 @@
 - [x] Test all pages load correctly
 - [x] Verify all navigation links work
 - [ ] Test payment flow with real backend
+
+## Phase 36: Push All Changes to GitHub & Fix Image Placeholders
+- [ ] Push all local commits to GitHub remote
+- [ ] Fix PropertyDetail page to completely hide gallery when no real images
+- [ ] Verify empty placeholders are gone
+- [ ] Test on live site
+
+- [x] Add Facebook domain verification meta tag to index.html
+- [ ] Deploy changes to Vercel for Meta Business verification
