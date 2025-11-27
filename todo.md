@@ -250,3 +250,15 @@
 - [x] Force pushed to GitHub
 - [ ] Wait for Render to deploy (2-3 minutes)
 - [ ] Test WhatsApp flow to verify it's working again
+
+## Phase 35: Connect Website to Backend & Eliminate All 404 Errors (URGENT)
+- [x] Configure backend API URL in environment variables
+- [x] Connect Properties page to real backend data (with fallback to mock)
+- [x] Connect Fundis page to real backend data (with fallback to mock)
+- [x] Connect Mama Dennis chat to backend endpoint (/api/webchat/message)
+- [x] Fix all broken links and routes
+- [x] Verify no 404 errors anywhere on site
+- [x] Add professional error handling for failed API calls
+- [x] Test all pages load correctly
+- [x] Verify all navigation links work
+- [ ] Test payment flow with real backend

@@ -56,7 +56,7 @@ export default function MamaDennisWidget() {
       }
 
       // Call real Mama Dennis backend
-      const response = await fetch('https://conekta-backend.onrender.com/api/webchat/message', {
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
