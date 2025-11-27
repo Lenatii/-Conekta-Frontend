@@ -270,4 +270,8 @@
 - [ ] Test on live site
 
 - [x] Add Facebook domain verification meta tag to index.html
-- [ ] Deploy changes to Vercel for Meta Business verification
+- [x] Deploy changes to Vercel for Meta Business verification
+
+- [x] Fix Facebook verification tag - change lowercase 'o' to uppercase 'O'
+- [ ] Push fix to GitHub
+- [ ] Verify Meta domain verification completes
