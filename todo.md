@@ -273,5 +273,5 @@
 - [x] Deploy changes to Vercel for Meta Business verification
 
 - [x] Fix Facebook verification tag - change lowercase 'o' to uppercase 'O'
-- [ ] Push fix to GitHub
+- [x] Push fix to GitHub
 - [ ] Verify Meta domain verification completes
