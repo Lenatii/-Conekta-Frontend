@@ -108,7 +108,7 @@ export default function MamaDennisChatWidget() {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110"
         aria-label="Chat with Mama Dennis"
       >
         {isOpen ? (
@@ -123,14 +123,14 @@ export default function MamaDennisChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-96 h-[600px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+        <div className="fixed bottom-20 right-4 left-4 sm:left-auto sm:right-6 z-50 sm:w-96 h-[600px] max-h-[85vh] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-4 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-3 sm:p-4 flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center text-xl sm:text-2xl flex-shrink-0">
               👩🏾
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-white">Mama Dennis</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-white text-sm sm:text-base truncate">Mama Dennis</h3>
               <p className="text-xs text-teal-100">AI Assistant • Online</p>
             </div>
             <button
@@ -149,7 +149,7 @@ export default function MamaDennisChatWidget() {
                 className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-3 py-2 sm:px-4 ${
                     message.sender === "user"
                       ? "bg-teal-500 text-white rounded-br-none"
                       : "bg-slate-800 text-slate-100 rounded-bl-none"
@@ -177,7 +177,7 @@ export default function MamaDennisChatWidget() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-slate-700 bg-slate-800/50">
+          <div className="p-3 sm:p-4 border-t border-slate-700 bg-slate-800/50 flex-shrink-0">
             <div className="flex gap-2">
               <Input
                 value={inputMessage}

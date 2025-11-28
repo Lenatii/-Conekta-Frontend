@@ -277,5 +277,10 @@
 - [ ] Verify Meta domain verification completes
 
 - [x] Replace Facebook verification code with new Meta-provided code
-- [ ] Deploy and purge Vercel cache
+- [x] Deploy and purge Vercel cache
 - [ ] Complete Meta domain verification
+
+- [x] Fix Mama Dennis header cutoff on mobile
+- [x] Fix chat widget spacing and layout on mobile
+- [x] Fix Explore Modules button overlap with close button
+- [x] Test mobile responsiveness
