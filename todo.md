@@ -275,3 +275,7 @@
 - [x] Fix Facebook verification tag - change lowercase 'o' to uppercase 'O'
 - [x] Push fix to GitHub
 - [ ] Verify Meta domain verification completes
+
+- [x] Replace Facebook verification code with new Meta-provided code
+- [ ] Deploy and purge Vercel cache
+- [ ] Complete Meta domain verification
