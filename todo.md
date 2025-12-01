@@ -310,3 +310,9 @@
 - [x] Improved message text with leading-relaxed and whitespace-pre-wrap
 - [x] Enhanced input field styling
 - [x] Ensure professional appearance
+
+## Phase 40: Fix Chat Widget Overlap with Bottom Elements
+- [x] Increase bottom spacing to clear "Made with Manus" badge (bottom-32)
+- [x] Reduce height to 500px for better mobile fit
+- [x] Ensure no overlap with floating chat button
+- [x] Adjusted max-height to 75vh
