@@ -123,7 +123,7 @@ export default function MamaDennisChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 left-4 sm:left-auto sm:right-6 z-50 sm:w-96 h-[600px] max-h-[85vh] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+        <div className="fixed bottom-24 right-4 left-4 sm:left-auto sm:right-6 z-50 sm:w-96 h-[550px] max-h-[80vh] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
           <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-3 sm:p-4 flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center text-xl sm:text-2xl flex-shrink-0">
@@ -154,8 +154,9 @@ export default function MamaDennisChatWidget() {
                       ? "bg-teal-500 text-white rounded-br-none"
                       : "bg-slate-800 text-slate-100 rounded-bl-none"
                   }`}
+                  style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
                 >
-                  <p className="text-sm whitespace-pre-line">{message.text}</p>
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
                   <p className="text-xs opacity-70 mt-1">
                     {message.timestamp.toLocaleTimeString([], {
                       hour: "2-digit",
@@ -184,7 +185,8 @@ export default function MamaDennisChatWidget() {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500"
+                className="flex-1 bg-slate-900 border-slate-700 text-white placeholder:text-slate-500 px-4 py-2"
+                style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
               />
               <Button
                 onClick={handleSendMessage}
