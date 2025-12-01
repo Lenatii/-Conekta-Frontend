@@ -57,7 +57,7 @@ export default function HomePage() {
                     Explore Modules
                   </Button>
                 </a>
-                <a href="#contact">
+                <a href="/signup">
                   <Button size="lg" variant="outline" className="rounded-xl px-6 py-4 glass text-white font-semibold text-lg border-white/12">
                     Get Started
                   </Button>

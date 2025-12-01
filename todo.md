@@ -316,3 +316,7 @@
 - [x] Reduce height to 500px for better mobile fit
 - [x] Ensure no overlap with floating chat button
 - [x] Adjusted max-height to 75vh
+
+## Phase 41: Update Get Started Button
+- [x] Change Get Started button to navigate to /signup
+- [x] Update from #contact to /signup link
