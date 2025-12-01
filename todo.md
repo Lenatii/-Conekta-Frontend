@@ -322,9 +322,16 @@
 - [x] Update from #contact to /signup link
 
 ## Phase 42: Fix Facebook Domain Verification Meta Tag Deployment (URGENT)
-- [ ] Identify correct GitHub repository Vercel is deploying from (with dash or without)
-- [ ] Ensure Facebook meta tag (sOgc4fktlggvfl8hcmxgdj7c8sqsh5) is in index.html
-- [ ] Push changes to correct GitHub repository
-- [ ] Trigger fresh Vercel deployment
-- [ ] Verify meta tag appears on live site (conekta.co.ke)
+- [x] Identify correct GitHub repository Vercel is deploying from (Lenatii/-Conekta-Frontend)
+- [x] Ensure Facebook meta tag (sOgc4fktlggvfl8hcmxgdj7c8sqsh5) is in index.html
+- [x] Push changes to correct GitHub repository
+- [x] Trigger fresh Vercel deployment
+- [x] Verify meta tag appears on live site (conekta.co.ke) ✅ CONFIRMED!
+- [ ] Complete Meta Business domain verification
+
+## Phase 43: Update Facebook Meta Tag with New Verification Code (URGENT)
+- [ ] Replace old code (sOgc4fktlggvfl8hcmxgdj7c8sqsh5) with new code (tyk97et9ddidlmpdodezabphfvu05u)
+- [ ] Update in client/index.html
+- [ ] Push to GitHub
+- [ ] Verify on live site
 - [ ] Complete Meta Business domain verification
