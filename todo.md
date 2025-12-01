@@ -320,3 +320,11 @@
 ## Phase 41: Update Get Started Button
 - [x] Change Get Started button to navigate to /signup
 - [x] Update from #contact to /signup link
+
+## Phase 42: Fix Facebook Domain Verification Meta Tag Deployment (URGENT)
+- [ ] Identify correct GitHub repository Vercel is deploying from (with dash or without)
+- [ ] Ensure Facebook meta tag (sOgc4fktlggvfl8hcmxgdj7c8sqsh5) is in index.html
+- [ ] Push changes to correct GitHub repository
+- [ ] Trigger fresh Vercel deployment
+- [ ] Verify meta tag appears on live site (conekta.co.ke)
+- [ ] Complete Meta Business domain verification
