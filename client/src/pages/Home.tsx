@@ -29,6 +29,20 @@ export default function HomePage() {
             
             {/* Left: Text Content */}
             <div className="fade-in-up">
+              {/* Mama Dennis AI Badge - Clickable for future standalone UI */}
+              <button
+                onClick={() => {
+                  // TODO: Link to Mama Dennis standalone UI when available
+                  // For now, just show a message
+                  alert('Mama Dennis standalone UI coming soon! For now, use the chat widget.');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/16 text-sm text-slate-200 mb-6 hover:border-teal-400/50 hover:bg-teal-500/10 transition-all cursor-pointer"
+                style={{background: 'linear-gradient(90deg, rgba(124,92,255,.25), rgba(0,224,184,.25))'}}
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Powered by Mama Dennis AI</span>
+              </button>
+              
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
                 Your Digital OS for <span className="gradient-text">Rent • Services • Trust</span>
               </h1>

@@ -297,7 +297,8 @@
 - [ ] Connect authentication to backend API
 - [ ] Test complete user flow end-to-end
 
-## Phase 38: Fix Duplicate Chat Widget (URGENT)
-- [x] Remove duplicate "Powered by Mama Dennis AI" badge
-- [x] Keep only the floating chat button (bottom right)
-- [x] Ensure widget works properly on all pages
+## Phase 38: Make Mama Dennis Badge Clickable (Future-Ready)
+- [x] Keep "Powered by Mama Dennis AI" badge visible
+- [x] Make badge clickable (will link to standalone Mama Dennis UI in future)
+- [x] Keep floating chat button separate (bottom right)
+- [x] Ensure both elements work independently
