@@ -13,6 +13,11 @@ import ShortStay from "./pages/ShortStay";
 import Ubaru from "./pages/Ubaru";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import AddProperty from "./pages/AddProperty";
+import EditProfile from "./pages/EditProfile";
 import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
@@ -28,6 +33,11 @@ function Router() {
       <Route path="/verify" component={Ubaru} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard/add-property" component={AddProperty} />
+      <Route path="/dashboard/edit-profile" component={EditProfile} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

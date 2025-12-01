@@ -284,3 +284,20 @@
 - [x] Fix chat widget spacing and layout on mobile
 - [x] Fix Explore Modules button overlap with close button
 - [x] Test mobile responsiveness
+
+## Phase 37: Add User Authentication & Property Upload System (NEW)
+- [x] Create Login page with phone OTP verification
+- [x] Create Signup page with user type selection (Landlord/Tenant/Service Provider)
+- [x] Create Landlord Dashboard page
+- [x] Add property upload form with image upload
+- [x] Add video upload functionality for properties
+- [x] Create User Profile page with edit functionality
+- [x] Add protected routes for authenticated users
+- [x] Add Login/Signup buttons to Navigation
+- [ ] Connect authentication to backend API
+- [ ] Test complete user flow end-to-end
+
+## Phase 38: Fix Duplicate Chat Widget (URGENT)
+- [x] Remove duplicate "Powered by Mama Dennis AI" badge
+- [x] Keep only the floating chat button (bottom right)
+- [x] Ensure widget works properly on all pages
