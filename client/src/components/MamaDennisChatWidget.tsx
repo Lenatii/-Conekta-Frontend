@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { trpc } from "@/lib/trpc";
+
 
 interface Message {
   id: string;
@@ -27,8 +27,7 @@ export default function MamaDennisChatWidget() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  // Setup mutation hook
-  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
+
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -47,32 +46,50 @@ export default function MamaDennisChatWidget() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const messageToSend = inputMessage;
     setInputMessage("");
     setIsTyping(true);
 
-    // Call Mama Dennis via tRPC
+    // Call the real backend API
     try {
-      const data = await sendMessageMutation.mutateAsync({
-        message: inputMessage,
-        session_id: `web-${Date.now()}`,
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageToSend,
+          session_id: localStorage.getItem('mama_session_id') || undefined,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
       
+      // Save session ID for future messages
+      if (data.session_id) {
+        localStorage.setItem('mama_session_id', data.session_id);
+      }
+
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response || "Sorry, I'm having trouble connecting. Please try again!",
+        text: data.response,
         sender: "mama",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, mamaResponse]);
     } catch (error) {
-      console.error('Mama Dennis API error:', error);
-      const errorResponse: Message = {
+      console.error('Chat error:', error);
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp!",
         sender: "mama",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorResponse]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
     }
