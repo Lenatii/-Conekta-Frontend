@@ -12,6 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
+// Force deployment - Chat widget spacing fix
 export default function MamaDennisChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
