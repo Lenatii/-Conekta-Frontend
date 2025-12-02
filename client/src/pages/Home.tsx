@@ -9,7 +9,7 @@ import {
   Search, Home as HomeIcon, Wrench, Hotel, Shield, ArrowRight, 
   MessageCircle, Sparkles, Bot, ShieldCheck, Bed
 } from "lucide-react";
-import MamaDennisWidget from "@/components/MamaDennisWidget";
+import MamaDennisChatWidget from "@/components/MamaDennisChatWidget";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -300,7 +300,7 @@ export default function HomePage() {
       </section>
 
       <Footer />
-      <MamaDennisWidget />
+      <MamaDennisChatWidget />
     </div>
   );
 }
