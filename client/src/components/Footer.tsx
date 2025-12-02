@@ -168,7 +168,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} <strong>CONEKTA TECHNOLOGIES</strong> (trading as CONEKTA Africa). All rights reserved.</p>
+          <p>© {new Date().getFullYear()} <strong>Conekta Technologies</strong> (trading as CONEKTA Africa). All rights reserved.</p>
           <p className="mt-2 text-xs">
             🔒 Secure M-Pesa Payments • ✓ UBARU Verified • 🇰🇪 Made in Kenya
           </p>
