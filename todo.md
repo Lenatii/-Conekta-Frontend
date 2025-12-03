@@ -342,3 +342,11 @@
 - [x] Verify legal name is prominently visible on homepage
 - [x] Deploy changes to live site
 - [ ] Resubmit Meta Business verification (USER ACTION REQUIRED)
+
+## Phase 45: WhatsApp Cloud API Integration
+- [ ] Add WhatsApp credentials to backend environment variables
+- [ ] Create WhatsApp webhook endpoint (/whatsapp/webhook)
+- [ ] Integrate Mama Dennis AI to respond to WhatsApp messages
+- [ ] Deploy to Render
+- [ ] Configure webhook URL in Meta Developer Console
+- [ ] Test sending/receiving messages via WhatsApp
