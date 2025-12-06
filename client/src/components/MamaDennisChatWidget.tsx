@@ -50,33 +50,40 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Call the real backend API
+    // Call WhatsApp webhook endpoint (same endpoint for web and WhatsApp)
     try {
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
+      // Use a consistent session ID for web users
+      let sessionId = localStorage.getItem('mama_session_id');
+      if (!sessionId) {
+        sessionId = `web-${Date.now()}`;
+        localStorage.setItem('mama_session_id', sessionId);
+      }
+
+      // Format request as Twilio webhook format (form data)
+      const formData = new FormData();
+      formData.append('From', `whatsapp:${sessionId}`); // Use session ID as "phone number" for web users
+      formData.append('Body', messageToSend);
+      formData.append('NumMedia', '0');
+
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/whatsapp/webhook', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: messageToSend,
-          session_id: localStorage.getItem('mama_session_id') || undefined,
-        }),
+        body: formData, // Send as form data (Twilio format)
       });
 
       if (!response.ok) {
         throw new Error('Failed to get response');
       }
 
-      const data = await response.json();
+      // WhatsApp webhook returns TwiML XML, parse it
+      const responseText = await response.text();
       
-      // Save session ID for future messages
-      if (data.session_id) {
-        localStorage.setItem('mama_session_id', data.session_id);
-      }
+      // Extract message from TwiML <Message>...</Message>
+      const messageMatch = responseText.match(/<Message>(.*?)<\/Message>/s);
+      const mamaResponseText = messageMatch ? messageMatch[1].trim() : "Sorry, I couldn't understand the response.";
 
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response,
+        text: mamaResponseText,
         sender: "mama",
         timestamp: new Date(),
       };
