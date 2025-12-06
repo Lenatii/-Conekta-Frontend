@@ -65,7 +65,7 @@ export default function MamaDennisChatWidget() {
       formData.append('Body', messageToSend);
       formData.append('NumMedia', '0');
 
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/whatsapp/webhook', {
+      const response = await fetch('https://conekta-complete-system.onrender.com/webhook', {
         method: 'POST',
         body: formData, // Send as form data (Twilio format)
       });
