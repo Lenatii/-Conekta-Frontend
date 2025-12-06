@@ -27,6 +27,9 @@ export default function MamaDennisChatWidget() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
+  // Persist session ID across all messages (CRITICAL FIX)
+  const [sessionId] = useState(() => `web-${Date.now()}`);
+  
   // Setup mutation hook
   const sendMessageMutation = trpc.chat.sendMessage.useMutation();
 
@@ -54,7 +57,7 @@ export default function MamaDennisChatWidget() {
     try {
       const data = await sendMessageMutation.mutateAsync({
         message: inputMessage,
-        session_id: `web-${Date.now()}`,
+        session_id: sessionId,
       });
       
       const mamaResponse: Message = {
