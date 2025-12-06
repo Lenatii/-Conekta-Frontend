@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-
+import { trpc } from "@/lib/trpc";
 
 interface Message {
   id: string;
@@ -27,7 +27,11 @@ export default function MamaDennisChatWidget() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
-
+  // Persist session ID across all messages (CRITICAL FIX)
+  const [sessionId] = useState(() => `web-${Date.now()}`);
+  
+  // Setup mutation hook
+  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -46,57 +50,32 @@ export default function MamaDennisChatWidget() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    const messageToSend = inputMessage;
     setInputMessage("");
     setIsTyping(true);
 
-    // Call WhatsApp webhook endpoint (same endpoint for web and WhatsApp)
+    // Call Mama Dennis via tRPC
     try {
-      // Use a consistent session ID for web users
-      let sessionId = localStorage.getItem('mama_session_id');
-      if (!sessionId) {
-        sessionId = `web-${Date.now()}`;
-        localStorage.setItem('mama_session_id', sessionId);
-      }
-
-      // Format request as Twilio webhook format (form data)
-      const formData = new FormData();
-      formData.append('From', `whatsapp:${sessionId}`); // Use session ID as "phone number" for web users
-      formData.append('Body', messageToSend);
-      formData.append('NumMedia', '0');
-
-      const response = await fetch('https://conekta-complete-system.onrender.com/whatsapp/webhook', {
-        method: 'POST',
-        body: formData, // Send as form data (Twilio format)
+      const data = await sendMessageMutation.mutateAsync({
+        message: inputMessage,
+        session_id: sessionId,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
-      // WhatsApp webhook returns TwiML XML, parse it
-      const responseText = await response.text();
       
-      // Extract message from TwiML <Message>...</Message>
-      const messageMatch = responseText.match(/<Message>(.*?)<\/Message>/s);
-      const mamaResponseText = messageMatch ? messageMatch[1].trim() : "Sorry, I couldn't understand the response.";
-
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: mamaResponseText,
+        text: data.response || "Sorry, I'm having trouble connecting. Please try again!",
         sender: "mama",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, mamaResponse]);
     } catch (error) {
-      console.error('Chat error:', error);
-      const errorMessage: Message = {
+      console.error('Mama Dennis API error:', error);
+      const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp!",
         sender: "mama",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsTyping(false);
     }
