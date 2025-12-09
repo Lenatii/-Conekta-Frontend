@@ -19,7 +19,6 @@ export default function PropertyDetailPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [contactRevealed, setContactRevealed] = useState(false);
-  const paymentMutation = trpc.payment.revealContact.useMutation();
 
   // Mock property data - will connect to backend later
   const property = {
@@ -86,18 +85,27 @@ export default function PropertyDetailPage() {
     setPaymentStatus("processing");
 
     try {
-      const result = await paymentMutation.mutateAsync({
-        entity_id: property.id || "1",
-        entity_type: "property",
-        phone_number: normalizedPhone,
-        amount: 150,
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_phone: normalizedPhone,
+          entity_id: property.id || "1",
+          entity_type: "property",
+          amount: 150,
+        }),
       });
+
+      const result = await response.json();
 
       if (result.success) {
         setPaymentStatus("success");
         alert("Payment request sent! Check your phone for M-Pesa prompt.");
         setShowPaymentModal(false);
         setPaymentStatus("idle");
+        setContactRevealed(true);
       } else {
         setPaymentStatus("failed");
         alert("Payment failed: " + (result.message || "Unknown error"));
