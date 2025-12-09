@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,9 @@ export default function ShortStay() {
   const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const paymentMutation = trpc.payment.revealContact.useMutation();
 
   const handleCheckAvailability = (stay: any) => {
     setSelectedStay(stay);
@@ -28,12 +32,33 @@ export default function ShortStay() {
     setIsPaymentModalOpen(true);
   };
 
-  const confirmPayment = () => {
-    // TODO: Call payment API (KES 150)
-    setTimeout(() => {
-      setContactRevealed(true);
-      setIsPaymentModalOpen(false);
-    }, 2000);
+  const confirmPayment = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Please enter a valid phone number for M-Pesa payment");
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
+    try {
+      const result = await paymentMutation.mutateAsync({
+        entity_id: selectedStay?.id?.toString() || "1",
+        entity_type: "short_stay",
+        phone_number: phoneNumber,
+        amount: 150,
+      });
+
+      if (result.success) {
+        alert("Payment request sent! Check your phone for M-Pesa prompt.");
+        setIsPaymentModalOpen(false);
+      } else {
+        alert("Payment failed: " + (result.message || "Unknown error"));
+      }
+    } catch (error: any) {
+      alert("Payment error: " + (error.message || "Unknown error"));
+    } finally {
+      setIsProcessingPayment(false);
+    }
   };
   // Mock data - will connect to backend later
   const mockStays = [
@@ -276,8 +301,23 @@ export default function ShortStay() {
                 </div>
               </CardContent>
             </Card>
-            <Button onClick={confirmPayment} className="w-full" style={{background: '#25D366'}}>
-              Pay KES 150 via M-Pesa
+            <div className="space-y-2">
+              <label className="text-sm font-medium">M-Pesa Phone Number</label>
+              <input
+                type="tel"
+                placeholder="254712345678"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+            <Button 
+              onClick={confirmPayment} 
+              className="w-full" 
+              style={{background: '#25D366'}}
+              disabled={isProcessingPayment}
+            >
+              {isProcessingPayment ? "Processing..." : "Pay KES 150 via M-Pesa"}
             </Button>
           </div>
         </DialogContent>

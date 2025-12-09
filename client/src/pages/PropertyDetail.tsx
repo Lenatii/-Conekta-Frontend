@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ export default function PropertyDetailPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [contactRevealed, setContactRevealed] = useState(false);
+  const paymentMutation = trpc.payment.revealContact.useMutation();
 
   // Mock property data - will connect to backend later
   const property = {
@@ -67,23 +69,37 @@ export default function PropertyDetailPage() {
     setShowPaymentModal(true);
   };
 
-  const handlePayment = async () => {
+  const handleConfirmPayment = async () => {
     if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Please enter a valid phone number");
+      alert("Please enter a valid phone number for M-Pesa payment");
       return;
     }
 
     setPaymentStatus("processing");
 
-    // Simulate payment processing - will integrate Instasend later
-    setTimeout(() => {
-      setPaymentStatus("success");
-      setTimeout(() => {
-        setContactRevealed(true);
+    try {
+      const result = await paymentMutation.mutateAsync({
+        entity_id: property.id || "1",
+        entity_type: "property",
+        phone_number: phoneNumber,
+        amount: 150,
+      });
+
+      if (result.success) {
+        setPaymentStatus("success");
+        alert("Payment request sent! Check your phone for M-Pesa prompt.");
         setShowPaymentModal(false);
         setPaymentStatus("idle");
-      }, 2000);
-    }, 3000);
+      } else {
+        setPaymentStatus("failed");
+        alert("Payment failed: " + (result.message || "Unknown error"));
+        setPaymentStatus("idle");
+      }
+    } catch (error: any) {
+      setPaymentStatus("failed");
+      alert("Payment error: " + (error.message || "Unknown error"));
+      setPaymentStatus("idle");
+    }
   };
 
   return (
