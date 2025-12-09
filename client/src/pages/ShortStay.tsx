@@ -33,9 +33,17 @@ export default function ShortStay() {
   };
 
   const confirmPayment = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
+    if (!phoneNumber || phoneNumber.length < 9) {
       alert("Please enter a valid phone number for M-Pesa payment");
       return;
+    }
+
+    // Normalize phone number: 0712345678 -> 254712345678
+    let normalizedPhone = phoneNumber.trim();
+    if (normalizedPhone.startsWith('0')) {
+      normalizedPhone = '254' + normalizedPhone.substring(1);
+    } else if (!normalizedPhone.startsWith('254')) {
+      normalizedPhone = '254' + normalizedPhone;
     }
 
     setIsProcessingPayment(true);
@@ -44,7 +52,7 @@ export default function ShortStay() {
       const result = await paymentMutation.mutateAsync({
         entity_id: selectedStay?.id?.toString() || "1",
         entity_type: "short_stay",
-        phone_number: phoneNumber,
+        phone_number: normalizedPhone,
         amount: 150,
       });
 
@@ -305,7 +313,7 @@ export default function ShortStay() {
               <label className="text-sm font-medium">M-Pesa Phone Number</label>
               <input
                 type="tel"
-                placeholder="254712345678"
+                placeholder="0712345678"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md"
