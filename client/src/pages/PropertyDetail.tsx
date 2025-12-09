@@ -85,7 +85,7 @@ export default function PropertyDetailPage() {
     setPaymentStatus("processing");
 
     try {
-      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/payments/initiate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
