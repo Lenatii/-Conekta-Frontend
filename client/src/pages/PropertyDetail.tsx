@@ -364,7 +364,7 @@ export default function PropertyDetailPage() {
               <Button variant="outline" onClick={() => setShowPaymentModal(false)}>
                 Cancel
               </Button>
-              <Button onClick={handlePayment}>Pay KES 150</Button>
+              <Button onClick={handleConfirmPayment}>Pay KES 150</Button>
             </DialogFooter>
           )}
         </DialogContent>
