@@ -92,7 +92,7 @@ export default function Login() {
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+254 712 345 678"
+                    placeholder="0712 345 678"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="bg-slate-800 border-slate-700 text-white"
