@@ -30,8 +30,8 @@ export default function MamaDennisChatWidget() {
   // Persist session ID across all messages (CRITICAL FIX)
   const [sessionId] = useState(() => `web-${Date.now()}`);
   
-  // Setup mutation hook
-  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
+  // Direct API call to Render backend (bypass Vercel tRPC)
+  const BACKEND_URL = "https://conekta-complete-system.onrender.com";
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -53,12 +53,19 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Call Mama Dennis via tRPC
+    // Call Mama Dennis backend directly
     try {
-      const data = await sendMessageMutation.mutateAsync({
-        message: inputMessage,
-        session_id: sessionId,
+      const response = await fetch(`${BACKEND_URL}/api/webchat/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: inputMessage,
+          session_id: sessionId,
+        }),
       });
+      
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
