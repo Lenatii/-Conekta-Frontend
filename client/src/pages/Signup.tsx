@@ -67,13 +67,22 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to send OTP
-      // await trpc.auth.register.mutate({ ...formData, userType });
+      // Call backend API to send OTP via WhatsApp
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: formData.phone.startsWith("+254") ? formData.phone : `+254${formData.phone.replace(/^0/, "")}`
+        })
+      });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const data = await response.json();
       
-      toast.success("OTP sent to your phone!");
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to send OTP");
+      }
+      
+      toast.success("OTP sent to your WhatsApp!");
       setStep("otp");
     } catch (error) {
       toast.error("Failed to send OTP. Please try again.");
@@ -93,11 +102,22 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to verify OTP and complete registration
-      // const result = await trpc.auth.verifyRegistration.mutate({ phone: formData.phone, otp });
+      // Call backend API to verify OTP
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: formData.phone.startsWith("+254") ? formData.phone : `+254${formData.phone.replace(/^0/, "")}`
+,
+          otp_code: otp
+        })
+      });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const data = await response.json();
+      
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Invalid OTP");
+      }
       
       toast.success("Account created successfully!");
       setLocation("/dashboard");
