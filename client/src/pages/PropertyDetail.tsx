@@ -61,10 +61,7 @@ export default function PropertyDetailPage() {
   const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
-    if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
-      return;
-    }
+    // No authentication required - open payment modal directly
     setShowPaymentModal(true);
   };
 
