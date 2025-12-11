@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
-import { trpc } from "@/lib/trpc";
+// import { trpc } from "@/lib/trpc"; // No longer needed for payment
 import { 
   Star, 
   Shield, 
@@ -27,7 +27,7 @@ export default function FundiProfile() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const paymentMutation = trpc.payment.revealContact.useMutation();
+  // const paymentMutation = trpc.payment.revealContact.useMutation(); // Replaced with direct API call
 
   // Mock data - will connect to backend later
   const mockFundis: Record<string, any> = {
@@ -124,14 +124,21 @@ export default function FundiProfile() {
       // TODO: Get user's phone number (from login or prompt)
       const userPhone = "+254712345678"; // Placeholder
       
-      const result = await paymentMutation.mutateAsync({
-        entity_id: id || "1",
-        entity_type: "fundi",
-        phone_number: userPhone,
-        amount: 150,
+      // Call Render backend directly
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/payments/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entity_id: id || "1",
+          entity_type: "fundi",
+          user_phone: userPhone,
+          amount: 150,
+        })
       });
       
-      if (result.success) {
+      const result = await response.json();
+      
+      if (response.ok && result.status === "success") {
         // Payment initiated - STK Push sent
         alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
         // In production, poll for payment status
@@ -139,6 +146,8 @@ export default function FundiProfile() {
           setContactRevealed(true);
           setShowPaymentModal(false);
         }, 5000);
+      } else {
+        throw new Error(result.error || "Payment failed");
       }
     } catch (error: any) {
       alert("Payment failed: " + (error.message || "Unknown error"));
