@@ -235,7 +235,7 @@ export default function ShortStay() {
 
       {/* Availability Check Modal */}
       <Dialog open={isAvailabilityModalOpen} onOpenChange={setIsAvailabilityModalOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Check Availability - {selectedStay?.title}</DialogTitle>
             <DialogDescription>
@@ -243,7 +243,7 @@ export default function ShortStay() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
+          <div className="space-y-6 pb-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">Check-in Date</label>
