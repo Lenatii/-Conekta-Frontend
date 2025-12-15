@@ -127,7 +127,7 @@ We take data security seriously and implement multiple layers of protection:
 
 ### 5.1 With Other Users (Contact Reveals)
 
-When someone pays KES 100 to reveal your contact:
+When someone pays KES 150 to reveal your contact:
 - **Landlords:** Your phone number is shared with the tenant
 - **Fundis:** Your phone number is shared with the client
 
