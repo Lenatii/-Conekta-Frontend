@@ -16,7 +16,8 @@ export default function Login() {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // TODO: Connect to backend API
+  const sendOTPMutation = trpc.auth.sendOTP.useMutation();
+  
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -28,21 +29,24 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to send OTP
-      // await trpc.auth.sendOTP.mutate({ phone });
+      const result = await sendOTPMutation.mutateAsync({ phone });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success("OTP sent to your phone!");
-      setStep("otp");
-    } catch (error) {
-      toast.error("Failed to send OTP. Please try again.");
+      if (result.success) {
+        toast.success("OTP sent to your phone!");
+        setStep("otp");
+      } else {
+        toast.error(result.message || "Failed to send OTP");
+      }
+    } catch (error: any) {
+      console.error("Send OTP error:", error);
+      toast.error(error.message || "Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const verifyOTPMutation = trpc.auth.verifyOTP.useMutation();
+  
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -54,16 +58,18 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to verify OTP
-      // const result = await trpc.auth.verifyOTP.mutate({ phone, otp });
+      const result = await verifyOTPMutation.mutateAsync({ phone, otp });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success("Login successful!");
-      setLocation("/dashboard");
-    } catch (error) {
-      toast.error("Invalid OTP. Please try again.");
+      if (result.success) {
+        toast.success("Login successful!");
+        // Refresh auth state
+        window.location.href = "/dashboard";
+      } else {
+        toast.error(result.message || "Invalid OTP");
+      }
+    } catch (error: any) {
+      console.error("Verify OTP error:", error);
+      toast.error(error.message || "Invalid OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }

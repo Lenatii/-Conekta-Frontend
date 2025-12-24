@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Home, Wrench, Bed } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 type UserType = "landlord" | "tenant" | "service_provider";
 
@@ -51,6 +52,8 @@ export default function Signup() {
     setStep("details");
   };
 
+  const sendOTPMutation = trpc.auth.sendOTP.useMutation();
+  
   const handleSubmitDetails = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -67,21 +70,24 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to send OTP
-      // await trpc.auth.register.mutate({ ...formData, userType });
+      const result = await sendOTPMutation.mutateAsync({ phone: formData.phone });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success("OTP sent to your phone!");
-      setStep("otp");
-    } catch (error) {
-      toast.error("Failed to send OTP. Please try again.");
+      if (result.success) {
+        toast.success("OTP sent to your phone!");
+        setStep("otp");
+      } else {
+        toast.error(result.message || "Failed to send OTP");
+      }
+    } catch (error: any) {
+      console.error("Send OTP error:", error);
+      toast.error(error.message || "Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const verifyOTPMutation = trpc.auth.verifyOTP.useMutation();
+  
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -93,16 +99,18 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      // TODO: Call backend API to verify OTP and complete registration
-      // const result = await trpc.auth.verifyRegistration.mutate({ phone: formData.phone, otp });
+      const result = await verifyOTPMutation.mutateAsync({ phone: formData.phone, otp });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success("Account created successfully!");
-      setLocation("/dashboard");
-    } catch (error) {
-      toast.error("Invalid OTP. Please try again.");
+      if (result.success) {
+        toast.success("Account created successfully!");
+        // Refresh auth state
+        window.location.href = "/dashboard";
+      } else {
+        toast.error(result.message || "Invalid OTP");
+      }
+    } catch (error: any) {
+      console.error("Verify OTP error:", error);
+      toast.error(error.message || "Invalid OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }

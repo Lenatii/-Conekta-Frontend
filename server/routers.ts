@@ -107,6 +107,42 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+    
+    // OTP Authentication
+    sendOTP: publicProcedure
+      .input(z.object({
+        phone: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const response = await fetchFromBackend("/api/auth/send-otp", {
+            method: "POST",
+            body: JSON.stringify({ phone: input.phone }),
+          });
+          return response;
+        } catch (error) {
+          console.error("Send OTP error:", error);
+          throw new Error("Failed to send OTP. Please try again.");
+        }
+      }),
+    
+    verifyOTP: publicProcedure
+      .input(z.object({
+        phone: z.string(),
+        otp: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const response = await fetchFromBackend("/api/auth/verify-otp", {
+            method: "POST",
+            body: JSON.stringify({ phone: input.phone, otp: input.otp }),
+          });
+          return response;
+        } catch (error) {
+          console.error("Verify OTP error:", error);
+          throw new Error("Invalid OTP. Please try again.");
+        }
+      }),
   }),
 
   // Properties router
