@@ -80,7 +80,9 @@ export default function Signup() {
       }
     } catch (error: any) {
       console.error("Send OTP error:", error);
-      toast.error(error.message || "Failed to send OTP. Please try again.");
+      // Extract the actual error message from the backend
+      const errorMessage = error?.message || error?.data?.message || "Failed to send OTP. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
