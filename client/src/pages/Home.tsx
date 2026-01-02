@@ -185,10 +185,10 @@ export default function HomePage() {
                     <HomeIcon className="w-8 h-8 text-purple-400" />
                   </div>
                   <p className="text-sm text-slate-200 mb-4 flex-grow">
-                    Browse verified property listings with 360° virtual tours and secure contact reveal payments.
+                    Browse verified property listings with 360° virtual tours, secure applications, and digital lease agreements.
                   </p>
                   <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
-                    ✓ Pay to reveal contact<br/>
+                    ✓ 5% commission<br/>
                     ✓ Virtual tours<br/>
                     ✓ Conekta-Pay protection
                   </div>
