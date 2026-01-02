@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { trpc } from "@/lib/trpc";
+// tRPC removed - chat now calls backend directly
 
 interface Message {
   id: string;
@@ -30,8 +30,7 @@ export default function MamaDennisChatWidget() {
   // Persist session ID across all messages (CRITICAL FIX)
   const [sessionId] = useState(() => `web-${Date.now()}`);
   
-  // Setup mutation hook
-  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
+  // Direct backend API calls - no tRPC needed
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -50,15 +49,28 @@ export default function MamaDennisChatWidget() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const messageToSend = inputMessage;
     setInputMessage("");
     setIsTyping(true);
 
-    // Call Mama Dennis via tRPC
+    // Call the real backend API directly
     try {
-      const data = await sendMessageMutation.mutateAsync({
-        message: inputMessage,
-        session_id: sessionId,
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageToSend,
+          session_id: sessionId,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -71,7 +83,7 @@ export default function MamaDennisChatWidget() {
       console.error('Mama Dennis API error:', error);
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp!",
+        text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp at +254 797 446 155!",
         sender: "mama",
         timestamp: new Date(),
       };
