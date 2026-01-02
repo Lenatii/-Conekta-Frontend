@@ -3,7 +3,7 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// tRPC removed - chat now calls backend directly
+import { trpc } from "@/lib/trpc";
 
 interface Message {
   id: string;
@@ -30,7 +30,8 @@ export default function MamaDennisChatWidget() {
   // Persist session ID across all messages (CRITICAL FIX)
   const [sessionId] = useState(() => `web-${Date.now()}`);
   
-  // Direct backend API calls - no tRPC needed
+  // Setup mutation hook
+  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -49,28 +50,15 @@ export default function MamaDennisChatWidget() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    const messageToSend = inputMessage;
     setInputMessage("");
     setIsTyping(true);
 
-    // Call the real backend API directly
+    // Call Mama Dennis via tRPC
     try {
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: messageToSend,
-          session_id: sessionId,
-        }),
+      const data = await sendMessageMutation.mutateAsync({
+        message: inputMessage,
+        session_id: sessionId,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
-      const data = await response.json();
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -83,7 +71,7 @@ export default function MamaDennisChatWidget() {
       console.error('Mama Dennis API error:', error);
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp at +254 797 446 155!",
+        text: "Sorry, I'm having trouble connecting right now. Please try again or contact us on WhatsApp!",
         sender: "mama",
         timestamp: new Date(),
       };
