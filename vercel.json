@@ -1,12 +1,6 @@
 {
   "buildCommand": "pnpm install && pnpm run build",
   "outputDirectory": "dist/public",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index"
-    }
-  ],
   "routes": [
     {
       "handle": "filesystem"
@@ -15,10 +9,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  ]
 }
