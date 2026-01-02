@@ -175,100 +175,108 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* RentConnect */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">RentConnect</h3>
-                  <HomeIcon className="w-6 h-6 text-purple-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Browse verified property listings with 360° virtual tours, secure applications, and digital lease agreements.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ 5% commission<br/>
-                  ✓ Virtual tours<br/>
-                  ✓ Conekta-Pay protection
-                </div>
-                <Link href="/properties">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            <Link href="/properties">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-rentconnect.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">RentConnect</h3>
+                    <HomeIcon className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Browse verified property listings with 360° virtual tours, secure applications, and digital lease agreements.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ 5% commission<br/>
+                    ✓ Virtual tours<br/>
+                    ✓ Conekta-Pay protection
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Explore Properties</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
             {/* KaziFlow */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">KaziFlow</h3>
-                  <Wrench className="w-6 h-6 text-teal-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Hire vetted service providers (fundis) with confidence. Pay safely through Conekta-Pay and rate their work.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ Background checks<br/>
-                  ✓ Conekta-Pay payments<br/>
-                  ✓ Rating system
-                </div>
-                <Link href="/fundis">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            <Link href="/fundis">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-kaziflow.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">KaziFlow</h3>
+                    <Wrench className="w-8 h-8 text-teal-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Hire vetted service providers (fundis) with confidence. Pay safely through Conekta-Pay and rate their work.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ Background checks<br/>
+                    ✓ Conekta-Pay payments<br/>
+                    ✓ Rating system
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Find Fundis</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
             {/* UBARU */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">UBARU</h3>
-                  <ShieldCheck className="w-6 h-6 text-purple-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Trust certification system that verifies landlords, tenants, and service providers to reduce fraud.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ KYC verification<br/>
-                  ✓ Background checks<br/>
-                  ✓ Trust scores
-                </div>
-                <Link href="/verify">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            <Link href="/verify">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-ubaru.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">UBARU</h3>
+                    <ShieldCheck className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Trust certification system that verifies landlords, tenants, and service providers to reduce fraud.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ KYC verification<br/>
+                    ✓ Background checks<br/>
+                    ✓ Trust scores
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Get Certified</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
             {/* Short-Stay */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">Short-Stay</h3>
-                  <Bed className="w-6 h-6 text-teal-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Host your space or book verified short-term stays with secure payments and instant confirmations.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ Instant booking<br/>
-                  ✓ Host protection<br/>
-                  ✓ Flexible stays
-                </div>
-                <Link href="/stays">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            <Link href="/stays">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-shortstay.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">Short-Stay</h3>
+                    <Bed className="w-8 h-8 text-teal-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Host your space or book verified short-term stays with secure payments and instant confirmations.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ Instant booking<br/>
+                    ✓ Host protection<br/>
+                    ✓ Flexible stays
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Book Stays</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
           </div>
         </div>

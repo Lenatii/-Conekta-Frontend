@@ -225,12 +225,15 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         try {
-          return await fetchFromBackend("/api/webchat/message", {
+          console.log("[CHAT DEBUG] Sending to backend:", input);
+          const result = await fetchFromBackend("/api/webchat/message", {
             method: "POST",
             body: JSON.stringify(input),
           });
+          console.log("[CHAT DEBUG] Backend response:", result);
+          return result;
         } catch (error) {
-          console.error("Chat API error:", error);
+          console.error("[CHAT DEBUG] Chat API error:", error);
           // Fallback response when backend is unavailable
           return {
             response: "Hello! I'm Mama Dennis, your AI assistant. I'm currently experiencing connectivity issues with my main system. Please try again in a moment, or contact us directly via WhatsApp at +254 797 446 155. How can I help you today?",

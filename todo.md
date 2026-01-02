@@ -350,3 +350,31 @@
 - [ ] Deploy to Render
 - [ ] Configure webhook URL in Meta Developer Console
 - [ ] Test sending/receiving messages via WhatsApp
+
+## Phase 40: Redesign Module Cards with Attractive Images (URGENT)
+- [x] Review current module card design on homepage
+- [x] Add attractive images/screenshots to each module card
+- [x] Make cards more professional and engaging
+- [x] Ensure cards are clickable and lead to correct pages
+- [x] Add visual hierarchy and better layout
+- [ ] Test module navigation flow
+
+## Phase 41: Test Complete Signup Flow (URGENT - LAUNCH BLOCKER)
+- [ ] Test signup page with phone number input
+- [ ] Verify OTP is generated (shown in response for now)
+- [ ] Test OTP verification
+- [ ] Verify user can login after signup
+- [ ] Test complete user journey from signup to dashboard
+- [ ] Verify all authentication flows work
+
+## Phase 42: Fix UBARU Module Image (URGENT)
+- [x] Regenerate UBARU image with letter "U" in the middle of the shield
+- [x] Replace module-ubaru.jpg with new version
+
+## Phase 43: Fix Backend OTP Verification Bug (CRITICAL)
+- [x] Investigate why /api/auth/verify-otp returns 500 error
+- [x] Check backend logs on Render
+- [x] Fix OTP verification logic (User._phone → User.phone)
+- [ ] Wait for Render to redeploy backend
+- [ ] Test complete signup flow end-to-end
+- [ ] Verify user can access dashboard after signup
