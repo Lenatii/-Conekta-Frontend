@@ -350,3 +350,28 @@
 - [ ] Deploy to Render
 - [ ] Configure webhook URL in Meta Developer Console
 - [ ] Test sending/receiving messages via WhatsApp
+
+## Phase 43: CRITICAL - Fix 405 Method Not Allowed Error on Signup (BLOCKING LAUNCH)
+- [ ] Investigate why auth.sendOTP returns 405 error
+- [ ] Check Vercel serverless function configuration
+- [ ] Verify tRPC POST requests are properly handled
+- [ ] Test signup flow end-to-end after fix
+- [ ] Verify OTP SMS delivery works
+
+## Phase 44: Comprehensive Flow Testing (ALL DEPARTMENTS)
+- [x] Test RentConnect flow (property search → payment → contact reveal) - ✅ WORKING
+- [x] Test KaziFlow flow (fundi search → payment → contact reveal) - ⚠️ UI works, no data
+- [x] Test UBARU certification flow - ❌ 404 Page Not Found
+- [x] Test Short-Stay booking flow - ❌ 404 Page Not Found
+- [x] Test Mama Dennis chat widget (open/close, responses, session persistence) - ❌ Button not opening
+- [x] Test payment integration prompts - ✅ Modal works
+- [x] Test all navigation links - ⚠️ Some 404s
+- [ ] Test mobile responsiveness
+- [x] Document what works and what doesn't - ✅ Report created
+
+## Phase 45: FIX CRITICAL ISSUES FROM TESTING (URGENT)
+- [ ] Fix Mama Dennis chat widget (button click not working)
+- [ ] Create UBARU page (/ubaru route missing)
+- [ ] Create Short-Stay page (/short-stay route missing)
+- [ ] Fix Fundis database query (returns 0 results)
+- [ ] Test signup with OTP after backend deployment
