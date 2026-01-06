@@ -29,8 +29,8 @@ function Router() {
       <Route path="/properties/:id" component={PropertyDetail} />
       <Route path="/fundis" component={Fundis} />
       <Route path="/fundis/:id" component={FundiProfile} />
-      <Route path="/stays" component={ShortStay} />
-      <Route path="/verify" component={Ubaru} />
+      <Route path="/short-stay" component={ShortStay} />
+      <Route path="/ubaru" component={Ubaru} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/login" component={Login} />

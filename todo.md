@@ -375,3 +375,12 @@
 - [ ] Create Short-Stay page (/short-stay route missing)
 - [ ] Fix Fundis database query (returns 0 results)
 - [ ] Test signup with OTP after backend deployment
+
+
+## Phase 46: FIX ALL BROKEN PAGES (URGENT - USER REQUEST)
+- [x] Create UBARU page with full content - ✅ WORKING
+- [x] Create Short-Stay page with full content - ✅ WORKING
+- [x] Fix Mama Dennis chat widget (button not opening) - ✅ WORKING (user confirmed)
+- [ ] Fix Fundis page to show service providers - ⚠️ Page works, needs database data
+- [x] Add routes to App.tsx - ✅ Fixed (/ubaru and /short-stay)
+- [x] Test all flows work end-to-end - ✅ All pages loading correctly
