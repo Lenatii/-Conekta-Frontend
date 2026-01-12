@@ -81,7 +81,7 @@ export default function PropertyDetailPage() {
         },
         body: JSON.stringify({
           user_phone: phoneNumber,
-          entity_id: id || "1",
+          entity_id: params?.id || "1",
           entity_type: "property",
           amount: 150,
         }),
