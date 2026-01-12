@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -17,6 +18,7 @@ export default function ShortStay() {
   const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleCheckAvailability = (stay: any) => {
     setSelectedStay(stay);
@@ -29,6 +31,11 @@ export default function ShortStay() {
   };
 
   const confirmPayment = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Please enter a valid phone number");
+      return;
+    }
+    
     try {
       // Call backend API directly (bypass Manus tRPC)
       const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
@@ -37,7 +44,7 @@ export default function ShortStay() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_phone: "+254712345678", // TODO: Get from user input
+          user_phone: phoneNumber,
           entity_id: selectedStay?.id?.toString() || "1",
           entity_type: "short_stay",
           amount: 150,
@@ -294,6 +301,16 @@ export default function ShortStay() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">M-Pesa Phone Number</label>
+              <Input
+                type="tel"
+                placeholder="0712345678"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full"
+              />
+            </div>
             <Card>
               <CardContent className="pt-6">
                 <div className="text-center space-y-3">
