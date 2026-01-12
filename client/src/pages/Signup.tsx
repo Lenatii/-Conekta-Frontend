@@ -195,6 +195,7 @@ export default function Signup() {
                     checked={acceptedTerms}
                     onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
                     disabled={isLoading}
+                    className="border-2 border-teal-400 data-[state=checked]:bg-teal-400 data-[state=checked]:border-teal-400"
                   />
                   <label
                     htmlFor="terms"
