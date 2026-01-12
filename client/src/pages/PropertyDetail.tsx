@@ -95,13 +95,15 @@ export default function PropertyDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        setPaymentStatus("success");
-        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
+        // Close modal immediately and show alert
+        setShowPaymentModal(false);
+        setPaymentStatus("idle");
+        alert(result.message || "STK Push sent! Please check your phone and enter your M-Pesa PIN.");
+        
         // In production, poll for payment status
+        // For now, reveal contact after 5 seconds
         setTimeout(() => {
           setContactRevealed(true);
-          setShowPaymentModal(false);
-          setPaymentStatus("idle");
         }, 5000);
       }
     } catch (error: any) {

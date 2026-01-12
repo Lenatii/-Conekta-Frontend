@@ -61,11 +61,15 @@ export default function ShortStay() {
       const result = await response.json();
 
       if (result.success) {
-        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
+        // Close modal immediately and show alert
+        setIsPaymentModalOpen(false);
+        setIsPaymentLoading(false);
+        alert(result.message || "STK Push sent! Please check your phone and enter your M-Pesa PIN.");
+        
         // In production, poll for payment status
+        // For now, reveal contact after 5 seconds
         setTimeout(() => {
           setContactRevealed(true);
-          setIsPaymentModalOpen(false);
         }, 5000);
       }
     } catch (error: any) {
