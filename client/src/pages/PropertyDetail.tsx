@@ -60,10 +60,7 @@ export default function PropertyDetailPage() {
   const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
-    if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
-      return;
-    }
+    // Allow payment without login (guest mode)
     setShowPaymentModal(true);
   };
 
