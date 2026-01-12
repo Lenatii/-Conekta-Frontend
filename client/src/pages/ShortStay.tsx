@@ -38,7 +38,7 @@ export default function ShortStay() {
         },
         body: JSON.stringify({
           user_phone: "+254712345678", // TODO: Get from user input
-          entity_id: "1", // TODO: Use actual stay ID
+          entity_id: selectedStay?.id?.toString() || "1",
           entity_type: "short_stay",
           amount: 150,
         }),
