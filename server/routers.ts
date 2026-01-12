@@ -188,14 +188,18 @@ export const appRouter = router({
           if (input.location && input.location !== "all") params.append("location", input.location);
           if (input.verified_only) params.append("verified_only", "true");
 
-          const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
-          
-          // If backend returns data, use it
-          if (data && Array.isArray(data) && data.length > 0) {
-            return data;
+          try {
+            const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
+            
+            // If backend returns data, use it
+            if (data && Array.isArray(data) && data.length > 0) {
+              return data;
+            }
+          } catch (backendError) {
+            console.log("Backend unavailable, using mock fundis", backendError);
           }
           
-          // Fallback to mock data if backend is empty
+          // Fallback to mock data if backend is empty or fails
           return getMockFundis();
         } catch (error) {
           console.error("Backend API error, using mock data:", error);
