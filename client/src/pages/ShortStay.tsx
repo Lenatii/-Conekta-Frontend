@@ -19,6 +19,7 @@ export default function ShortStay() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   const handleCheckAvailability = (stay: any) => {
     setSelectedStay(stay);
@@ -36,6 +37,7 @@ export default function ShortStay() {
       return;
     }
     
+    setIsPaymentLoading(true);
     try {
       // Call backend API directly (bypass Manus tRPC)
       const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
@@ -68,6 +70,8 @@ export default function ShortStay() {
       }
     } catch (error: any) {
       alert("Payment failed: " + (error.message || "Unknown error"));
+    } finally {
+      setIsPaymentLoading(false);
     }
   };
   // Mock data - will connect to backend later
@@ -321,8 +325,13 @@ export default function ShortStay() {
                 </div>
               </CardContent>
             </Card>
-            <Button onClick={confirmPayment} className="w-full" style={{background: '#25D366'}}>
-              Pay KES 150 via M-Pesa
+            <Button 
+              onClick={confirmPayment} 
+              className="w-full" 
+              style={{background: '#25D366'}}
+              disabled={isPaymentLoading}
+            >
+              {isPaymentLoading ? "Processing..." : "Pay KES 150 via M-Pesa"}
             </Button>
           </div>
         </DialogContent>

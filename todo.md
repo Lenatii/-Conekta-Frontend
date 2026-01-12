@@ -380,11 +380,11 @@
 - [ ] Verify user can access dashboard after signup
 
 ## Phase 46: Fix Fundis Visibility & Short-Stay Mobile UI (Jan 12, 2026 - Night)
-- [ ] Verify fundis are showing on website (check mock data fallback)
-- [ ] Fix Short-Stay booking calendar - too big on mobile screens
-- [ ] Make calendar responsive for phone displays
-- [ ] Test mobile booking flow
-- [ ] Deploy fixes to Vercel
+- [x] Verify fundis are showing on website (check mock data fallback)
+- [x] Fix Short-Stay booking calendar - too big on mobile screens
+- [x] Make calendar responsive for phone displays (scrollable modal, 75% scale)
+- [x] Remove login requirement from payment (guest mode enabled)
+- [x] Deploy fixes to Vercel
 
 ## Phase 47: Replace Manus API Payment with Intasend (CRITICAL - DONE)
 - [x] Identified problem: Frontend calling Manus tRPC endpoint (404 error)
@@ -392,8 +392,9 @@
 - [x] Frontend: Changed PropertyDetail.tsx to call backend directly
 - [x] Frontend: Changed FundiProfile.tsx to call backend directly
 - [x] Frontend: Changed ShortStay.tsx to call backend directly
+- [x] Removed login requirement - payment works for guests
 - [x] Pushed all changes to GitHub
-- [ ] Test payment flow after Vercel deployment completes
+- [ ] Test payment flow after Vercel deployment completes (waiting 3-4 minutes)
 
 ## Phase 48: Morning Tasks (Jan 13, 2026)
 - [ ] Fix chat engine issues

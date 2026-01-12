@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap } from "lucide-react";
-import { trpc } from "@/lib/trpc";
+// import { trpc } from "@/lib/trpc";
 
 export default function FundisPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,11 +34,37 @@ export default function FundisPage() {
     "WiFi Installation"
   ];
 
-  // Fetch fundis from backend API (with mock fallback)
-  const { data: fundisData, isLoading } = trpc.fundis.search.useQuery({
-    category: serviceType,
-    location: location,
-  });
+  // Fetch fundis from backend API directly
+  const [fundisData, setFundisData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFundis = async () => {
+      try {
+        const params = new URLSearchParams();
+        if (serviceType !== "all") params.append("category", serviceType);
+        if (location !== "all") params.append("location", location);
+        
+        const response = await fetch(
+          `https://conekta-complete-system.onrender.com/api/services/search?${params}`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          setFundisData(data.services || []);
+        } else {
+          setFundisData([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch fundis:", error);
+        setFundisData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFundis();
+  }, [serviceType, location]);
 
   // Transform backend data to match frontend format
   const fundis = (fundisData || []).map((service: any) => ({
