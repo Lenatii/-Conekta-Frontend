@@ -75,15 +75,42 @@ export default function PropertyDetailPage() {
 
     setPaymentStatus("processing");
 
-    // Simulate payment processing - will integrate Instasend later
-    setTimeout(() => {
-      setPaymentStatus("success");
-      setTimeout(() => {
-        setContactRevealed(true);
-        setShowPaymentModal(false);
-        setPaymentStatus("idle");
-      }, 2000);
-    }, 3000);
+    try {
+      // Call backend API directly (bypass Manus tRPC)
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_phone: phoneNumber,
+          entity_id: id || "1",
+          entity_type: "property",
+          amount: 150,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
+        throw new Error(errorData.detail || "Payment failed");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setPaymentStatus("success");
+        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
+        // In production, poll for payment status
+        setTimeout(() => {
+          setContactRevealed(true);
+          setShowPaymentModal(false);
+          setPaymentStatus("idle");
+        }, 5000);
+      }
+    } catch (error: any) {
+      setPaymentStatus("idle");
+      alert("Payment failed: " + (error.message || "Unknown error"));
+    }
   };
 
   return (

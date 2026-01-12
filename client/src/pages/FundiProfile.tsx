@@ -27,7 +27,8 @@ export default function FundiProfile() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const paymentMutation = trpc.payment.revealContact.useMutation();
+  // Direct API call to backend (bypass Manus tRPC)
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   // Mock data - will connect to backend later
   const mockFundis: Record<string, any> = {
@@ -124,12 +125,26 @@ export default function FundiProfile() {
       // TODO: Get user's phone number (from login or prompt)
       const userPhone = "+254712345678"; // Placeholder
       
-      const result = await paymentMutation.mutateAsync({
-        entity_id: id || "1",
-        entity_type: "fundi",
-        phone_number: userPhone,
-        amount: 150,
+      // Call backend API directly (bypass Manus tRPC)
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_phone: userPhone,
+          entity_id: id || "1",
+          entity_type: "fundi",
+          amount: 150,
+        }),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
+        throw new Error(errorData.detail || "Payment failed");
+      }
+      
+      const result = await response.json();
       
       if (result.success) {
         // Payment initiated - STK Push sent
@@ -141,7 +156,9 @@ export default function FundiProfile() {
         }, 5000);
       }
     } catch (error: any) {
-      alert("Payment failed: " + (error.message || "Unknown error"));
+      const errorMsg = error.message || "Unknown error";
+      setPaymentError(errorMsg);
+      alert("Payment failed: " + errorMsg);
     } finally {
       setIsProcessingPayment(false);
     }
