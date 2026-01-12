@@ -28,12 +28,40 @@ export default function ShortStay() {
     setIsPaymentModalOpen(true);
   };
 
-  const confirmPayment = () => {
-    // TODO: Call payment API (KES 150)
-    setTimeout(() => {
-      setContactRevealed(true);
-      setIsPaymentModalOpen(false);
-    }, 2000);
+  const confirmPayment = async () => {
+    try {
+      // Call backend API directly (bypass Manus tRPC)
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_phone: "+254712345678", // TODO: Get from user input
+          entity_id: "1", // TODO: Use actual stay ID
+          entity_type: "short_stay",
+          amount: 150,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
+        throw new Error(errorData.detail || "Payment failed");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
+        // In production, poll for payment status
+        setTimeout(() => {
+          setContactRevealed(true);
+          setIsPaymentModalOpen(false);
+        }, 5000);
+      }
+    } catch (error: any) {
+      alert("Payment failed: " + (error.message || "Unknown error"));
+    }
   };
   // Mock data - will connect to backend later
   const mockStays = [
