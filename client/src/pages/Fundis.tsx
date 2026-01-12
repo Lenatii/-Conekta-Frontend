@@ -51,7 +51,8 @@ export default function FundisPage() {
         
         if (response.ok) {
           const data = await response.json();
-          setFundisData(data.services || []);
+          // API returns array directly, not {services: []}
+          setFundisData(Array.isArray(data) ? data : []);
         } else {
           setFundisData([]);
         }
@@ -69,7 +70,7 @@ export default function FundisPage() {
   // Transform backend data to match frontend format
   const fundis = (fundisData || []).map((service: any) => ({
     id: service.id,
-    name: service.provider?.name || "Unknown Provider",
+    name: service.provider?.full_name || "Unknown Provider",
     serviceType: service.category,
     description: service.description || service.title,
     location: service.location,
