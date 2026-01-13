@@ -119,6 +119,7 @@ export default function FundiProfile() {
   };
 
   const handlePayment = async () => {
+    console.log('handlePayment called!');
     setIsProcessingPayment(true);
     
     try {
