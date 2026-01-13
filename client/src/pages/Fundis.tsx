@@ -80,7 +80,7 @@ export default function FundisPage() {
     totalJobs: service.jobs_completed || 0,
     isVerified: service.verified || false,
     phone: service.provider?.phone || "",
-    avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
+    avatar: service.provider?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(service.provider?.full_name || 'Fundi')}&background=14b8a6&color=fff&size=200`,
     certifications: service.verified ? ["UBARU Certified", "Customer Service Training"] : []
   }));
 

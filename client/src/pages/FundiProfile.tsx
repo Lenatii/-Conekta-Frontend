@@ -45,7 +45,7 @@ export default function FundiProfile() {
       totalJobs: 127,
       isVerified: true,
       phone: "+254 712 345 678",
-      avatar: "/api/placeholder/200/200",
+      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
       skills: ["Pipe Installation", "Leak Repairs", "Water Heaters", "Drain Cleaning", "Bathroom Fixtures"],
       availability: "Monday - Saturday, 8AM - 6PM",
       responseTime: "Within 2 hours",
@@ -64,7 +64,7 @@ export default function FundiProfile() {
       totalJobs: 89,
       isVerified: true,
       phone: "+254 723 456 789",
-      avatar: "/api/placeholder/200/200",
+      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
       skills: ["Electrical Wiring", "Circuit Installation", "Safety Inspections", "Lighting", "Appliance Repairs"],
       availability: "Monday - Friday, 9AM - 5PM",
       responseTime: "Within 1 hour",
@@ -83,7 +83,7 @@ export default function FundiProfile() {
       totalJobs: 56,
       isVerified: false,
       phone: "+254 734 567 890",
-      avatar: "/api/placeholder/200/200",
+      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
       skills: ["Custom Furniture", "Wood Repairs", "Cabinet Installation", "Door Fitting", "Shelving"],
       availability: "Monday - Saturday, 7AM - 7PM",
       responseTime: "Within 3 hours",
@@ -407,7 +407,7 @@ export default function FundiProfile() {
 
       {/* Payment Modal */}
       <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Reveal Contact Details</DialogTitle>
             <DialogDescription>
