@@ -295,10 +295,10 @@ export default function FundisPage() {
                       <Link href={`/fundis/${fundi.id}`}>View Profile</Link>
                     </Button>
                     <Button size="sm" asChild>
-                      <a href={`https://wa.me/${fundi.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+                      <Link href={`/fundis/${fundi.id}`}>
                         <Phone className="h-4 w-4 mr-1" />
                         Contact
-                      </a>
+                      </Link>
                     </Button>
                   </div>
                 </CardContent>
