@@ -69,28 +69,203 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Structured Data (Schema.org JSON-LD) -->
+    <!-- Structured Data (Schema.org JSON-LD) for GEO/AI Discoverability -->
+    
+    <!-- Organization Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "CONEKTA Africa",
+      "alternateName": "CONEKTA",
       "url": "https://www.conekta.co.ke",
       "logo": "https://www.conekta.co.ke/conekta_logo.png",
-      "description": "Kenya's complete digital platform for rent, services, trust, and stays. Powered by Mama Dennis AI.",
+      "description": "Kenya's complete digital marketplace connecting customers with verified property rentals, service providers (fundis), UBARU verification, and short-stay accommodations. Pay KES 150 to reveal verified provider contacts.",
+      "slogan": "Rent • Services • Trust",
+      "foundingDate": "2025",
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "KE",
-        "addressLocality": "Nakuru"
+        "addressLocality": "Nakuru",
+        "addressRegion": "Nakuru County"
       },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Nakuru"
+        },
+        {
+          "@type": "City",
+          "name": "Nairobi"
+        },
+        {
+          "@type": "Country",
+          "name": "Kenya"
+        }
+      ],
       "contactPoint": {
         "@type": "ContactPoint",
         "email": "hello@conekta.africa",
-        "telephone": "+254-797-446-155",
-        "contactType": "Customer Service"
+        "telephone": "+254797446155",
+        "contactType": "Customer Service",
+        "availableLanguage": ["English", "Swahili"]
       },
       "sameAs": [
-        "https://wa.me/254797446155"
+        "https://wa.me/254797446155",
+        "https://facebook.com/Conekta"
+      ]
+    }
+    </script>
+
+    <!-- LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "CONEKTA Africa",
+      "image": "https://www.conekta.co.ke/conekta_logo.png",
+      "@id": "https://www.conekta.co.ke",
+      "url": "https://www.conekta.co.ke",
+      "telephone": "+254797446155",
+      "priceRange": "KES 150",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nakuru",
+        "addressCountry": "KE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -0.3031,
+        "longitude": 36.0800
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150"
+      }
+    }
+    </script>
+
+    <!-- Service Schema - Marketplace Platform -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Online Marketplace",
+      "provider": {
+        "@type": "Organization",
+        "name": "CONEKTA Africa"
+      },
+      "areaServed": "Kenya",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "CONEKTA Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "RentConnect - Property Rental Listings",
+              "description": "Find verified rental properties in Kenya. Browse apartments, bedsitters, houses for rent in Nakuru, Nairobi, and other cities."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "KaziFlow - Service Provider Marketplace",
+              "description": "Hire verified fundis (plumbers, electricians, carpenters, cleaners) in Kenya. Pay KES 150 to reveal contact."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "UBARU - Verification & Certification",
+              "description": "Get verified and certified as a trusted service provider or property owner in Kenya."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Short-Stay - Accommodation Bookings",
+              "description": "Book verified short-stay accommodations in Kenya. Affordable stays in Nakuru, Nairobi, and other cities."
+            }
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- WebSite Schema with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CONEKTA Africa",
+      "url": "https://www.conekta.co.ke",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.conekta.co.ke/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.conekta.co.ke/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Properties",
+          "item": "https://www.conekta.co.ke/properties"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Fundis",
+          "item": "https://www.conekta.co.ke/fundis"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "UBARU",
+          "item": "https://www.conekta.co.ke/ubaru"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Short-Stay",
+          "item": "https://www.conekta.co.ke/short-stay"
+        }
       ]
     }
     </script>
