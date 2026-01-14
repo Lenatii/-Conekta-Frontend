@@ -193,23 +193,23 @@ export default function FundiProfile() {
               {/* Header */}
               <Card>
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-6">
+                  <div className="flex items-start gap-4 md:gap-6">
                     {/* Avatar */}
                     <div className="relative flex-shrink-0">
-                      <div className="w-32 h-32 rounded-full bg-muted overflow-hidden">
+                      <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-muted overflow-hidden">
                         <img src={fundi.avatar} alt={fundi.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="absolute -bottom-2 -right-2 text-4xl">
+                      <div className="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 text-2xl md:text-4xl">
                         {serviceTypeIcons[fundi.serviceType]}
                       </div>
                     </div>
 
                     {/* Info */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h1 className="text-3xl font-bold mb-1">{fundi.name}</h1>
-                          <p className="text-lg text-muted-foreground capitalize mb-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <div className="min-w-0 flex-1">
+                          <h1 className="text-xl md:text-3xl font-bold mb-1 truncate">{fundi.name}</h1>
+                          <p className="text-base md:text-lg text-muted-foreground capitalize mb-2 md:mb-3">
                             {fundi.serviceType}
                           </p>
                         </div>
@@ -221,25 +221,26 @@ export default function FundiProfile() {
                         )}
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-4 mb-4">
+                      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-3 md:mb-4 text-sm md:text-base">
                         <div className="flex items-center gap-1">
-                          <Star className="h-5 w-5 fill-primary text-primary" />
-                          <span className="font-bold text-lg">{fundi.rating}.0</span>
-                          <span className="text-muted-foreground">({fundi.totalJobs} reviews)</span>
+                          <Star className="h-4 w-4 md:h-5 md:w-5 fill-primary text-primary" />
+                          <span className="font-bold">{fundi.rating}.0</span>
+                          <span className="text-muted-foreground text-xs md:text-base">({fundi.totalJobs})</span>
                         </div>
                         <div className="flex items-center gap-1 text-muted-foreground">
-                          <Briefcase className="h-5 w-5" />
-                          <span>{fundi.totalJobs} jobs completed</span>
+                          <Briefcase className="h-4 w-4 md:h-5 md:w-5" />
+                          <span className="hidden sm:inline">{fundi.totalJobs} jobs completed</span>
+                          <span className="sm:hidden">{fundi.totalJobs} jobs</span>
                         </div>
                         <div className="flex items-center gap-1 text-muted-foreground">
-                          <MapPin className="h-5 w-5" />
-                          <span>{fundi.location}, {fundi.city}</span>
+                          <MapPin className="h-4 w-4 md:h-5 md:w-5" />
+                          <span>{fundi.location}</span>
                         </div>
                       </div>
 
-                      <p className="text-muted-foreground mb-4">{fundi.description}</p>
+                      <p className="text-sm md:text-base text-muted-foreground mb-3 md:mb-4 line-clamp-2">{fundi.description}</p>
 
-                      <div className="flex items-center gap-2 text-2xl font-bold text-primary">
+                      <div className="flex items-center gap-2 text-xl md:text-2xl font-bold text-primary">
                         <span>KES {fundi.hourlyRate.toLocaleString()}</span>
                         <span className="text-sm text-muted-foreground font-normal">/hour</span>
                       </div>
