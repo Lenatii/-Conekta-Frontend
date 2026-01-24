@@ -27,28 +27,28 @@ export default function Footer() {
               <li>
                 <Link href="/properties">
                   <a className="text-muted-foreground hover:text-primary transition-colors">
-                    RentConnect
+                    CONEKTA Rentals
                   </a>
                 </Link>
               </li>
               <li>
                 <Link href="/fundis">
                   <a className="text-muted-foreground hover:text-primary transition-colors">
-                    KaziFlow
+                    CONEKTA Fundis
                   </a>
                 </Link>
               </li>
               <li>
                 <Link href="/stays">
                   <a className="text-muted-foreground hover:text-primary transition-colors">
-                    Short-Stay
+                    CONEKTA Stays
                   </a>
                 </Link>
               </li>
               <li>
                 <Link href="/verify">
                   <a className="text-muted-foreground hover:text-primary transition-colors">
-                    UBARU
+                    CONEKTA Trust
                   </a>
                 </Link>
               </li>
@@ -170,7 +170,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} <strong>Conekta Technologies</strong> (trading as CONEKTA Africa). All rights reserved.</p>
           <p className="mt-2 text-xs">
-            🔒 Secure M-Pesa Payments • ✓ UBARU Verified • 🇰🇪 Made in Kenya
+            🔒 Secure M-Pesa Payments • ✓ CONEKTA Trust Verified • 🇰🇪 Made in Kenya
           </p>
         </div>
       </div>

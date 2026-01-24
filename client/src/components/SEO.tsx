@@ -11,8 +11,8 @@ interface SEOProps {
 
 export default function SEO({
   title = "CONEKTA Africa - Rent • Services • Trust",
-  description = "Find verified rental properties, trusted fundis, and short-stay accommodations in Kenya. Powered by Mama Dennis AI. Secure M-Pesa payments, UBARU verified listings.",
-  keywords = "rental properties Kenya, apartments Nakuru, bedsitter Nairobi, fundis Kenya, short stay Kenya, UBARU verification, M-Pesa payments, property rental, accommodation Kenya",
+  description = "Find verified rental properties, trusted fundis, and short-stay accommodations in Kenya. Powered by Mama Dennis AI. Secure M-Pesa payments, CONEKTA Trust verified listings.",
+  keywords = "rental properties Kenya, apartments Nakuru, bedsitter Nairobi, fundis Kenya, short stay Kenya, CONEKTA Trust verification, M-Pesa payments, property rental, accommodation Kenya",
   image = "https://www.conekta.co.ke/og-image.jpg",
   url = "https://www.conekta.co.ke",
   type = "website"

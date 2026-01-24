@@ -53,12 +53,12 @@ export default function Navigation() {
             </Link>
             <Link href="/stays">
               <a className="text-foreground/80 hover:text-primary transition-colors">
-                Short-Stay
+                Stays
               </a>
             </Link>
             <Link href="/verify">
               <a className="text-foreground/80 hover:text-primary transition-colors">
-                UBARU
+                Trust
               </a>
             </Link>
           </div>
@@ -147,12 +147,12 @@ export default function Navigation() {
             </Link>
             <Link href="/stays">
               <a className="block py-2 text-foreground/80 hover:text-primary transition-colors">
-                Short-Stay
+                Stays
               </a>
             </Link>
             <Link href="/verify">
               <a className="block py-2 text-foreground/80 hover:text-primary transition-colors">
-                UBARU
+                Trust
               </a>
             </Link>
             

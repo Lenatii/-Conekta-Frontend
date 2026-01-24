@@ -60,7 +60,10 @@ export default function PropertyDetailPage() {
   const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
-    // Allow payment without login (guest mode)
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
     setShowPaymentModal(true);
   };
 
@@ -72,44 +75,15 @@ export default function PropertyDetailPage() {
 
     setPaymentStatus("processing");
 
-    try {
-      // Call backend API directly (bypass Manus tRPC)
-      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_phone: phoneNumber,
-          entity_id: params?.id || "1",
-          entity_type: "property",
-          amount: 150,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
-        throw new Error(errorData.detail || "Payment failed");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Close modal immediately and show alert
+    // Simulate payment processing - will integrate Instasend later
+    setTimeout(() => {
+      setPaymentStatus("success");
+      setTimeout(() => {
+        setContactRevealed(true);
         setShowPaymentModal(false);
         setPaymentStatus("idle");
-        alert(result.message || "STK Push sent! Please check your phone and enter your M-Pesa PIN.");
-        
-        // In production, poll for payment status
-        // For now, reveal contact after 5 seconds
-        setTimeout(() => {
-          setContactRevealed(true);
-        }, 5000);
-      }
-    } catch (error: any) {
-      setPaymentStatus("idle");
-      alert("Payment failed: " + (error.message || "Unknown error"));
-    }
+      }, 2000);
+    }, 3000);
   };
 
   return (
@@ -139,7 +113,7 @@ export default function PropertyDetailPage() {
                 {property.isVerified && (
                   <Badge className="absolute top-4 right-4 bg-primary">
                     <Shield className="h-3 w-3 mr-1" />
-                    UBARU Verified
+                    CONEKTA Trust Verified
                   </Badge>
                 )}
               </div>
@@ -286,7 +260,7 @@ export default function PropertyDetailPage() {
                   <div className="pt-4 border-t border-border space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Shield className="h-4 w-4 text-primary" />
-                      <span>UBARU Verified Property</span>
+                      <span>CONEKTA Trust Verified Property</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-primary">🔒</span>

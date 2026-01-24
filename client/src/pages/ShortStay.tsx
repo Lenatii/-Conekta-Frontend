@@ -3,7 +3,6 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -18,8 +17,6 @@ export default function ShortStay() {
   const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   const handleCheckAvailability = (stay: any) => {
     setSelectedStay(stay);
@@ -31,52 +28,12 @@ export default function ShortStay() {
     setIsPaymentModalOpen(true);
   };
 
-  const confirmPayment = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Please enter a valid phone number");
-      return;
-    }
-    
-    setIsPaymentLoading(true);
-    try {
-      // Call backend API directly (bypass Manus tRPC)
-      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_phone: phoneNumber,
-          entity_id: selectedStay?.id?.toString() || "1",
-          entity_type: "short_stay",
-          amount: 150,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
-        throw new Error(errorData.detail || "Payment failed");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Close modal immediately and show alert
-        setIsPaymentModalOpen(false);
-        setIsPaymentLoading(false);
-        alert(result.message || "STK Push sent! Please check your phone and enter your M-Pesa PIN.");
-        
-        // In production, poll for payment status
-        // For now, reveal contact after 5 seconds
-        setTimeout(() => {
-          setContactRevealed(true);
-        }, 5000);
-      }
-    } catch (error: any) {
-      alert("Payment failed: " + (error.message || "Unknown error"));
-    } finally {
-      setIsPaymentLoading(false);
-    }
+  const confirmPayment = () => {
+    // TODO: Call payment API (KES 150)
+    setTimeout(() => {
+      setContactRevealed(true);
+      setIsPaymentModalOpen(false);
+    }, 2000);
   };
   // Mock data - will connect to backend later
   const mockStays = [
@@ -137,13 +94,13 @@ export default function ShortStay() {
         <section className="bg-gradient-to-br from-primary/10 via-background to-background py-20">
           <div className="container">
             <div className="max-w-3xl">
-              <Badge className="mb-4">Short-Stay</Badge>
+              <Badge className="mb-4">CONEKTA Stays</Badge>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
                 Book Verified Short-Term Stays
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
                 Find comfortable, secure short-stay accommodations in Nakuru. 
-                All hosts verified through UBARU. Book instantly with M-Pesa.
+                All hosts verified through CONEKTA Trust. Book instantly with M-Pesa.
               </p>
             </div>
           </div>
@@ -163,7 +120,7 @@ export default function ShortStay() {
                     />
                     {stay.isVerified && (
                       <Badge className="absolute top-3 right-3 bg-green-500">
-                        UBARU Verified
+                        CONEKTA Trust Verified
                       </Badge>
                     )}
                   </div>
@@ -229,7 +186,7 @@ export default function ShortStay() {
                   <p className="text-muted-foreground mb-4">
                     We're onboarding more verified hosts. Want to list your space?
                   </p>
-                  <a href="https://wa.me/254797446155?text=Hi, I want to list my space on CONEKTA Short-Stay">
+                  <a href="https://wa.me/254797446155?text=Hi, I want to list my space on CONEKTA Stays">
                     <Button style={{background: '#25D366'}}>
                       Contact Us on WhatsApp
                     </Button>
@@ -245,7 +202,7 @@ export default function ShortStay() {
 
       {/* Availability Check Modal */}
       <Dialog open={isAvailabilityModalOpen} onOpenChange={setIsAvailabilityModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Check Availability - {selectedStay?.title}</DialogTitle>
             <DialogDescription>
@@ -254,7 +211,7 @@ export default function ShortStay() {
           </DialogHeader>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">Check-in Date</label>
                 <Calendar
@@ -262,7 +219,7 @@ export default function ShortStay() {
                   selected={checkIn}
                   onSelect={setCheckIn}
                   disabled={(date) => date < new Date()}
-                  className="rounded-md border w-full scale-75 sm:scale-90 md:scale-100 origin-top"
+                  className="rounded-md border"
                 />
               </div>
               <div>
@@ -272,7 +229,7 @@ export default function ShortStay() {
                   selected={checkOut}
                   onSelect={setCheckOut}
                   disabled={(date) => !checkIn || date <= checkIn}
-                  className="rounded-md border w-full scale-75 sm:scale-90 md:scale-100 origin-top"
+                  className="rounded-md border"
                 />
               </div>
             </div>
@@ -309,16 +266,6 @@ export default function ShortStay() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">M-Pesa Phone Number</label>
-              <Input
-                type="tel"
-                placeholder="0712345678"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="w-full"
-              />
-            </div>
             <Card>
               <CardContent className="pt-6">
                 <div className="text-center space-y-3">
@@ -329,13 +276,8 @@ export default function ShortStay() {
                 </div>
               </CardContent>
             </Card>
-            <Button 
-              onClick={confirmPayment} 
-              className="w-full" 
-              style={{background: '#25D366'}}
-              disabled={isPaymentLoading}
-            >
-              {isPaymentLoading ? "Processing..." : "Pay KES 150 via M-Pesa"}
+            <Button onClick={confirmPayment} className="w-full" style={{background: '#25D366'}}>
+              Pay KES 150 via M-Pesa
             </Button>
           </div>
         </DialogContent>

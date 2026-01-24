@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap } from "lucide-react";
-// import { trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 
 export default function FundisPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,43 +34,16 @@ export default function FundisPage() {
     "WiFi Installation"
   ];
 
-  // Fetch fundis from backend API directly
-  const [fundisData, setFundisData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFundis = async () => {
-      try {
-        const params = new URLSearchParams();
-        if (serviceType !== "all") params.append("category", serviceType);
-        if (location !== "all") params.append("location", location);
-        
-        const response = await fetch(
-          `https://conekta-complete-system.onrender.com/api/services/search?${params}`
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          // API returns array directly, not {services: []}
-          setFundisData(Array.isArray(data) ? data : []);
-        } else {
-          setFundisData([]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch fundis:", error);
-        setFundisData([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFundis();
-  }, [serviceType, location]);
+  // Fetch fundis from backend API (with mock fallback)
+  const { data: fundisData, isLoading } = trpc.fundis.search.useQuery({
+    category: serviceType,
+    location: location,
+  });
 
   // Transform backend data to match frontend format
   const fundis = (fundisData || []).map((service: any) => ({
     id: service.id,
-    name: service.provider?.full_name || "Unknown Provider",
+    name: service.provider?.name || "Unknown Provider",
     serviceType: service.category,
     description: service.description || service.title,
     location: service.location,
@@ -80,8 +53,8 @@ export default function FundisPage() {
     totalJobs: service.jobs_completed || 0,
     isVerified: service.verified || false,
     phone: service.provider?.phone || "",
-    avatar: service.provider?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(service.provider?.full_name || 'Fundi')}&background=14b8a6&color=fff&size=200`,
-    certifications: service.verified ? ["UBARU Certified", "Customer Service Training"] : []
+    avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
+    certifications: service.verified ? ["CONEKTA Trust Certified", "Customer Service Training"] : []
   }));
 
   // Filter fundis based on search query
@@ -140,7 +113,7 @@ export default function FundisPage() {
                     <li>✓ <strong>Customer Service Excellence</strong> - Professional communication & respect</li>
                     <li>✓ <strong>Quality Standards</strong> - Best practices & workmanship</li>
                     <li>✓ <strong>Safety & Hygiene</strong> - Workplace safety protocols</li>
-                    <li>✓ <strong>UBARU Verification</strong> - Background checks & identity verification</li>
+                    <li>✓ <strong>CONEKTA Trust Verification</strong> - Background checks & identity verification</li>
                   </ul>
                   <p className="text-sm text-primary font-semibold mt-2">
                     🏆 Higher standards. Better service. Guaranteed professionalism.
@@ -242,7 +215,7 @@ export default function FundisPage() {
                         {fundi.isVerified && (
                           <Badge variant="secondary" className="bg-primary/10 text-primary">
                             <Shield className="h-3 w-3 mr-1" />
-                            UBARU
+                            CONEKTA Trust
                           </Badge>
                         )}
                       </div>
@@ -295,10 +268,10 @@ export default function FundisPage() {
                       <Link href={`/fundis/${fundi.id}`}>View Profile</Link>
                     </Button>
                     <Button size="sm" asChild>
-                      <Link href={`/fundis/${fundi.id}`}>
+                      <a href={`https://wa.me/${fundi.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
                         <Phone className="h-4 w-4 mr-1" />
                         Contact
-                      </Link>
+                      </a>
                     </Button>
                   </div>
                 </CardContent>

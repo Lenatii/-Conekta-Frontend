@@ -27,8 +27,7 @@ export default function FundiProfile() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  // Direct API call to backend (bypass Manus tRPC)
-  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const paymentMutation = trpc.payment.revealContact.useMutation();
 
   // Mock data - will connect to backend later
   const mockFundis: Record<string, any> = {
@@ -45,7 +44,7 @@ export default function FundiProfile() {
       totalJobs: 127,
       isVerified: true,
       phone: "+254 712 345 678",
-      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
+      avatar: "/api/placeholder/200/200",
       skills: ["Pipe Installation", "Leak Repairs", "Water Heaters", "Drain Cleaning", "Bathroom Fixtures"],
       availability: "Monday - Saturday, 8AM - 6PM",
       responseTime: "Within 2 hours",
@@ -64,7 +63,7 @@ export default function FundiProfile() {
       totalJobs: 89,
       isVerified: true,
       phone: "+254 723 456 789",
-      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
+      avatar: "/api/placeholder/200/200",
       skills: ["Electrical Wiring", "Circuit Installation", "Safety Inspections", "Lighting", "Appliance Repairs"],
       availability: "Monday - Friday, 9AM - 5PM",
       responseTime: "Within 1 hour",
@@ -83,7 +82,7 @@ export default function FundiProfile() {
       totalJobs: 56,
       isVerified: false,
       phone: "+254 734 567 890",
-      avatar: "https://ui-avatars.com/api/?name=Fundi&background=14b8a6&color=fff&size=200",
+      avatar: "/api/placeholder/200/200",
       skills: ["Custom Furniture", "Wood Repairs", "Cabinet Installation", "Door Fitting", "Shelving"],
       availability: "Monday - Saturday, 7AM - 7PM",
       responseTime: "Within 3 hours",
@@ -119,50 +118,30 @@ export default function FundiProfile() {
   };
 
   const handlePayment = async () => {
-    console.log('handlePayment called!');
     setIsProcessingPayment(true);
     
     try {
       // TODO: Get user's phone number (from login or prompt)
       const userPhone = "+254712345678"; // Placeholder
       
-      // Call backend API directly (bypass Manus tRPC)
-      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/payments/initiate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_phone: userPhone,
-          entity_id: id || "1",
-          entity_type: "fundi",
-          amount: 150,
-        }),
+      const result = await paymentMutation.mutateAsync({
+        entity_id: id || "1",
+        entity_type: "fundi",
+        phone_number: userPhone,
+        amount: 150,
       });
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
-        throw new Error(errorData.detail || "Payment failed");
-      }
-      
-      const result = await response.json();
-      
       if (result.success) {
-        // Close modal immediately and show alert
-        setShowPaymentModal(false);
-        setIsProcessingPayment(false);
-        alert(result.message || "STK Push sent! Please check your phone and enter your M-Pesa PIN.");
-        
+        // Payment initiated - STK Push sent
+        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
         // In production, poll for payment status
-        // For now, reveal contact after 5 seconds
         setTimeout(() => {
           setContactRevealed(true);
+          setShowPaymentModal(false);
         }, 5000);
       }
     } catch (error: any) {
-      const errorMsg = error.message || "Unknown error";
-      setPaymentError(errorMsg);
-      alert("Payment failed: " + errorMsg);
+      alert("Payment failed: " + (error.message || "Unknown error"));
     } finally {
       setIsProcessingPayment(false);
     }
@@ -216,7 +195,7 @@ export default function FundiProfile() {
                         {fundi.isVerified && (
                           <Badge variant="secondary" className="bg-primary/10 text-primary">
                             <Shield className="h-4 w-4 mr-1" />
-                            UBARU Verified
+                            CONEKTA Trust Verified
                           </Badge>
                         )}
                       </div>
@@ -242,7 +221,7 @@ export default function FundiProfile() {
 
                       <div className="flex items-center gap-2 text-xl md:text-2xl font-bold text-primary">
                         <span>KES {fundi.hourlyRate.toLocaleString()}</span>
-                        <span className="text-sm text-muted-foreground font-normal">/hour</span>
+                        <span className="text-xs md:text-sm text-muted-foreground font-normal">/hour</span>
                       </div>
                     </div>
                   </div>
@@ -409,7 +388,7 @@ export default function FundiProfile() {
 
       {/* Payment Modal */}
       <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Reveal Contact Details</DialogTitle>
             <DialogDescription>

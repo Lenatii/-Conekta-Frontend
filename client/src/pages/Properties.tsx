@@ -218,7 +218,7 @@ export default function PropertiesPage() {
                     {property.isVerified && (
                       <Badge className="absolute top-2 right-2 bg-primary">
                         <Shield className="h-3 w-3 mr-1" />
-                        UBARU
+                        CONEKTA Trust
                       </Badge>
                     )}
                     <div className="absolute bottom-2 left-2">
