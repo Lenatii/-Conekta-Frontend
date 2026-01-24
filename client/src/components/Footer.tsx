@@ -127,7 +127,7 @@ export default function Footer() {
             {/* Social Media Icons */}
             <div className="flex gap-3 mt-6">
               <a 
-                href="https://facebook.com/Conekta" 
+                href="https://www.facebook.com/profile.php?id=61583476898763" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition"

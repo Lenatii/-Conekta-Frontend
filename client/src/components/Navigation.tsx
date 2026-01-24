@@ -27,7 +27,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-6">
             {/* Social Media Icons */}
             <div className="flex items-center space-x-3 mr-2">
-              <a href="https://facebook.com/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61583476898763" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Facebook className="h-4 w-4" />
               </a>
               <a href="https://instagram.com/conektaafrica" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">

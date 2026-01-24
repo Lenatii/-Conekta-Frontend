@@ -80,7 +80,7 @@ export default function SEO({
             "availableLanguage": ["English", "Swahili"]
           },
           "sameAs": [
-            "https://facebook.com/conektaafrica",
+            "https://www.facebook.com/profile.php?id=61583476898763",
             "https://instagram.com/conektaafrica",
             "https://twitter.com/conektaafrica",
             "https://linkedin.com/company/conektaafrica"
@@ -133,7 +133,7 @@ export default function SEO({
             "closes": "23:59"
           },
           "sameAs": [
-            "https://facebook.com/conektaafrica",
+            "https://www.facebook.com/profile.php?id=61583476898763",
             "https://instagram.com/conektaafrica",
             "https://twitter.com/conektaafrica",
             "https://linkedin.com/company/conektaafrica"
