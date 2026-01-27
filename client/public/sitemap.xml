@@ -4,44 +4,44 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Homepage -->
+  <!-- Homepage - Highest priority -->
   <url>
-    <loc>https://www.conekta.co.ke/</loc>
-    <lastmod>2025-11-25</lastmod>
+    <loc>https://conekta.co.ke/</loc>
+    <lastmod>2026-01-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Properties Listing -->
+  <!-- CONEKTA Rentals -->
   <url>
-    <loc>https://www.conekta.co.ke/properties</loc>
-    <lastmod>2025-11-25</lastmod>
+    <loc>https://conekta.co.ke/properties</loc>
+    <lastmod>2026-01-27</lastmod>
     <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- CONEKTA Fundis -->
+  <url>
+    <loc>https://conekta.co.ke/fundis</loc>
+    <lastmod>2026-01-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- CONEKTA Trust -->
+  <url>
+    <loc>https://conekta.co.ke/trust</loc>
+    <lastmod>2026-01-27</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Fundis/Service Providers -->
+  <!-- CONEKTA Stays -->
   <url>
-    <loc>https://www.conekta.co.ke/fundis</loc>
-    <lastmod>2025-11-25</lastmod>
+    <loc>https://conekta.co.ke/stays</loc>
+    <lastmod>2026-01-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-  </url>
-
-  <!-- Short-Stay (future) -->
-  <url>
-    <loc>https://www.conekta.co.ke/stays</loc>
-    <lastmod>2025-11-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- UBARU Verification (future) -->
-  <url>
-    <loc>https://www.conekta.co.ke/ubaru</loc>
-    <lastmod>2025-11-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
 
   <!-- Note: Individual property pages will be dynamically added by the backend -->

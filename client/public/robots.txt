@@ -1,15 +1,68 @@
-# robots.txt for CONEKTA Africa
-# Allow all search engines to index the site
+# CONEKTA Africa - robots.txt
+# Optimized for search engines and AI crawlers (AEO, GEO, pSEO)
 
+# Default rules for all crawlers
 User-agent: *
 Allow: /
-
-# Sitemap location
-Sitemap: https://www.conekta.co.ke/sitemap.xml
-
-# Disallow admin pages (if any)
+Allow: /properties
+Allow: /fundis
+Allow: /trust
+Allow: /stays
 Disallow: /admin/
 Disallow: /api/
-
-# Crawl delay (optional, helps prevent server overload)
+Disallow: /.env
+Disallow: /node_modules
 Crawl-delay: 1
+
+# OpenAI GPT Bot - for ChatGPT, GPT-4, and other OpenAI models
+User-agent: GPTBot
+Allow: /
+Allow: /properties
+Allow: /fundis
+Allow: /trust
+Allow: /stays
+Allow: /about
+Allow: /contact
+Crawl-delay: 0
+
+# Anthropic Claude Bot
+User-agent: Claude-Web
+Allow: /
+Allow: /properties
+Allow: /fundis
+Allow: /trust
+Allow: /stays
+Crawl-delay: 0
+
+# Perplexity AI Bot
+User-agent: PerplexityBot
+Allow: /
+Allow: /properties
+Allow: /fundis
+Allow: /trust
+Allow: /stays
+Crawl-delay: 0
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Other search engines
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap locations
+Sitemap: https://conekta.co.ke/sitemap.xml
+Sitemap: https://conekta.co.ke/sitemap-properties.xml
+Sitemap: https://conekta.co.ke/sitemap-fundis.xml
