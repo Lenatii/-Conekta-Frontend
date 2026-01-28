@@ -31,6 +31,7 @@ export default function AddProperty() {
     landlordName: "",
     landlordPhone: "",
     landlordEmail: "",
+    tour360Url: "",
   });
 
   const [amenities, setAmenities] = useState({
@@ -434,6 +435,41 @@ export default function AddProperty() {
                       />
                     </label>
                   )}
+                </div>
+              </div>
+
+              {/* 360° Virtual Tour */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-white">360° Virtual Tour (Optional)</h3>
+                  <span className="px-2 py-0.5 bg-teal-600/20 text-teal-400 text-xs rounded-full">🚀 3x More Inquiries!</span>
+                </div>
+                <p className="text-sm text-slate-400">
+                  Add a 360° tour link to massively increase tenant interest!
+                </p>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="tour360Url">360° Tour URL</Label>
+                  <Input
+                    id="tour360Url"
+                    type="url"
+                    placeholder="https://goo.gl/maps/... or Matterport/Kuula link"
+                    value={formData.tour360Url}
+                    onChange={(e) => setFormData({ ...formData, tour360Url: e.target.value })}
+                    className="bg-slate-800 border-slate-700 text-white"
+                  />
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                  <h4 className="text-sm font-medium text-teal-400 mb-2">📱 How to create a FREE 360° tour:</h4>
+                  <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
+                    <li>Download 'Google Street View' app (free)</li>
+                    <li>Open app → tap Camera icon</li>
+                    <li>Select 'Camera' mode</li>
+                    <li>Stand in center of room and rotate slowly</li>
+                    <li>Upload → Share → Copy link</li>
+                  </ol>
+                  <p className="text-xs text-slate-500 mt-2">💡 Takes only 2 minutes per room!</p>
                 </div>
               </div>
 
