@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
 
-import { trpc } from "@/lib/trpc";
+// Direct API call to backend instead of tRPC (for static hosting compatibility)
+const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
 
 interface Message {
   id: string;
@@ -51,8 +52,7 @@ export default function MamaDennisChatWidget() {
   // Persist session ID across all messages
   const [sessionId] = useState(() => `web-${Date.now()}`);
   
-  // Setup mutation hook
-  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
+  // Direct API call function (no tRPC needed for static hosting)
 
   // Auto-open chat after 10 seconds on homepage
   useEffect(() => {
@@ -312,12 +312,22 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Call Mama Dennis via tRPC
+    // Call Mama Dennis backend directly
     try {
-      const data = await sendMessageMutation.mutateAsync({
-        message: messageToSend,
-        session_id: sessionId,
+      const response = await fetch(`${BACKEND_API_URL}/api/webchat/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageToSend,
+          session_id: sessionId,
+        }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
