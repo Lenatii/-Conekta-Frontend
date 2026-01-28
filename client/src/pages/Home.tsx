@@ -48,7 +48,7 @@ export default function HomePage() {
               </h1>
               
               <p className="text-slate-300 text-lg lg:text-xl leading-relaxed max-w-2xl mb-8">
-                Find verified homes, hire trusted fundis, get CONEKTA Trust certified, and book short-stays — all in one platform. Built for Kenya & Africa with automation, accountability, and heart.
+                Find verified homes, hire trusted fundis, get UBARU certified, and book short-stays — all in one platform. Built for Kenya & Africa with automation, accountability, and heart.
               </p>
               
               <div className="flex flex-wrap gap-4 mb-8">
@@ -67,18 +67,17 @@ export default function HomePage() {
               {/* Trust Badges */}
               <div className="flex items-center gap-3 text-sm text-slate-400 flex-wrap">
                 <div className="border border-white/12 rounded-full px-4 py-2 hover:bg-white/10 transition cursor-pointer">
-                  🛡️ Conekta-Pay • CONEKTA Trust Certified
+                  🛡️ Conekta-Pay • UBARU Certified
                 </div>
                 <div 
                   className="border border-white/12 rounded-full px-4 py-2 hover:bg-white/10 transition cursor-pointer relative group"
                   onClick={() => {
-                    // Open chat widget instead
                     const chatButton = document.querySelector('[data-chat-toggle]') as HTMLButtonElement;
                     if (chatButton) chatButton.click();
                   }}
                 >
                   💬 WhatsApp First
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-50">
                     Coming soon! Use web chat
                   </span>
                 </div>
@@ -184,101 +183,109 @@ export default function HomePage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            {/* CONEKTA Rentals */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">CONEKTA Rentals</h3>
-                  <HomeIcon className="w-6 h-6 text-purple-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Browse verified property listings with 360° virtual tours, secure applications, and digital lease agreements.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ 5% commission<br/>
-                  ✓ Virtual tours<br/>
-                  ✓ Conekta-Pay protection
-                </div>
-                <Link href="/properties">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            {/* RentConnect */}
+            <Link href="/properties">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-rentconnect.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">CONEKTA Rentals</h3>
+                    <HomeIcon className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Browse verified property listings with 360° virtual tours, secure applications, and digital lease agreements.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ 5% commission<br/>
+                    ✓ Virtual tours<br/>
+                    ✓ Conekta-Pay protection
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Explore Properties</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
-            {/* CONEKTA Fundis */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">CONEKTA Fundis</h3>
-                  <Wrench className="w-6 h-6 text-teal-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Hire vetted service providers (fundis) with confidence. Pay safely through Conekta-Pay and rate their work.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ Background checks<br/>
-                  ✓ Conekta-Pay payments<br/>
-                  ✓ Rating system
-                </div>
-                <Link href="/fundis">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            {/* KaziFlow */}
+            <Link href="/fundis">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-kaziflow.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">CONEKTA Fundis</h3>
+                    <Wrench className="w-8 h-8 text-teal-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Hire vetted service providers (fundis) with confidence. Pay safely through Conekta-Pay and rate their work.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ Background checks<br/>
+                    ✓ Conekta-Pay payments<br/>
+                    ✓ Rating system
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Find Fundis</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
-            {/* CONEKTA Trust */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">CONEKTA Trust</h3>
-                  <ShieldCheck className="w-6 h-6 text-purple-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Trust certification system that verifies landlords, tenants, and service providers to reduce fraud.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ KYC verification<br/>
-                  ✓ Background checks<br/>
-                  ✓ Trust scores
-                </div>
-                <Link href="/verify">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            {/* UBARU */}
+            <Link href="/verify">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-ubaru.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">CONEKTA Trust</h3>
+                    <ShieldCheck className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Trust certification system that verifies landlords, tenants, and service providers to reduce fraud.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ KYC verification<br/>
+                    ✓ Background checks<br/>
+                    ✓ Trust scores
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Get Certified</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
-            {/* CONEKTA Stays */}
-            <Card className="glass rounded-2xl border-white/10 module-card">
-              <CardContent className="p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold">CONEKTA Stays</h3>
-                  <Bed className="w-6 h-6 text-teal-400" />
-                </div>
-                <p className="text-sm text-slate-300 mb-4 flex-grow">
-                  Host your space or book verified short-term stays with secure payments and instant confirmations.
-                </p>
-                <div className="text-xs text-slate-400 mb-4 p-3 rounded-lg bg-white/5">
-                  ✓ Instant booking<br/>
-                  ✓ Host protection<br/>
-                  ✓ Flexible stays
-                </div>
-                <Link href="/stays">
-                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold p-0 h-auto">
+            {/* Short-Stay */}
+            <Link href="/stays">
+              <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-shortstay.jpg)'}}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                <CardContent className="p-6 flex flex-col relative z-10 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold">CONEKTA Stays</h3>
+                    <Bed className="w-8 h-8 text-teal-400" />
+                  </div>
+                  <p className="text-sm text-slate-200 mb-4 flex-grow">
+                    Host your space or book verified short-term stays with secure payments and instant confirmations.
+                  </p>
+                  <div className="text-xs text-slate-300 mb-4 p-3 rounded-lg bg-black/30 backdrop-blur-sm">
+                    ✓ Instant booking<br/>
+                    ✓ Host protection<br/>
+                    ✓ Flexible stays
+                  </div>
+                  <Button variant="ghost" className="mt-auto w-full justify-center gap-2 text-teal-400 hover:text-white font-semibold bg-black/40 hover:bg-black/60 transition">
                     <span>Book Stays</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
             
           </div>
         </div>
@@ -293,22 +300,23 @@ export default function HomePage() {
               <p className="text-slate-300 text-lg">Let Mama Dennis guide you. Quick, human, effective.</p>
             </div>
             <div className="flex gap-4">
-              <Button 
-                size="lg" 
-                className="rounded-xl px-6 py-4 text-lg font-bold text-white inline-flex items-center gap-2 relative group" 
-                style={{background: '#25D366'}}
-                onClick={() => {
-                  // Open chat widget instead
-                  const chatButton = document.querySelector('[data-chat-toggle]') as HTMLButtonElement;
-                  if (chatButton) chatButton.click();
-                }}
-              >
-                <MessageCircle className="w-5 h-5" />
-                WhatsApp
-                <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+              <div className="relative group">
+                <Button 
+                  size="lg" 
+                  className="rounded-xl px-6 py-4 text-lg font-bold text-white inline-flex items-center gap-2" 
+                  style={{background: '#25D366'}}
+                  onClick={() => {
+                    const chatButton = document.querySelector('[data-chat-toggle]') as HTMLButtonElement;
+                    if (chatButton) chatButton.click();
+                  }}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  WhatsApp
+                </Button>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-50">
                   Coming soon! Use web chat
                 </span>
-              </Button>
+              </div>
               <a href="mailto:hello@conekta.africa">
                 <Button size="lg" variant="outline" className="rounded-xl px-6 py-4 glass text-white font-semibold text-lg border-white/12">
                   Contact Us

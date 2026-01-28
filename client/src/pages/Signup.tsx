@@ -29,8 +29,8 @@ export default function Signup() {
   const userTypes = [
     {
       type: "landlord" as UserType,
-      title: "Landlord",
-      description: "List and manage your properties",
+      title: "Landlord/Host",
+      description: "List properties or host short-stays",
       icon: Home,
     },
     {
