@@ -314,6 +314,7 @@ export default function MamaDennisChatWidget() {
 
     // Call Mama Dennis backend directly
     try {
+      console.log('[Chat] Sending message to:', `${BACKEND_API_URL}/api/webchat/message`);
       const response = await fetch(`${BACKEND_API_URL}/api/webchat/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -323,11 +324,16 @@ export default function MamaDennisChatWidget() {
         }),
       });
       
+      console.log('[Chat] Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('[Chat] API error response:', errorText);
+        throw new Error(`API error: ${response.status} - ${errorText}`);
       }
       
       const data = await response.json();
+      console.log('[Chat] Got response:', data);
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -338,16 +344,18 @@ export default function MamaDennisChatWidget() {
       };
       setMessages((prev) => [...prev, mamaResponse]);
     } catch (error) {
-      console.error('Mama Dennis API error:', error);
+      console.error('[Chat] Mama Dennis API error:', error);
+      console.error('[Chat] Error details:', error instanceof Error ? error.message : String(error));
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try WhatsApp at +254 797 446 155!",
+        text: `Sorry, I'm having trouble connecting right now. Please try WhatsApp at +254 797 446 155! (Error: ${error instanceof Error ? error.message : 'Unknown error'})`,
         sender: "mama",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsTyping(false);
+      console.log('[Chat] Message send complete');
     }
   };
 
