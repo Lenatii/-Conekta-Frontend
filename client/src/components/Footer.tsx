@@ -111,16 +111,22 @@ export default function Footer() {
                 <span>Nakuru • Nairobi</span>
               </li>
               <li className="mt-2">
-                <a 
-                  href="https://wa.me/254797446155?text=Hi%2C%20I%20need%20help%20with%20CONEKTA"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-white hover:opacity-90 transition"
-                  style={{background: '#25D366'}}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Chat on WhatsApp
-                </a>
+                <div className="relative group inline-block">
+                  <button 
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-white hover:opacity-90 transition"
+                    style={{background: '#25D366'}}
+                    onClick={() => {
+                      const chatButton = document.querySelector('[data-chat-toggle]') as HTMLButtonElement;
+                      if (chatButton) chatButton.click();
+                    }}
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Chat on WhatsApp
+                  </button>
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-50">
+                    Coming soon! Use web chat
+                  </span>
+                </div>
               </li>
             </ul>
             
