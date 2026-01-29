@@ -8,6 +8,43 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, CheckCircle2, Award, FileCheck, Users, TrendingUp, Phone } from "lucide-react";
 
 export default function TrustPage() {
+  // Function to open chat widget and trigger verification flow
+  const handleGetVerified = () => {
+    // Find and click the chat widget button
+    const chatButton = document.querySelector('[data-chat-toggle="true"]') as HTMLButtonElement;
+    if (chatButton) {
+      // Open chat if closed
+      if (!chatButton.getAttribute('aria-expanded')) {
+        chatButton.click();
+      }
+      
+      // Wait for chat to open, then send "3" to select CONEKTA Trust option
+      setTimeout(() => {
+        // Find the input field and send button in the chat widget
+        const chatInput = document.querySelector('input[placeholder*="Type"]') as HTMLInputElement;
+        const sendButton = document.querySelector('[aria-label="Send message"]') as HTMLButtonElement;
+        
+        if (chatInput && sendButton) {
+          // Set the value to "3" for CONEKTA Trust option
+          chatInput.value = "3";
+          // Trigger input event so React detects the change
+          const event = new Event('input', { bubbles: true });
+          chatInput.dispatchEvent(event);
+          // Click send after a short delay
+          setTimeout(() => sendButton.click(), 200);
+        }
+      }, 600);
+    }
+  };
+
+  // Function to just open chat widget
+  const handleOpenChat = () => {
+    const chatButton = document.querySelector('[data-chat-toggle="true"]') as HTMLButtonElement;
+    if (chatButton && !chatButton.getAttribute('aria-expanded')) {
+      chatButton.click();
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -25,11 +62,16 @@ export default function TrustPage() {
             Get verified, build trust, and unlock premium opportunities across the CONEKTA ecosystem
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2" onClick={handleGetVerified}>
               <Shield className="h-5 w-5" />
               Get Verified Now
             </Button>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" onClick={() => {
+              const section = document.getElementById('how-it-works');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}>
               Learn More
             </Button>
           </div>
@@ -152,7 +194,7 @@ export default function TrustPage() {
       </div>
 
       {/* Verification Process */}
-      <div className="py-16 bg-card/30">
+      <div id="how-it-works" className="py-16 bg-card/30">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           
@@ -227,7 +269,7 @@ export default function TrustPage() {
             Join thousands of verified landlords, fundis, and hosts who have built trust and grown their business with CONEKTA Trust.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2" onClick={handleOpenChat}>
               <Phone className="h-5 w-5" />
               Chat with Mama Dennis
             </Button>
