@@ -30,6 +30,7 @@ function Router() {
       <Route path="/fundis" component={Fundis} />
       <Route path="/fundis/:id" component={FundiProfile} />
       <Route path="/stays" component={ShortStay} />
+      <Route path="/trust" component={Ubaru} />
       <Route path="/verify" component={Ubaru} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
