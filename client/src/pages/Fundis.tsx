@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap } from "lucide-react";
+import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap, Circle } from "lucide-react";
 
 // Direct API call to backend instead of tRPC (for static hosting compatibility)
 const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
@@ -25,6 +25,7 @@ const MOCK_FUNDIS = [
     rating: 5,
     totalJobs: 127,
     isVerified: true,
+    isAvailable: true,
     phone: "+254712345678",
     avatar: "/fundi-placeholder.jpg",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
@@ -40,6 +41,7 @@ const MOCK_FUNDIS = [
     rating: 5,
     totalJobs: 98,
     isVerified: true,
+    isAvailable: true,
     phone: "+254723456789",
     avatar: "/fundi-placeholder.jpg",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
@@ -55,6 +57,7 @@ const MOCK_FUNDIS = [
     rating: 5,
     totalJobs: 84,
     isVerified: true,
+    isAvailable: false,
     phone: "+254734567890",
     avatar: "/fundi-placeholder.jpg",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
@@ -65,6 +68,7 @@ export default function FundisPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [serviceType, setServiceType] = useState("all");
   const [location, setLocation] = useState("all");
+  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [fundis, setFundis] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -98,6 +102,7 @@ export default function FundisPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             category: serviceType === "all" ? undefined : serviceType,
+            online_only: showOnlineOnly,
             location: location === "all" ? undefined : location,
           }),
         });
@@ -147,7 +152,7 @@ export default function FundisPage() {
     };
 
     fetchFundis();
-  }, [serviceType, location]);
+  }, [serviceType, location, showOnlineOnly]);
 
   // Filter fundis based on search query
   const filteredFundis = fundis.filter((fundi: any) => {
@@ -261,6 +266,22 @@ export default function FundisPage() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Online Now Filter */}
+          <div className="max-w-4xl mx-auto mt-4 flex items-center justify-center gap-2">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showOnlineOnly}
+                onChange={(e) => setShowOnlineOnly(e.target.checked)}
+                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
+              />
+              <span className="text-sm font-medium flex items-center gap-1">
+                <Circle className="w-3 h-3 fill-green-500 text-green-500" />
+                Show Online Now Only
+              </span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -304,12 +325,20 @@ export default function FundisPage() {
                         <h3 className="font-bold text-lg group-hover:text-primary transition-colors">
                           {fundi.name}
                         </h3>
-                        {fundi.isVerified && (
-                          <Badge variant="secondary" className="bg-primary/10 text-primary">
-                            <Shield className="h-3 w-3 mr-1" />
-                            CONEKTA Trust
-                          </Badge>
-                        )}
+                        <div className="flex gap-1">
+                          {fundi.isAvailable && (
+                            <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20">
+                              <Circle className="h-2 w-2 fill-green-500 text-green-500 mr-1" />
+                              Online
+                            </Badge>
+                          )}
+                          {fundi.isVerified && (
+                            <Badge variant="secondary" className="bg-primary/10 text-primary">
+                              <Shield className="h-3 w-3 mr-1" />
+                              CONEKTA Trust
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       <p className="text-sm text-muted-foreground capitalize mb-2">
                         {fundi.serviceType}

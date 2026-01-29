@@ -6,12 +6,37 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Plus, Home, User, Settings, LogOut } from "lucide-react";
+import { Plus, Home, User, Settings, LogOut, Wrench, Power } from "lucide-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { user, loading, isAuthenticated, logout } = useAuth();
   const [activeTab, setActiveTab] = useState("properties");
+  const [isOnline, setIsOnline] = useState(true);
+  const [isTogglingStatus, setIsTogglingStatus] = useState(false);
+
+  // Toggle fundi online/offline status
+  const toggleOnlineStatus = async () => {
+    setIsTogglingStatus(true);
+    try {
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/v1/fundis/toggle-availability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fundi_id: user?.id, // Assuming user ID is fundi ID
+          is_available: !isOnline
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setIsOnline(data.is_available);
+      }
+    } catch (error) {
+      console.error("Error toggling status:", error);
+    } finally {
+      setIsTogglingStatus(false);
+    }
+  };
 
   // Redirect to login if not authenticated
   if (!loading && !isAuthenticated) {
@@ -68,6 +93,10 @@ export default function Dashboard() {
             <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600">
               <User className="w-4 h-4 mr-2" />
               Profile
+            </TabsTrigger>
+            <TabsTrigger value="fundi" className="data-[state=active]:bg-teal-600">
+              <Wrench className="w-4 h-4 mr-2" />
+              My Services
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-teal-600">
               <Settings className="w-4 h-4 mr-2" />
@@ -146,6 +175,87 @@ export default function Dashboard() {
                 >
                   Edit Profile
                 </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Fundi Services Tab */}
+          <TabsContent value="fundi" className="space-y-6">
+            <Card className="bg-slate-900 border-slate-800">
+              <CardHeader>
+                <CardTitle className="text-white">Service Provider Status</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Manage your availability and service offerings
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Online/Offline Toggle */}
+                <div className="flex items-center justify-between p-6 bg-slate-800 rounded-lg border-2 border-slate-700">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-full ${
+                      isOnline ? "bg-green-500/20" : "bg-slate-700"
+                    }`}>
+                      <Power className={`w-6 h-6 ${
+                        isOnline ? "text-green-500" : "text-slate-500"
+                      }`} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">
+                        {isOnline ? "You're Online" : "You're Offline"}
+                      </h3>
+                      <p className="text-sm text-slate-400">
+                        {isOnline 
+                          ? "Clients can see you in search results and contact you"
+                          : "You won't appear in search results"}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={toggleOnlineStatus}
+                    disabled={isTogglingStatus}
+                    className={`px-8 py-6 text-lg font-semibold ${
+                      isOnline 
+                        ? "bg-red-600 hover:bg-red-700" 
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  >
+                    {isTogglingStatus ? "Updating..." : (isOnline ? "Go Offline" : "Go Online")}
+                  </Button>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-slate-800 rounded-lg">
+                    <p className="text-sm text-slate-400">Jobs Completed</p>
+                    <p className="text-2xl font-bold text-white">0</p>
+                  </div>
+                  <div className="p-4 bg-slate-800 rounded-lg">
+                    <p className="text-sm text-slate-400">Rating</p>
+                    <p className="text-2xl font-bold text-white">0.0</p>
+                  </div>
+                  <div className="p-4 bg-slate-800 rounded-lg">
+                    <p className="text-sm text-slate-400">Response Time</p>
+                    <p className="text-2xl font-bold text-white">N/A</p>
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => setLocation("/verify-form")}
+                    variant="outline"
+                    className="w-full justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  >
+                    Get CONEKTA Trust Verified
+                  </Button>
+                  <Button
+                    onClick={() => setLocation("/fundis/" + user?.id)}
+                    variant="outline"
+                    className="w-full justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  >
+                    View My Public Profile
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
