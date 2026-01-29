@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
 
-import { trpc } from "@/lib/trpc";
+// Direct API call to backend instead of tRPC (for static hosting compatibility)
+const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
 
 interface Message {
   id: string;
@@ -51,8 +52,7 @@ export default function MamaDennisChatWidget() {
   // Persist session ID across all messages
   const [sessionId] = useState(() => `web-${Date.now()}`);
   
-  // Setup mutation hook
-  const sendMessageMutation = trpc.chat.sendMessage.useMutation();
+  // Direct API call function (no tRPC needed for static hosting)
 
   // Auto-open chat after 10 seconds on homepage
   useEffect(() => {
@@ -254,13 +254,10 @@ export default function MamaDennisChatWidget() {
         });
         return;
         
-      // Trust verification - Route to CONEKTA Trust (option 3)
+      // Trust verification
       case "trust":
-      case "get_verified":
-        setMenuHistory([...menuHistory, "flow"]);
-        // Send "3" to select CONEKTA Trust
-        handleSendMessage("3");
-        return;
+        message = "Tell me about CONEKTA Trust verification";
+        break;
         
       // Back to main menu (reset everything)
       case "main_menu":
@@ -315,12 +312,28 @@ export default function MamaDennisChatWidget() {
     setInputMessage("");
     setIsTyping(true);
 
-    // Call Mama Dennis via tRPC
+    // Call Mama Dennis backend directly
     try {
-      const data = await sendMessageMutation.mutateAsync({
-        message: messageToSend,
-        session_id: sessionId,
+      console.log('[Chat] Sending message to:', `${BACKEND_API_URL}/api/webchat/message`);
+      const response = await fetch(`${BACKEND_API_URL}/api/webchat/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: messageToSend,
+          session_id: sessionId,
+        }),
       });
+      
+      console.log('[Chat] Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[Chat] API error response:', errorText);
+        throw new Error(`API error: ${response.status} - ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('[Chat] Got response:', data);
       
       const mamaResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -331,16 +344,18 @@ export default function MamaDennisChatWidget() {
       };
       setMessages((prev) => [...prev, mamaResponse]);
     } catch (error) {
-      console.error('Mama Dennis API error:', error);
+      console.error('[Chat] Mama Dennis API error:', error);
+      console.error('[Chat] Error details:', error instanceof Error ? error.message : String(error));
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try WhatsApp at +254 797 446 155!",
+        text: `Sorry, I'm having trouble connecting right now. Please try WhatsApp at +254 797 446 155! (Error: ${error instanceof Error ? error.message : 'Unknown error'})`,
         sender: "mama",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsTyping(false);
+      console.log('[Chat] Message send complete');
     }
   };
 
@@ -348,8 +363,15 @@ export default function MamaDennisChatWidget() {
   const getSuggestedActions = (response: string): QuickAction[] | undefined => {
     const lower = response.toLowerCase();
     
-    // DON'T auto-add navigation buttons - they cause duplication
-    // The backend or specific contexts will handle button suggestions
+    // Check if in a step-by-step flow (property listing, fundi registration, etc.)
+    if (lower.includes("step 1") || lower.includes("step 2") || lower.includes("step 3") || 
+        lower.includes("reply with") || lower.includes("your title") || lower.includes("your name")) {
+      // In a flow - show go back and main menu
+      return [
+        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
+        { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
+      ];
+    }
     
     // Check for property type selection (landlord listing)
     if (lower.includes("property type") || lower.includes("1. apartment") || lower.includes("2. house")) {
@@ -435,8 +457,8 @@ export default function MamaDennisChatWidget() {
     
     if (lower.includes("trust") || lower.includes("verify") || lower.includes("ubaru") || lower.includes("certified")) {
       return [
-        { label: "✅ Get Verified", action: "get_verified", variant: "provider" },
-        { label: "ℹ️ Learn More", action: "Tell me more about CONEKTA Trust" },
+        { label: "Get Verified", action: "How do I get CONEKTA Trust verified?" },
+        { label: "Learn More", action: "Tell me more about CONEKTA Trust" },
         { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
       ];
     }
