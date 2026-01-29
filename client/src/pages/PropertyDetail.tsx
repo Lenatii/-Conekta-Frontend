@@ -11,6 +11,9 @@ import { MapPin, Bed, Bath, Car, Wifi, Shield, Phone, Mail, User, Lock, CheckCir
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 
+// Direct API call to backend instead of tRPC (for static hosting compatibility)
+const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
+
 export default function PropertyDetailPage() {
   const [, params] = useRoute("/properties/:id");
   const { user, isAuthenticated } = useAuth();
@@ -75,15 +78,41 @@ export default function PropertyDetailPage() {
 
     setPaymentStatus("processing");
 
-    // Simulate payment processing - will integrate Instasend later
-    setTimeout(() => {
-      setPaymentStatus("success");
-      setTimeout(() => {
-        setContactRevealed(true);
-        setShowPaymentModal(false);
-        setPaymentStatus("idle");
-      }, 2000);
-    }, 3000);
+    try {
+      console.log('[Payment] Initiating payment to:', `${BACKEND_API_URL}/api/v1/payments/initiate`);
+      const response = await fetch(`${BACKEND_API_URL}/api/v1/payments/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_phone: phoneNumber,
+          entity_id: property.id,
+          entity_type: 'property',
+          amount: 150,
+        }),
+      });
+
+      const data = await response.json();
+      console.log('[Payment] Response:', data);
+
+      if (data.success) {
+        // STK Push sent successfully
+        setPaymentStatus("success");
+        setTimeout(() => {
+          setContactRevealed(true);
+          setShowPaymentModal(false);
+          setPaymentStatus("idle");
+        }, 2000);
+      } else {
+        setPaymentStatus("failed");
+        alert(data.message || "Payment failed. Please try again.");
+        setTimeout(() => setPaymentStatus("idle"), 2000);
+      }
+    } catch (error) {
+      console.error('[Payment] Error:', error);
+      setPaymentStatus("failed");
+      alert("Payment failed. Please check your connection and try again.");
+      setTimeout(() => setPaymentStatus("idle"), 2000);
+    }
   };
 
   return (

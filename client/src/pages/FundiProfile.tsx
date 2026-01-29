@@ -6,8 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { trpc } from "@/lib/trpc";
+// Direct API call to backend instead of tRPC (for static hosting compatibility)
+const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
 import { 
   Star, 
   Shield, 
@@ -27,7 +29,7 @@ export default function FundiProfile() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [contactRevealed, setContactRevealed] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const paymentMutation = trpc.payment.revealContact.useMutation();
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   // Mock data - will connect to backend later
   const mockFundis: Record<string, any> = {
@@ -117,31 +119,47 @@ export default function FundiProfile() {
     mason: "🧱",
   };
 
-  const handlePayment = async () => {
+  const handleRevealContact = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handlePayment = async (phoneNumber: string) => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Please enter a valid phone number");
+      return;
+    }
+
     setIsProcessingPayment(true);
     
     try {
-      // TODO: Get user's phone number (from login or prompt)
-      const userPhone = "+254712345678"; // Placeholder
-      
-      const result = await paymentMutation.mutateAsync({
-        entity_id: id || "1",
-        entity_type: "fundi",
-        phone_number: userPhone,
-        amount: 150,
+      console.log('[Payment] Initiating payment to:', `${BACKEND_API_URL}/api/v1/payments/initiate`);
+      const response = await fetch(`${BACKEND_API_URL}/api/v1/payments/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_phone: phoneNumber,
+          entity_id: id || "1",
+          entity_type: 'fundi',
+          amount: 150,
+        }),
       });
+
+      const data = await response.json();
+      console.log('[Payment] Response:', data);
       
-      if (result.success) {
-        // Payment initiated - STK Push sent
-        alert(result.message || "STK Push sent! Please enter your M-Pesa PIN.");
-        // In production, poll for payment status
+      if (data.success) {
+        // STK Push sent successfully
+        alert(data.message || "STK Push sent! Please enter your M-Pesa PIN.");
         setTimeout(() => {
           setContactRevealed(true);
           setShowPaymentModal(false);
-        }, 5000);
+        }, 2000);
+      } else {
+        alert(data.message || "Payment failed. Please try again.");
       }
     } catch (error: any) {
-      alert("Payment failed: " + (error.message || "Unknown error"));
+      console.error('[Payment] Error:', error);
+      alert("Payment failed: " + (error.message || "Please check your connection and try again."));
     } finally {
       setIsProcessingPayment(false);
     }
@@ -397,6 +415,23 @@ export default function FundiProfile() {
           </DialogHeader>
           
           <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label htmlFor="phone" className="text-sm font-medium">
+                M-Pesa Phone Number
+              </label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="254712345678"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                disabled={isProcessingPayment}
+              />
+              <p className="text-xs text-muted-foreground">
+                Enter your M-Pesa number to receive the payment prompt
+              </p>
+            </div>
+
             <div className="bg-muted rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Service Provider</span>
@@ -419,8 +454,8 @@ export default function FundiProfile() {
             <Button 
               className="w-full" 
               size="lg"
-              onClick={handlePayment}
-              disabled={isProcessingPayment}
+              onClick={() => handlePayment(phoneNumber)}
+              disabled={isProcessingPayment || !phoneNumber}
               style={{background: '#25D366'}}
             >
               {isProcessingPayment ? (
