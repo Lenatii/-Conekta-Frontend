@@ -10,6 +10,7 @@ import PropertyDetail from "./pages/PropertyDetail";
 import Fundis from "./pages/Fundis";
 import FundiProfile from "./pages/FundiProfile";
 import ShortStay from "./pages/ShortStay";
+import StayDetail from "./pages/StayDetail";
 import Ubaru from "./pages/Ubaru";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/fundis" component={Fundis} />
       <Route path="/fundis/:id" component={FundiProfile} />
       <Route path="/stays" component={ShortStay} />
+      <Route path="/stays/:id" component={StayDetail} />
       <Route path="/trust" component={Ubaru} />
       <Route path="/verify" component={Ubaru} />
       <Route path="/terms" component={Terms} />
