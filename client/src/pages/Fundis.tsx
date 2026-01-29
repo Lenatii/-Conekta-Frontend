@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,12 +8,65 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap } from "lucide-react";
-import { trpc } from "@/lib/trpc";
+
+// Direct API call to backend instead of tRPC (for static hosting compatibility)
+const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
+
+// Mock fundis data as fallback
+const MOCK_FUNDIS = [
+  {
+    id: 1,
+    name: "John Mwangi",
+    serviceType: "Plumber",
+    description: "Expert plumber with 8+ years experience. Specializing in residential and commercial plumbing installations and repairs.",
+    location: "Nakuru CBD",
+    city: "Nakuru",
+    hourlyRate: 800,
+    rating: 5,
+    totalJobs: 127,
+    isVerified: true,
+    phone: "+254712345678",
+    avatar: "/fundi-placeholder.jpg",
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+  },
+  {
+    id: 2,
+    name: "Peter Ochieng",
+    serviceType: "Electrician",
+    description: "Licensed electrician offering quality electrical installations, repairs, and maintenance services.",
+    location: "Milimani",
+    city: "Nakuru",
+    hourlyRate: 900,
+    rating: 5,
+    totalJobs: 98,
+    isVerified: true,
+    phone: "+254723456789",
+    avatar: "/fundi-placeholder.jpg",
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+  },
+  {
+    id: 3,
+    name: "David Kimani",
+    serviceType: "Carpenter",
+    description: "Professional carpenter specializing in custom furniture, kitchen cabinets, and home renovations.",
+    location: "Pipeline",
+    city: "Nakuru",
+    hourlyRate: 750,
+    rating: 5,
+    totalJobs: 84,
+    isVerified: true,
+    phone: "+254734567890",
+    avatar: "/fundi-placeholder.jpg",
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+  }
+];
 
 export default function FundisPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [serviceType, setServiceType] = useState("all");
   const [location, setLocation] = useState("all");
+  const [fundis, setFundis] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // All 15 service categories from backend
   const serviceCategories = [
@@ -34,28 +87,67 @@ export default function FundisPage() {
     "WiFi Installation"
   ];
 
-  // Fetch fundis from backend API (with mock fallback)
-  const { data: fundisData, isLoading } = trpc.fundis.search.useQuery({
-    category: serviceType,
-    location: location,
-  });
+  // Fetch fundis from backend API
+  useEffect(() => {
+    const fetchFundis = async () => {
+      setIsLoading(true);
+      try {
+        console.log('[Fundis] Fetching from:', `${BACKEND_API_URL}/api/fundis/search`);
+        const response = await fetch(`${BACKEND_API_URL}/api/fundis/search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: serviceType === "all" ? undefined : serviceType,
+            location: location === "all" ? undefined : location,
+          }),
+        });
+        
+        console.log('[Fundis] Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('[Fundis] API error response:', errorText);
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('[Fundis] Got response:', data);
+        
+        // Transform backend data to match frontend format
+        const transformedFundis = (data.fundis || []).map((service: any) => ({
+          id: service.id,
+          name: service.provider?.name || "Unknown Provider",
+          serviceType: service.category,
+          description: service.description || service.title,
+          location: service.location,
+          city: service.town || service.county || "Nakuru",
+          hourlyRate: service.rate,
+          rating: service.rating_avg || 5,
+          totalJobs: service.jobs_completed || 0,
+          isVerified: service.verified || false,
+          phone: service.provider?.phone || "",
+          avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
+          certifications: service.verified ? ["CONEKTA Trust Certified", "Customer Service Training"] : []
+        }));
+        
+        // Use backend data if available, otherwise use mock data
+        if (transformedFundis.length > 0) {
+          console.log('[Fundis] Using backend data:', transformedFundis.length, 'fundis');
+          setFundis(transformedFundis);
+        } else {
+          console.log('[Fundis] Backend returned no data, using mock fallback');
+          setFundis(MOCK_FUNDIS);
+        }
+      } catch (error) {
+        console.error('[Fundis] API error, using mock data fallback:', error);
+        setFundis(MOCK_FUNDIS);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Transform backend data to match frontend format
-  const fundis = (fundisData || []).map((service: any) => ({
-    id: service.id,
-    name: service.provider?.name || "Unknown Provider",
-    serviceType: service.category,
-    description: service.description || service.title,
-    location: service.location,
-    city: service.town || service.county || "Nakuru",
-    hourlyRate: service.rate,
-    rating: service.rating_avg || 0,
-    totalJobs: service.jobs_completed || 0,
-    isVerified: service.verified || false,
-    phone: service.provider?.phone || "",
-    avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
-    certifications: service.verified ? ["CONEKTA Trust Certified", "Customer Service Training"] : []
-  }));
+    fetchFundis();
+  }, [serviceType, location]);
 
   // Filter fundis based on search query
   const filteredFundis = fundis.filter((fundi: any) => {
