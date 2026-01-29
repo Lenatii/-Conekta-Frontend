@@ -188,10 +188,6 @@ export default function StayDetailPage() {
   const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
-    if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
-      return;
-    }
     setShowPaymentModal(true);
   };
 
