@@ -12,6 +12,7 @@ import FundiProfile from "./pages/FundiProfile";
 import ShortStay from "./pages/ShortStay";
 import StayDetail from "./pages/StayDetail";
 import Ubaru from "./pages/Ubaru";
+import VerifyForm from "./pages/VerifyForm";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Login from "./pages/Login";
@@ -34,6 +35,7 @@ function Router() {
       <Route path="/stays/:id" component={StayDetail} />
       <Route path="/trust" component={Ubaru} />
       <Route path="/verify" component={Ubaru} />
+      <Route path="/verify-form" component={VerifyForm} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/login" component={Login} />

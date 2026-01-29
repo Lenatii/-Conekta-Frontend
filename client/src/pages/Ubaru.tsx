@@ -8,33 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, CheckCircle2, Award, FileCheck, Users, TrendingUp, Phone } from "lucide-react";
 
 export default function TrustPage() {
-  // Function to open chat widget and trigger verification flow
+  // Function to navigate to verification form
   const handleGetVerified = () => {
-    // Find and click the chat widget button
-    const chatButton = document.querySelector('[data-chat-toggle="true"]') as HTMLButtonElement;
-    if (chatButton) {
-      // Open chat if closed
-      if (!chatButton.getAttribute('aria-expanded')) {
-        chatButton.click();
-      }
-      
-      // Wait for chat to open, then send "3" to select CONEKTA Trust option
-      setTimeout(() => {
-        // Find the input field and send button in the chat widget
-        const chatInput = document.querySelector('input[placeholder*="Type"]') as HTMLInputElement;
-        const sendButton = document.querySelector('[aria-label="Send message"]') as HTMLButtonElement;
-        
-        if (chatInput && sendButton) {
-          // Set the value to "3" for CONEKTA Trust option
-          chatInput.value = "3";
-          // Trigger input event so React detects the change
-          const event = new Event('input', { bubbles: true });
-          chatInput.dispatchEvent(event);
-          // Click send after a short delay
-          setTimeout(() => sendButton.click(), 200);
-        }
-      }, 600);
-    }
+    window.location.href = "/verify-form";
   };
 
   // Function to just open chat widget
