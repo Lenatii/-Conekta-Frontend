@@ -188,18 +188,14 @@ export const appRouter = router({
           if (input.location && input.location !== "all") params.append("location", input.location);
           if (input.verified_only) params.append("verified_only", "true");
 
-          try {
-            const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
-            
-            // If backend returns data, use it
-            if (data && Array.isArray(data) && data.length > 0) {
-              return data;
-            }
-          } catch (backendError) {
-            console.log("Backend unavailable, using mock fundis", backendError);
+          const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
+          
+          // If backend returns data, use it
+          if (data && Array.isArray(data) && data.length > 0) {
+            return data;
           }
           
-          // Fallback to mock data if backend is empty or fails
+          // Fallback to mock data if backend is empty
           return getMockFundis();
         } catch (error) {
           console.error("Backend API error, using mock data:", error);
@@ -229,19 +225,159 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         try {
-          console.log("[CHAT DEBUG] Sending to backend:", input);
-          const result = await fetchFromBackend("/api/webchat/message", {
+          return await fetchFromBackend("/api/webchat/message", {
             method: "POST",
             body: JSON.stringify(input),
           });
-          console.log("[CHAT DEBUG] Backend response:", result);
-          return result;
         } catch (error) {
-          console.error("[CHAT DEBUG] Chat API error:", error);
+          console.error("Chat API error:", error);
           // Fallback response when backend is unavailable
           return {
             response: "Hello! I'm Mama Dennis, your AI assistant. I'm currently experiencing connectivity issues with my main system. Please try again in a moment, or contact us directly via WhatsApp at +254 797 446 155. How can I help you today?",
             session_id: input.session_id || `fallback-${Date.now()}`,
+          };
+        }
+      }),
+  }),
+
+  // Public API for AI agents (no auth required)
+  public: router({
+    // Business information endpoint
+    about: publicProcedure.query(() => ({
+      name: "CONEKTA Africa",
+      description: "Kenya's complete digital platform for property rental, service providers (fundis), trust verification (UBARU), and short-stay bookings. Powered by Mama Dennis AI.",
+      services: [
+        {
+          name: "CONEKTA Rentals (RentConnect)",
+          description: "Find verified rental properties with 360° virtual tours in Kenya",
+          keywords: ["property rental", "apartments", "houses", "Nakuru rentals", "Nairobi rentals"],
+        },
+        {
+          name: "CONEKTA Fundis (KaziFlow)",
+          description: "Hire trusted, verified service providers (plumbers, electricians, carpenters, etc.)",
+          keywords: ["hire fundi", "plumber Kenya", "electrician Nakuru", "service providers"],
+        },
+        {
+          name: "CONEKTA Trust (UBARU)",
+          description: "Get verified with background checks and KYC for trust certification",
+          keywords: ["UBARU verification", "trust badge", "background check Kenya"],
+        },
+        {
+          name: "CONEKTA Stays",
+          description: "Book or list short-stay properties across Kenya",
+          keywords: ["short-stay Kenya", "Airbnb Kenya", "vacation rental Nakuru"],
+        },
+      ],
+      locations: ["Nakuru", "Nairobi", "Kenya"],
+      contact: {
+        phone: "+254797446155",
+        whatsapp: "https://wa.me/254797446155",
+        email: "hello@conekta.africa",
+        website: "https://www.conekta.co.ke",
+      },
+      features: [
+        "AI-powered property matching",
+        "360° virtual property tours",
+        "Verified service providers",
+        "UBARU trust certification",
+        "M-Pesa payment integration",
+        "WhatsApp-based booking",
+      ],
+    })),
+
+    // Properties endpoint for AI agents
+    properties: publicProcedure
+      .input(z.object({
+        limit: z.number().optional().default(10),
+        location: z.string().optional(),
+      }))
+      .query(async ({ input }) => {
+        try {
+          const params = new URLSearchParams();
+          if (input.location) params.append("location", input.location);
+          params.append("limit", input.limit.toString());
+
+          const data = await fetchFromBackend(`/api/properties?${params.toString()}`);
+          
+          // Return AI-friendly format
+          return {
+            total: data.length,
+            properties: data.map((p: any) => ({
+              id: p.id,
+              title: p.title || `${p.bedrooms}BR ${p.property_type} in ${p.location}`,
+              description: p.description,
+              type: p.property_type,
+              location: p.location,
+              price: p.price,
+              bedrooms: p.bedrooms,
+              bathrooms: p.bathrooms,
+              verified: p.verified || false,
+              rating: p.rating_avg || 0,
+              url: `https://www.conekta.co.ke/properties/${p.id}`,
+            })),
+          };
+        } catch (error) {
+          return {
+            total: 0,
+            properties: [],
+            error: "Unable to fetch properties at this time",
+          };
+        }
+      }),
+
+    // Fundis endpoint for AI agents
+    fundis: publicProcedure
+      .input(z.object({
+        limit: z.number().optional().default(10),
+        category: z.string().optional(),
+        location: z.string().optional(),
+      }))
+      .query(async ({ input }) => {
+        try {
+          const params = new URLSearchParams();
+          if (input.category) params.append("category", input.category);
+          if (input.location) params.append("location", input.location);
+
+          const data = await fetchFromBackend(`/api/services/search?${params.toString()}`);
+          const fundis = Array.isArray(data) && data.length > 0 ? data : getMockFundis();
+          
+          // Return AI-friendly format
+          return {
+            total: fundis.length,
+            fundis: fundis.slice(0, input.limit).map((f: any) => ({
+              id: f.id,
+              name: f.provider?.name || f.title,
+              title: f.title,
+              description: f.description,
+              category: f.category,
+              location: f.location,
+              rate: f.rate,
+              rate_type: f.rate_type,
+              verified: f.verified || false,
+              rating: f.rating_avg || 0,
+              jobs_completed: f.jobs_completed || 0,
+              url: `https://www.conekta.co.ke/fundis/${f.id}`,
+            })),
+          };
+        } catch (error) {
+          // Return mock data for AI agents
+          const mockFundis = getMockFundis();
+          return {
+            total: mockFundis.length,
+            fundis: mockFundis.slice(0, input.limit).map((f: any) => ({
+              id: f.id,
+              name: f.provider?.name || f.title,
+              title: f.title,
+              description: f.description,
+              category: f.category,
+              location: f.location,
+              rate: f.rate,
+              rate_type: f.rate_type,
+              verified: f.verified || false,
+              rating: f.rating_avg || 0,
+              jobs_completed: f.jobs_completed || 0,
+              url: `https://www.conekta.co.ke/fundis/${f.id}`,
+            })),
           };
         }
       }),

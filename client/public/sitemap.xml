@@ -4,47 +4,72 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Homepage - Highest priority -->
+  <!-- Homepage -->
   <url>
-    <loc>https://conekta.co.ke/</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://www.conekta.co.ke/</loc>
+    <lastmod>2026-01-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- CONEKTA Rentals -->
+  <!-- Properties Listing -->
   <url>
-    <loc>https://conekta.co.ke/properties</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://www.conekta.co.ke/properties</loc>
+    <lastmod>2026-01-29</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.95</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- CONEKTA Fundis -->
+  <!-- Fundis/Service Providers -->
   <url>
-    <loc>https://conekta.co.ke/fundis</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://www.conekta.co.ke/fundis</loc>
+    <lastmod>2026-01-29</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.95</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- CONEKTA Trust -->
+  <!-- Short-Stay -->
   <url>
-    <loc>https://conekta.co.ke/trust</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://www.conekta.co.ke/stays</loc>
+    <lastmod>2026-01-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- UBARU Verification -->
+  <url>
+    <loc>https://www.conekta.co.ke/ubaru</loc>
+    <lastmod>2026-01-29</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
 
-  <!-- CONEKTA Stays -->
+  <!-- Terms & Conditions -->
   <url>
-    <loc>https://conekta.co.ke/stays</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <loc>https://www.conekta.co.ke/terms</loc>
+    <lastmod>2026-01-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
-  <!-- Note: Individual property pages will be dynamically added by the backend -->
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://www.conekta.co.ke/privacy</loc>
+    <lastmod>2026-01-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Dashboard (requires login) -->
+  <url>
+    <loc>https://www.conekta.co.ke/dashboard</loc>
+    <lastmod>2026-01-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Note: Individual property and fundi pages will be dynamically added by the backend -->
   <!-- Format: https://www.conekta.co.ke/properties/[id] -->
+  <!-- Format: https://www.conekta.co.ke/fundis/[id] -->
 
 </urlset>
