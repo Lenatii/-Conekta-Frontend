@@ -248,12 +248,12 @@ export const appRouter = router({
       description: "Kenya's complete digital platform for property rental, service providers (fundis), trust verification (UBARU), and short-stay bookings. Powered by Mama Dennis AI.",
       services: [
         {
-          name: "CONEKTA Rentals (RentConnect)",
+          name: "CONEKTA Rentals",
           description: "Find verified rental properties with 360° virtual tours in Kenya",
           keywords: ["property rental", "apartments", "houses", "Nakuru rentals", "Nairobi rentals"],
         },
         {
-          name: "CONEKTA Fundis (KaziFlow)",
+          name: "CONEKTA Fundis",
           description: "Hire trusted, verified service providers (plumbers, electricians, carpenters, etc.)",
           keywords: ["hire fundi", "plumber Kenya", "electrician Nakuru", "service providers"],
         },

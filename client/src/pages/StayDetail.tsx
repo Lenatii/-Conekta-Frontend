@@ -22,7 +22,7 @@ export default function StayDetailPage() {
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [contactRevealed, setContactRevealed] = useState(false);
 
-  // Mock stays data - matches ShortStay.tsx
+  // Mock stays data - matches Stays.tsx
   const mockStays = [
     {
       id: 1,

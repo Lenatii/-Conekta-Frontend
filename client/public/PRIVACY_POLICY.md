@@ -9,7 +9,7 @@
 
 Welcome to **CONEKTA** ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services through WhatsApp (Mama Dennis chatbot) and our platform.
 
-**CONEKTA** is a marketplace platform connecting tenants with landlords, and clients with service providers (fundis) in Nakuru, Kenya. We also provide identity verification services through our UBARU system.
+**CONEKTA** is a marketplace platform connecting tenants with landlords, and clients with service providers (fundis) in Nakuru, Kenya. We also provide identity verification services through our CONEKTA Trust system.
 
 By using CONEKTA, you agree to the collection and use of information in accordance with this Privacy Policy and the **Kenya Data Protection Act, 2019**.
 
@@ -38,9 +38,9 @@ When you register or use CONEKTA services, we collect:
 - Tools owned
 - Experience and skills
 - Service area
-- ID verification information (through UBARU)
+- ID verification information (through CONEKTA Trust)
 
-**For Identity Verification (UBARU):**
+**For Identity Verification (CONEKTA Trust):**
 - National ID number
 - ID card photo
 - Selfie photo (for verification)
@@ -70,7 +70,7 @@ We use your information to:
 - Connect tenants with landlords
 - Connect clients with service providers (fundis)
 - Process contact reveal requests
-- Verify identities through UBARU
+- Verify identities through CONEKTA Trust
 - Send notifications via WhatsApp
 
 ### 3.2 Improve Services

@@ -9,7 +9,7 @@
 
 ## 1. ACCEPTANCE OF TERMS
 
-By accessing or using CONEKTA Technologies platform ("Platform"), including RentConnect, KaziFlow, UBARU verification system, Short-Stay marketplace, and Mama Dennis AI ("Services"), you ("User", "you", "your") agree to be bound by these Terms and Conditions ("Terms").
+By accessing or using CONEKTA Technologies platform ("Platform"), including CONEKTA Rentals, CONEKTA Fundis, CONEKTA Trust verification system, CONEKTA Stays marketplace, and Mama Dennis AI ("Services"), you ("User", "you", "your") agree to be bound by these Terms and Conditions ("Terms").
 
 **IF YOU DO NOT AGREE TO THESE TERMS, DO NOT USE THE PLATFORM.**
 
@@ -33,7 +33,7 @@ CONEKTA is a **MARKETPLACE PLATFORM ONLY**. We:
 - Connect landlords with tenants
 - Connect short-stay hosts with guests
 - Facilitate communication and payments
-- Provide verification services through UBARU
+- Provide verification services through CONEKTA Trust
 
 ### 3.2 NOT A SERVICE PROVIDER
 **WE ARE NOT:**
@@ -48,10 +48,10 @@ All service providers on the Platform are **independent contractors**. They are 
 
 ---
 
-## 4. UBARU VERIFICATION - LIMITED SCOPE
+## 4. CONEKTA TRUST VERIFICATION - LIMITED SCOPE
 
 ### 4.1 Verification Process
-UBARU verification includes:
+CONEKTA Trust verification includes:
 - Identity document verification
 - Face matching technology
 - Emergency contact collection (optional)
@@ -60,7 +60,7 @@ UBARU verification includes:
 ### 4.2 VERIFICATION ≠ GUARANTEE
 **CRITICAL DISCLAIMER:**
 
-**UBARU VERIFICATION DOES NOT GUARANTEE:**
+**CONEKTA TRUST VERIFICATION DOES NOT GUARANTEE:**
 - Professional competence or skill level
 - Honesty, reliability, or trustworthiness
 - Quality of work or services
@@ -263,7 +263,7 @@ Violation may result in:
 - Commercial use without license
 
 ### 11.2 Platform Ownership
-The CONEKTA platform, including RentConnect, KaziFlow, UBARU, and Short-Stay, is owned by CONEKTA Technologies.
+The CONEKTA platform, including CONEKTA Rentals, CONEKTA Fundis, CONEKTA Trust, and CONEKTA Stays, is owned by CONEKTA Technologies.
 
 ### 11.3 User Content
 Users retain ownership of content they upload but grant CONEKTA a worldwide, royalty-free license to use, display, and distribute such content for Platform operations.

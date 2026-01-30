@@ -183,7 +183,7 @@ export default function HomePage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            {/* RentConnect */}
+            {/* CONEKTA Rentals */}
             <Link href="/properties">
               <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-rentconnect.jpg)'}}></div>
@@ -209,7 +209,7 @@ export default function HomePage() {
               </Card>
             </Link>
             
-            {/* KaziFlow */}
+            {/* CONEKTA Fundis */}
             <Link href="/fundis">
               <Card className="glass rounded-2xl border-white/10 module-card overflow-hidden group cursor-pointer h-[400px] relative">
                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{backgroundImage: 'url(/module-kaziflow.jpg)'}}></div>
