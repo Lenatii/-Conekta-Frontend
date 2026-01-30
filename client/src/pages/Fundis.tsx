@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap, Circle } from "lucide-react";
+import { Search, MapPin, Star, Shield, Phone, Briefcase, Award, GraduationCap, Circle, Navigation } from "lucide-react";
+import { calculateDistance, formatDistance, getUserLocation } from "@/lib/geoUtils";
 
 // Direct API call to backend instead of tRPC (for static hosting compatibility)
 const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
@@ -28,7 +29,9 @@ const MOCK_FUNDIS = [
     isAvailable: true,
     phone: "+254712345678",
     avatar: "/fundi-placeholder.jpg",
-    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
+    latitude: -0.3031,
+    longitude: 36.0800
   },
   {
     id: 2,
@@ -44,7 +47,9 @@ const MOCK_FUNDIS = [
     isAvailable: true,
     phone: "+254723456789",
     avatar: "/fundi-placeholder.jpg",
-    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
+    latitude: -0.2827,
+    longitude: 36.0667
   },
   {
     id: 3,
@@ -60,7 +65,9 @@ const MOCK_FUNDIS = [
     isAvailable: false,
     phone: "+254734567890",
     avatar: "/fundi-placeholder.jpg",
-    certifications: ["CONEKTA Trust Certified", "Customer Service Training"]
+    certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
+    latitude: -0.3176,
+    longitude: 36.0965
   }
 ];
 
@@ -71,6 +78,17 @@ export default function FundisPage() {
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [fundis, setFundis] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Get user location on mount
+  useEffect(() => {
+    getUserLocation().then((loc) => {
+      if (loc) {
+        console.log('[Fundis] Got user location:', loc);
+        setUserLocation(loc);
+      }
+    });
+  }, []);
 
   // All 15 service categories from backend
   const serviceCategories = [
@@ -132,7 +150,9 @@ export default function FundisPage() {
           isVerified: service.verified || false,
           phone: service.provider?.phone || "",
           avatar: service.provider?.avatar || "/fundi-placeholder.jpg",
-          certifications: service.verified ? ["CONEKTA Trust Certified", "Customer Service Training"] : []
+          certifications: service.verified ? ["CONEKTA Trust Certified", "Customer Service Training"] : [],
+          latitude: service.latitude || service.lat,
+          longitude: service.longitude || service.lng
         }));
         
         // Use backend data if available, otherwise use mock data
@@ -371,9 +391,17 @@ export default function FundisPage() {
 
                   {/* Location and Rate */}
                   <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {fundi.location}
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        {fundi.location}
+                      </div>
+                      {userLocation && fundi.latitude && fundi.longitude && (
+                        <div className="flex items-center text-xs text-primary font-semibold">
+                          <Navigation className="h-3 w-3 mr-1" />
+                          {formatDistance(calculateDistance(userLocation.lat, userLocation.lng, fundi.latitude, fundi.longitude))}
+                        </div>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-primary">

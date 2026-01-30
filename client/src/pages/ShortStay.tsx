@@ -8,12 +8,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Users, Calendar, Star, Shield, Wifi, Car } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 export default function StaysPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [stayType, setStayType] = useState("all");
   const [priceRange, setPriceRange] = useState("all");
   const [guests, setGuests] = useState("all");
+  const [checkInDate, setCheckInDate] = useState<Date | undefined>(undefined);
+  const [checkOutDate, setCheckOutDate] = useState<Date | undefined>(undefined);
 
   // Mock stays data
   const mockStays = [
@@ -162,7 +167,7 @@ export default function StaysPage() {
           <h1 className="text-3xl font-bold mb-6">Find Your Perfect Short-Stay</h1>
           
           {/* Search and Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
             {/* Search Input */}
             <div className="md:col-span-2 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -217,6 +222,53 @@ export default function StaysPage() {
                 <SelectItem value="luxury">Luxury (KES 10,000+)</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          
+          {/* Date Range Pickers */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {/* Check-in Date */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  {checkInDate ? format(checkInDate, "PPP") : "Check-in Date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={checkInDate}
+                  onSelect={setCheckInDate}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+
+            {/* Check-out Date */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  {checkOutDate ? format(checkOutDate, "PPP") : "Check-out Date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={checkOutDate}
+                  onSelect={setCheckOutDate}
+                  disabled={(date) => date < (checkInDate || new Date())}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
