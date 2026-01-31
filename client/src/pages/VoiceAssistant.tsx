@@ -332,10 +332,16 @@ const VoiceAssistant: React.FC = () => {
 
     } catch (err: any) {
       console.error('Failed to start session:', err);
+      console.error('Error details:', JSON.stringify(err, null, 2));
+      console.error('Error message:', err?.message);
+      console.error('Error name:', err?.name);
+      
       if (err.name === 'NotAllowedError') {
         setError('Microphone access denied. Please allow microphone access and try again.');
+      } else if (err?.message?.includes('API key')) {
+        setError('API key error. Please contact support.');
       } else {
-        setError('Failed to connect. Please check your internet and try again.');
+        setError(`Error: ${err?.message || 'Failed to connect. Please try again.'}`);
       }
       setStatus(ConnectionStatus.ERROR);
     }
