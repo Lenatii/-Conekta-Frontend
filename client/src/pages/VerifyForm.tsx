@@ -363,20 +363,46 @@ export default function VerifyForm() {
                   <CheckCircle2 className="h-8 w-8 text-green-500" />
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-2">
-                  Verification Submitted!
+                  Verification Request Submitted!
                 </h2>
-                <p className="text-slate-400 mb-6">
-                  Thank you for submitting your CONEKTA Trust verification. We'll review your application within 24-48 hours.
+                <p className="text-slate-400 mb-4">
+                  Thank you! Your information has been saved.
                 </p>
+                
+                <div className="bg-slate-900/50 border border-primary/30 rounded-lg p-4 mb-6 text-left">
+                  <h3 className="font-semibold text-white mb-2">📋 Next Step: Complete Verification</h3>
+                  <p className="text-slate-300 text-sm mb-3">
+                    To complete your CONEKTA Trust verification, please:
+                  </p>
+                  <ol className="text-slate-300 text-sm space-y-2 list-decimal list-inside">
+                    <li>Click the chat button below to talk to <strong className="text-primary">Mama Dennis</strong></li>
+                    <li>Send her a clear photo of your ID (front side)</li>
+                    <li>She will verify your document and activate your badge</li>
+                  </ol>
+                </div>
+                
                 <p className="text-sm text-slate-500 mb-6">
-                  You'll receive a notification once your verification is approved.
+                  Verification usually takes 5-10 minutes during business hours.
                 </p>
-                <Button
-                  onClick={() => setLocation("/")}
-                  style={{ background: '#00D9A5' }}
-                >
-                  Return to Home
-                </Button>
+                
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button
+                    onClick={() => {
+                      // Open Mama Dennis chat
+                      const chatButton = document.querySelector('[data-chat-widget]') as HTMLElement;
+                      if (chatButton) chatButton.click();
+                    }}
+                    style={{ background: '#00D9A5' }}
+                  >
+                    💬 Chat with Mama Dennis
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setLocation("/")}
+                  >
+                    Return to Home
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
