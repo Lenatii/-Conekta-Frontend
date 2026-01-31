@@ -73,8 +73,6 @@ export default function VerifyForm() {
     }
   };
 
-  const submitVerification = trpc.verification.submit.useMutation();
-
   const handleSubmit = async () => {
     if (!validateStep2()) return;
 
@@ -82,19 +80,27 @@ export default function VerifyForm() {
     setError("");
 
     try {
-      const result = await submitVerification.mutateAsync({
-        name: formData.fullName,
-        id_type: formData.idType,
-        id_number: formData.idNumber,
-        location: formData.location,
-        emergency_contact_name: formData.emergencyContactName || null,
-        emergency_contact_phone: formData.emergencyContactPhone || null,
-        user_type: formData.userType,
-        tc_accepted: formData.tcAccepted,
-        privacy_accepted: formData.privacyAccepted,
+      const response = await fetch("https://conekta-complete-system.onrender.com/api/verification/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.fullName,
+          id_type: formData.idType,
+          id_number: formData.idNumber,
+          location: formData.location,
+          emergency_contact_name: formData.emergencyContactName || null,
+          emergency_contact_phone: formData.emergencyContactPhone || null,
+          user_type: formData.userType,
+          tc_accepted: formData.tcAccepted,
+          privacy_accepted: formData.privacyAccepted,
+        }),
       });
 
-      if (result.success) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setStep(3); // Success step
       } else {
         setError(result.message || "Verification submission failed. Please try again.");
