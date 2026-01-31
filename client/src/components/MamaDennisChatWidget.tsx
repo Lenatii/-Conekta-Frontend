@@ -131,14 +131,18 @@ export default function MamaDennisChatWidget() {
       }
 
       if (uploadedFiles.length > 0) {
-        // Show uploaded files in chat
+        // Create local preview URL for the first file
+        const firstFile = Array.from(files)[0];
+        const localPreviewUrl = firstFile ? URL.createObjectURL(firstFile) : uploadedFiles[0].url;
+        
+        // Show uploaded files in chat with local preview
         const fileTypes = uploadedFiles.map(f => f.type).join(", ");
         const userMessage: Message = {
           id: Date.now().toString(),
           text: `📎 Uploaded ${uploadedFiles.length} ${uploadedFiles.length === 1 ? 'file' : 'files'} (${fileTypes})`,
           sender: "user",
           timestamp: new Date(),
-          mediaUrl: uploadedFiles[0].url,
+          mediaUrl: localPreviewUrl, // Use local preview for display
           mediaType: uploadedFiles[0].type,
         };
         setMessages((prev) => [...prev, userMessage]);
