@@ -9,7 +9,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, CheckCircle2, AlertCircle } from "lucide-react";
-import { trpc } from "@/lib/trpc";
+
+// Backend API URL
+const API_BASE_URL = "https://conekta-complete-system.onrender.com";
 
 export default function VerifyForm() {
   const [, setLocation] = useLocation();
@@ -73,8 +75,6 @@ export default function VerifyForm() {
     }
   };
 
-  const submitVerification = trpc.verification.submit.useMutation();
-
   const handleSubmit = async () => {
     if (!validateStep2()) return;
 
@@ -82,26 +82,35 @@ export default function VerifyForm() {
     setError("");
 
     try {
-      const result = await submitVerification.mutateAsync({
-        name: formData.fullName,
-        id_type: formData.idType,
-        id_number: formData.idNumber,
-        location: formData.location,
-        emergency_contact_name: formData.emergencyContactName || null,
-        emergency_contact_phone: formData.emergencyContactPhone || null,
-        user_type: formData.userType,
-        tc_accepted: formData.tcAccepted,
-        privacy_accepted: formData.privacyAccepted,
+      // Call the Python backend REST API directly
+      const response = await fetch(`${API_BASE_URL}/api/verification/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.fullName,
+          id_type: formData.idType,
+          id_number: formData.idNumber,
+          location: formData.location,
+          emergency_contact_name: formData.emergencyContactName || null,
+          emergency_contact_phone: formData.emergencyContactPhone || null,
+          user_type: formData.userType,
+          tc_accepted: formData.tcAccepted,
+          privacy_accepted: formData.privacyAccepted,
+        }),
       });
 
-      if (result.success) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setStep(3); // Success step
       } else {
-        setError(result.message || "Verification submission failed. Please try again.");
+        setError(result.message || result.detail || "Verification submission failed. Please try again.");
       }
     } catch (err: any) {
       console.error("Verification error:", err);
-      setError(err.message || "Network error. Please check your connection and try again.");
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -278,13 +287,13 @@ export default function VerifyForm() {
                   </a>
                 </div>
 
-                <div className="flex items-start gap-3">
+                <div className="flex items-center gap-3">
                   <Checkbox
                     id="tc"
                     checked={formData.tcAccepted}
                     onCheckedChange={(checked) => handleInputChange("tcAccepted", checked as boolean)}
                   />
-                  <Label htmlFor="tc" className="text-white text-sm cursor-pointer">
+                  <Label htmlFor="tc" className="text-white cursor-pointer">
                     I have read and accept the Terms & Conditions *
                   </Label>
                 </div>
@@ -307,13 +316,13 @@ export default function VerifyForm() {
                   </a>
                 </div>
 
-                <div className="flex items-start gap-3">
+                <div className="flex items-center gap-3">
                   <Checkbox
                     id="privacy"
                     checked={formData.privacyAccepted}
                     onCheckedChange={(checked) => handleInputChange("privacyAccepted", checked as boolean)}
                   />
-                  <Label htmlFor="privacy" className="text-white text-sm cursor-pointer">
+                  <Label htmlFor="privacy" className="text-white cursor-pointer">
                     I have read and accept the Privacy Policy *
                   </Label>
                 </div>
@@ -349,35 +358,25 @@ export default function VerifyForm() {
           {/* Step 3: Success */}
           {step === 3 && (
             <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="py-12 text-center space-y-6">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10">
-                  <CheckCircle2 className="h-10 w-10 text-green-500" />
+              <CardContent className="pt-8 pb-8 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 mb-4">
+                  <CheckCircle2 className="h-8 w-8 text-green-500" />
                 </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    Verification Submitted!
-                  </h2>
-                  <p className="text-slate-400">
-                    Your CONEKTA Trust verification has been submitted successfully.
-                    We'll review your information and get back to you within 24-48 hours.
-                  </p>
-                </div>
-                <div className="space-y-3 pt-4">
-                  <Button
-                    className="w-full"
-                    onClick={() => setLocation("/")}
-                    style={{ background: '#00D9A5' }}
-                  >
-                    Back to Home
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setLocation("/trust")}
-                  >
-                    Learn More About CONEKTA Trust
-                  </Button>
-                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Verification Submitted!
+                </h2>
+                <p className="text-slate-400 mb-6">
+                  Thank you for submitting your CONEKTA Trust verification. We'll review your application within 24-48 hours.
+                </p>
+                <p className="text-sm text-slate-500 mb-6">
+                  You'll receive a notification once your verification is approved.
+                </p>
+                <Button
+                  onClick={() => setLocation("/")}
+                  style={{ background: '#00D9A5' }}
+                >
+                  Return to Home
+                </Button>
               </CardContent>
             </Card>
           )}
