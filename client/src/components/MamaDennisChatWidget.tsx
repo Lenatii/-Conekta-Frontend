@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, Loader2, ArrowLeft } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, ArrowLeft, Paperclip, Image, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
@@ -14,6 +14,8 @@ interface Message {
   timestamp: Date;
   quickActions?: QuickAction[];
   actionType?: "consumer" | "provider" | "menu";
+  mediaUrl?: string;
+  mediaType?: string;
 }
 
 interface QuickAction {
@@ -31,6 +33,8 @@ export default function MamaDennisChatWidget() {
   const [hasAutoOpened, setHasAutoOpened] = useState(false);
   const [menuHistory, setMenuHistory] = useState<MenuState[]>(["main"]);
   const [, setLocation] = useLocation();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -71,6 +75,117 @@ export default function MamaDennisChatWidget() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Handle file upload
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    const uploadedFiles: { url: string; type: string }[] = [];
+
+    try {
+      for (const file of Array.from(files)) {
+        // Validate file type
+        const allowedTypes = [
+          "image/jpeg", "image/png", "image/gif", "image/webp",
+          "video/mp4", "video/quicktime", "video/webm",
+          "application/pdf"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+          alert(`File type not allowed: ${file.type}. Please upload images, videos, or PDFs.`);
+          continue;
+        }
+
+        // Validate file size (max 50MB)
+        if (file.size > 50 * 1024 * 1024) {
+          alert(`File too large: ${file.name}. Maximum size is 50MB.`);
+          continue;
+        }
+
+        // Upload file
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("session_id", sessionId);
+
+        console.log('[Chat] Uploading file:', file.name);
+        const response = await fetch(`${BACKEND_API_URL}/api/webchat/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('[Chat] Upload error:', errorText);
+          throw new Error(`Upload failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('[Chat] Upload success:', data);
+        
+        uploadedFiles.push({
+          url: data.file_url,
+          type: data.file_type,
+        });
+      }
+
+      if (uploadedFiles.length > 0) {
+        // Show uploaded files in chat
+        const fileTypes = uploadedFiles.map(f => f.type).join(", ");
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          text: `📎 Uploaded ${uploadedFiles.length} ${uploadedFiles.length === 1 ? 'file' : 'files'} (${fileTypes})`,
+          sender: "user",
+          timestamp: new Date(),
+          mediaUrl: uploadedFiles[0].url,
+          mediaType: uploadedFiles[0].type,
+        };
+        setMessages((prev) => [...prev, userMessage]);
+
+        // Send message with media to backend
+        setIsTyping(true);
+        const response = await fetch(`${BACKEND_API_URL}/api/webchat/message-with-media`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: `[Uploaded ${uploadedFiles.length} file(s)]`,
+            session_id: sessionId,
+            media_urls: uploadedFiles.map(f => f.url),
+            media_types: uploadedFiles.map(f => f.type),
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const mamaResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: data.response || "✅ Files received! Processing...",
+            sender: "mama",
+            timestamp: new Date(),
+            quickActions: getSuggestedActions(data.response || ""),
+          };
+          setMessages((prev) => [...prev, mamaResponse]);
+        }
+      }
+    } catch (error) {
+      console.error('[Chat] File upload error:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: `❌ Upload failed. Please try again or send via WhatsApp at +254 797 446 155`,
+        sender: "mama",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
+      setIsUploading(false);
+      setIsTyping(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   // Go back to previous menu
   const handleGoBack = () => {
@@ -363,6 +478,16 @@ export default function MamaDennisChatWidget() {
   const getSuggestedActions = (response: string): QuickAction[] | undefined => {
     const lower = response.toLowerCase();
     
+    // Check if asking for photos/documents
+    if (lower.includes("send me photos") || lower.includes("upload") || lower.includes("send photos") || 
+        lower.includes("photo of your id") || lower.includes("send a clear photo")) {
+      return [
+        { label: "📷 Upload Photo", action: "upload_photo", variant: "default" },
+        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
+        { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
+      ];
+    }
+    
     // Check if in a step-by-step flow (property listing, fundi registration, etc.)
     if (lower.includes("step 1") || lower.includes("step 2") || lower.includes("step 3") || 
         lower.includes("reply with") || lower.includes("your title") || lower.includes("your name")) {
@@ -399,18 +524,18 @@ export default function MamaDennisChatWidget() {
     // Check for hire/register fundi options
     if (lower.includes("hire a fundi") && lower.includes("register as fundi")) {
       return [
-        { label: "💼 Hire a Fundi", action: "1" },
-        { label: "🛠️ Register as Fundi", action: "2" },
-        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
+        { label: "🔧 Hire a Fundi", action: "1" },
+        { label: "📋 Register as Fundi", action: "2" },
+        { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
       ];
     }
     
-    // Check for tenant/landlord options
-    if (lower.includes("find a home") && lower.includes("list property")) {
+    // Check for property listing options
+    if (lower.includes("find a home") && lower.includes("list your property")) {
       return [
         { label: "🔍 Find a Home", action: "1" },
-        { label: "📋 List Property", action: "2" },
-        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
+        { label: "🏠 List Property", action: "2" },
+        { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
       ];
     }
     
@@ -418,36 +543,33 @@ export default function MamaDennisChatWidget() {
     if (lower.includes("book a stay") && lower.includes("list your space")) {
       return [
         { label: "🏨 Book a Stay", action: "1" },
-        { label: "📋 List Your Space", action: "2" },
-        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
-      ];
-    }
-    
-    // Check for landlord/property listing prompts
-    if (lower.includes("list property") || lower.includes("landlord")) {
-      return [
-        { label: "📋 Start Listing", action: "Let's start listing my property" },
-        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
-      ];
-    }
-    
-    // Check for fundi registration prompts
-    if (lower.includes("register as fundi") || lower.includes("service provider")) {
-      return [
-        { label: "📋 Register Now", action: "I want to register as a fundi" },
-        { label: "⬅️ Go Back", action: "go_back", variant: "back" },
-      ];
-    }
-    
-    if (lower.includes("property") || lower.includes("rent") || lower.includes("find a home")) {
-      return [
-        { label: "View Properties", action: "Show me available properties" },
-        { label: "My Budget", action: "What's my budget range?" },
+        { label: "🏠 List Your Space", action: "2" },
         { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
       ];
     }
     
-    if (lower.includes("fundi") || lower.includes("service") || lower.includes("hire")) {
+    // Check for main menu options
+    if (lower.includes("1. conekta rentals") || lower.includes("2. conekta fundis") || 
+        lower.includes("3. conekta trust") || lower.includes("4. conekta stays")) {
+      return [
+        { label: "🏠 Rentals", action: "1" },
+        { label: "🔧 Fundis", action: "2" },
+        { label: "🛡️ Trust", action: "3" },
+        { label: "🏨 Stays", action: "4" },
+      ];
+    }
+    
+    // Check for property search context
+    if (lower.includes("property") || lower.includes("rent") || lower.includes("house") || lower.includes("apartment")) {
+      return [
+        { label: "Browse Properties", action: "Show me available properties" },
+        { label: "Specific Area", action: "I want to search in a specific area" },
+        { label: "🏠 Main Menu", action: "main_menu", variant: "back" },
+      ];
+    }
+    
+    // Check for fundi context
+    if (lower.includes("fundi") || lower.includes("plumber") || lower.includes("electrician") || lower.includes("service")) {
       return [
         { label: "Browse Fundis", action: "Show me available fundis" },
         { label: "Service Needed", action: "What service do you need?" },
@@ -471,6 +593,16 @@ export default function MamaDennisChatWidget() {
 
   return (
     <>
+      {/* Hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        accept="image/*,video/*,.pdf"
+        multiple
+        className="hidden"
+      />
+
       {/* Chat Button with Pulse Animation */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -523,6 +655,16 @@ export default function MamaDennisChatWidget() {
                     }`}
                     style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
                   >
+                    {/* Show image preview if media attached */}
+                    {message.mediaUrl && message.mediaType === "image" && (
+                      <div className="mb-2">
+                        <img 
+                          src={`${BACKEND_API_URL}${message.mediaUrl}`} 
+                          alt="Uploaded" 
+                          className="rounded-lg max-w-full h-auto max-h-32 object-cover"
+                        />
+                      </div>
+                    )}
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
                     <p className="text-xs opacity-70 mt-1">
                       {message.timestamp.toLocaleTimeString([], {
@@ -539,7 +681,13 @@ export default function MamaDennisChatWidget() {
                     {message.quickActions.map((action, idx) => (
                       <button
                         key={idx}
-                        onClick={() => handleQuickAction(action.action)}
+                        onClick={() => {
+                          if (action.action === "upload_photo") {
+                            fileInputRef.current?.click();
+                          } else {
+                            handleQuickAction(action.action);
+                          }
+                        }}
                         className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                           action.variant === "provider"
                             ? "bg-purple-900/50 hover:bg-purple-800/50 text-purple-300 border-purple-700"
@@ -566,11 +714,32 @@ export default function MamaDennisChatWidget() {
                 </div>
               </div>
             )}
+            
+            {isUploading && (
+              <div className="flex justify-start">
+                <div className="bg-slate-800 text-slate-100 rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">Uploading file...</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Input */}
           <div className="p-3 sm:p-4 border-t border-slate-700 bg-slate-800/50 flex-shrink-0">
             <div className="flex gap-2">
+              {/* File upload button */}
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading || isTyping}
+                variant="outline"
+                size="icon"
+                className="bg-slate-900 border-slate-700 text-slate-400 hover:text-teal-400 hover:border-teal-600"
+                title="Upload photo or document"
+              >
+                <Paperclip className="w-4 h-4" />
+              </Button>
+              
               <Input
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
@@ -589,7 +758,7 @@ export default function MamaDennisChatWidget() {
               </Button>
             </div>
             <p className="text-xs text-slate-500 mt-2 text-center">
-              Powered by Mama Dennis AI • <span className="text-amber-400">WhatsApp coming soon!</span>
+              📎 Upload photos/videos • Powered by Mama Dennis AI
             </p>
           </div>
         </div>
