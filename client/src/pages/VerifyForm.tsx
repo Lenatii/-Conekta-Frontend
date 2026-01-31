@@ -9,8 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, CheckCircle2, AlertCircle } from "lucide-react";
-
-const BACKEND_API_URL = "https://conekta-complete-system.onrender.com";
+import { trpc } from "@/lib/trpc";
 
 export default function VerifyForm() {
   const [, setLocation] = useLocation();
@@ -74,6 +73,8 @@ export default function VerifyForm() {
     }
   };
 
+  const submitVerification = trpc.verification.submit.useMutation();
+
   const handleSubmit = async () => {
     if (!validateStep2()) return;
 
@@ -81,31 +82,26 @@ export default function VerifyForm() {
     setError("");
 
     try {
-      const response = await fetch(`${BACKEND_API_URL}/api/v1/verification/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.fullName,
-          id_type: formData.idType,
-          id_number: formData.idNumber,
-          location: formData.location,
-          emergency_contact_name: formData.emergencyContactName || null,
-          emergency_contact_phone: formData.emergencyContactPhone || null,
-          user_type: formData.userType,
-          tc_accepted: formData.tcAccepted,
-          privacy_accepted: formData.privacyAccepted,
-        }),
+      const result = await submitVerification.mutateAsync({
+        name: formData.fullName,
+        id_type: formData.idType,
+        id_number: formData.idNumber,
+        location: formData.location,
+        emergency_contact_name: formData.emergencyContactName || null,
+        emergency_contact_phone: formData.emergencyContactPhone || null,
+        user_type: formData.userType,
+        tc_accepted: formData.tcAccepted,
+        privacy_accepted: formData.privacyAccepted,
       });
 
-      const data = await response.json();
-
-      if (data.success) {
+      if (result.success) {
         setStep(3); // Success step
       } else {
-        setError(data.message || "Verification submission failed. Please try again.");
+        setError(result.message || "Verification submission failed. Please try again.");
       }
-    } catch (err) {
-      setError("Network error. Please check your connection and try again.");
+    } catch (err: any) {
+      console.error("Verification error:", err);
+      setError(err.message || "Network error. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
     }

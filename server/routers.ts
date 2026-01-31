@@ -383,6 +383,74 @@ export const appRouter = router({
       }),
   }),
 
+  // Verification router (CONEKTA Trust)
+  verification: router({  
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string(),
+        id_type: z.string(),
+        id_number: z.string(),
+        location: z.string(),
+        emergency_contact_name: z.string().nullable().optional(),
+        emergency_contact_phone: z.string().nullable().optional(),
+        user_type: z.string(),
+        tc_accepted: z.boolean(),
+        privacy_accepted: z.boolean(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          // Validate required fields
+          if (!input.name || !input.id_type || !input.id_number || !input.location) {
+            return {
+              success: false,
+              message: "Please fill in all required fields."
+            };
+          }
+          
+          if (!input.tc_accepted || !input.privacy_accepted) {
+            return {
+              success: false,
+              message: "Please accept Terms & Conditions and Privacy Policy."
+            };
+          }
+          
+          // Save to database
+          const { createVerification } = await import("./db");
+          const result = await createVerification({
+            name: input.name,
+            idType: input.id_type,
+            idNumber: input.id_number,
+            location: input.location,
+            emergencyContactName: input.emergency_contact_name,
+            emergencyContactPhone: input.emergency_contact_phone,
+            userType: input.user_type as "tenant" | "landlord" | "fundi",
+            tcAccepted: input.tc_accepted,
+            privacyAccepted: input.privacy_accepted,
+          });
+          
+          console.log("CONEKTA Trust Verification Saved to Database:", {
+            name: input.name,
+            id_type: input.id_type,
+            location: input.location,
+            user_type: input.user_type,
+            timestamp: new Date().toISOString(),
+          });
+          
+          // Return success
+          return {
+            success: true,
+            message: "Verification submitted successfully! We'll review your application within 24-48 hours.",
+          };
+        } catch (error) {
+          console.error("Verification submission error:", error);
+          return { 
+            success: false, 
+            message: "Failed to submit verification. Please try again later."
+          };
+        }
+      }),
+  }),
+
   // Payment router
   payment: router({
     revealContact: publicProcedure

@@ -156,3 +156,26 @@ export const reviews = mysqlTable("reviews", {
 
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = typeof reviews.$inferInsert;
+
+/**
+ * CONEKTA Trust Verifications table
+ */
+export const verifications = mysqlTable("verifications", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  idType: varchar("idType", { length: 50 }).notNull(), // "National ID", "Passport", etc.
+  idNumber: varchar("idNumber", { length: 100 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+  emergencyContactName: varchar("emergencyContactName", { length: 255 }),
+  emergencyContactPhone: varchar("emergencyContactPhone", { length: 20 }),
+  userType: mysqlEnum("userType", ["tenant", "landlord", "fundi"]).notNull(),
+  tcAccepted: boolean("tcAccepted").default(false).notNull(),
+  privacyAccepted: boolean("privacyAccepted").default(false).notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  verifiedAt: timestamp("verifiedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Verification = typeof verifications.$inferSelect;
+export type InsertVerification = typeof verifications.$inferInsert;

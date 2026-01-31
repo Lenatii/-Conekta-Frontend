@@ -90,3 +90,40 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // TODO: add feature queries here as your schema grows.
+
+/**
+ * Create a new verification submission
+ */
+export async function createVerification(data: {
+  name: string;
+  idType: string;
+  idNumber: string;
+  location: string;
+  emergencyContactName?: string | null;
+  emergencyContactPhone?: string | null;
+  userType: "tenant" | "landlord" | "fundi";
+  tcAccepted: boolean;
+  privacyAccepted: boolean;
+}) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const { verifications } = await import("../drizzle/schema");
+
+  const result = await db.insert(verifications).values({
+    name: data.name,
+    idType: data.idType,
+    idNumber: data.idNumber,
+    location: data.location,
+    emergencyContactName: data.emergencyContactName || null,
+    emergencyContactPhone: data.emergencyContactPhone || null,
+    userType: data.userType,
+    tcAccepted: data.tcAccepted,
+    privacyAccepted: data.privacyAccepted,
+    status: "pending",
+  });
+
+  return result;
+}
