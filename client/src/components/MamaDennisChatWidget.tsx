@@ -663,9 +663,13 @@ export default function MamaDennisChatWidget() {
                     {message.mediaUrl && message.mediaType === "image" && (
                       <div className="mb-2">
                         <img 
-                          src={`${BACKEND_API_URL}${message.mediaUrl}`} 
+                          src={message.mediaUrl.startsWith('http') || message.mediaUrl.startsWith('blob:') ? message.mediaUrl : `${BACKEND_API_URL}${message.mediaUrl}`} 
                           alt="Uploaded" 
                           className="rounded-lg max-w-full h-auto max-h-32 object-cover"
+                          onError={(e) => {
+                            // Hide broken images
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
                         />
                       </div>
                     )}
