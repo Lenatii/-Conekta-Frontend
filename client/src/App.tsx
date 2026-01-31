@@ -20,6 +20,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import AddProperty from "./pages/AddProperty";
 import EditProfile from "./pages/EditProfile";
+import VoiceAssistant from "./pages/VoiceAssistant";
 import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/dashboard/add-property" component={AddProperty} />
       <Route path="/dashboard/edit-profile" component={EditProfile} />
+      <Route path="/voice" component={VoiceAssistant} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
