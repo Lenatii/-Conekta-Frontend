@@ -231,8 +231,10 @@ const VoiceAssistant: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
+      console.log('Starting Gemini Live session with API key:', apiKey ? 'SET' : 'NOT SET');
+      
       const sessionPromise = ai.live.connect({
-        model: 'gemini-2.5-flash-preview-native-audio-dialog',
+        model: 'gemini-2.0-flash-exp',
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
@@ -559,7 +561,7 @@ const VoiceAssistant: React.FC = () => {
       </main>
 
       <footer className="py-4 text-center text-gray-400 text-xs border-t border-gray-100 bg-white/50">
-        <p>CONEKTA Voice Assistant • Powered by AI</p>
+        <p>Powered by <span className="text-green-500 font-semibold">Mama Dennis AI</span></p>
         <p className="mt-1">Sheng • Swahili • English</p>
       </footer>
     </div>
