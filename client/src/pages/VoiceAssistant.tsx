@@ -96,14 +96,17 @@ const VoiceAssistant: React.FC = () => {
 
     try {
       // Call backend chat endpoint
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/v1/mama-dennis/chat', {
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/v1/mama-dennis/text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: userText,
-          session_id: 'voice_' + Date.now(),
+          conversation_history: messages.map(m => ({
+            role: m.type === 'user' ? 'user' : 'assistant',
+            content: m.text
+          }))
         }),
       });
 
