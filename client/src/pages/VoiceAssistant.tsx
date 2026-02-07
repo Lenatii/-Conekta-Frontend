@@ -130,16 +130,16 @@ const VoiceAssistant: React.FC = () => {
     });
 
     try {
-      // Call backend chat endpoint with conversation history
-      const response = await fetch('https://conekta-complete-system.onrender.com/api/v1/mama-dennis/text', {
+      // Call backend chat endpoint
+      // Backend manages conversation history internally using session_id
+      const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: userText,
-          conversation_history: conversationHistoryRef.current,
-          language: language || detectedLanguage,
+          session_id: 'voice-assistant',
         }),
       });
 
@@ -149,19 +149,8 @@ const VoiceAssistant: React.FC = () => {
 
       const data = await response.json();
       
-      // Handle various response formats from backend
-      let assistantText = '';
-      if (typeof data === 'string') {
-        assistantText = data;
-      } else if (data.response) {
-        assistantText = data.response;
-      } else if (data.message) {
-        assistantText = data.message;
-      } else if (data.text) {
-        assistantText = data.text;
-      } else {
-        assistantText = JSON.stringify(data);
-      }
+      // Handle response from webchat endpoint
+      let assistantText = data.response || data.message || 'Sawa! Karibu. Unataka nini leo?';
 
       if (!assistantText || assistantText.trim() === '') {
         assistantText = 'Sawa! Karibu. Unataka nini leo? 🏠 Nyumba, 🔧 Fundi, ama 🏨 Stays?';
@@ -177,11 +166,7 @@ const VoiceAssistant: React.FC = () => {
       };
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Update conversation history
-      conversationHistoryRef.current.push({
-        role: 'assistant',
-        content: assistantText
-      });
+
 
       // Speak the response
       speakText(assistantText, language || detectedLanguage);
