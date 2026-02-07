@@ -122,15 +122,10 @@ const VoiceAssistant: React.FC = () => {
       language: language || detectedLanguage,
     };
     setMessages(prev => [...prev, userMessage]);
-    
-    // Update conversation history
-    conversationHistoryRef.current.push({
-      role: 'user',
-      content: userText
-    });
 
     try {
-      // Call backend chat endpoint with conversation history
+      // Call backend chat endpoint
+      // Backend manages conversation history internally using session_id
       const response = await fetch('https://conekta-complete-system.onrender.com/api/webchat/message', {
         method: 'POST',
         headers: {
@@ -138,8 +133,7 @@ const VoiceAssistant: React.FC = () => {
         },
         body: JSON.stringify({
           message: userText,
-          conversation_history: conversationHistoryRef.current,
-          language: language || detectedLanguage,
+          session_id: 'voice-assistant', // Use fixed session for voice
         }),
       });
 
@@ -166,11 +160,7 @@ const VoiceAssistant: React.FC = () => {
       };
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Update conversation history
-      conversationHistoryRef.current.push({
-        role: 'assistant',
-        content: assistantText
-      });
+
 
       // Speak the response
       speakText(assistantText, language || detectedLanguage);
