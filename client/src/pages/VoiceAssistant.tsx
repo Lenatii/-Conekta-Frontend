@@ -140,17 +140,13 @@ const VoiceAssistant: React.FC = () => {
     const newHistory = [...conversationHistory, { role: 'user', content: userMessage }];
     
     try {
-      const response = await fetch('/api/v1/mama-dennis/voice', {
+      const response = await fetch('/api/mama-dennis/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage,
-          conversation_history: newHistory.map(msg => ({
-            role: msg.role,
-            content: msg.content
-          }))
+          message: userMessage
         })
       });
 
@@ -222,13 +218,9 @@ const VoiceAssistant: React.FC = () => {
         // Show interim results as user is speaking
         setTranscription(finalTranscript || interimTranscript);
         
-        // Only send if we have confident final result (>40% confidence)
-        if (finalTranscript && confidence > 0.4) {
+        // Send any final transcript (even low confidence)
+        if (finalTranscript) {
           callBackendAPI(finalTranscript);
-        } else if (finalTranscript && confidence <= 0.4) {
-          // Low confidence - ask user to repeat
-          setError('Sijasikia vizuri. Sema tena, karibu sana!');
-          setStatus(ConnectionStatus.IDLE);
         }
       };
       
