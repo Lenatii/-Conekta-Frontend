@@ -99,7 +99,7 @@ const VoiceAssistant: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
-  const apiKey = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -134,44 +134,33 @@ const VoiceAssistant: React.FC = () => {
     synthRef.current.speak(utterance);
   };
 
-  const callOpenAI = async (userMessage: string) => {
-    if (!apiKey) {
-      setError('API key not configured');
-      return;
-    }
-
+  const callBackendAPI = async (userMessage: string) => {
     setStatus(ConnectionStatus.PROCESSING);
     
     const newHistory = [...conversationHistory, { role: 'user', content: userMessage }];
     
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch('/api/v1/mama-dennis/voice', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: SYSTEM_INSTRUCTION },
-            ...newHistory.map(msg => ({
-              role: msg.role === 'user' ? 'user' : 'assistant',
-              content: msg.content
-            }))
-          ],
-          max_tokens: 150,
-          temperature: 0.8,
+          message: userMessage,
+          conversation_history: newHistory.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }))
         })
       });
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(data.error.message || 'API error');
+      if (!response.ok) {
+        throw new Error(data.error || 'API error');
       }
       
-      const aiResponse = data.choices?.[0]?.message?.content || 'Pole, sijasikia vizuri. Sema tena?';
+      const aiResponse = data.response || 'Pole, sijasikia vizuri. Sema tena?';
       
       setResponse(aiResponse);
       setConversationHistory([...newHistory, { role: 'assistant', content: aiResponse }]);
@@ -179,7 +168,7 @@ const VoiceAssistant: React.FC = () => {
       speak(aiResponse);
       
     } catch (err: any) {
-      console.error('OpenAI error:', err);
+      console.error('Backend API error:', err);
       setError(`Error: ${err.message}`);
       setStatus(ConnectionStatus.ERROR);
     }
@@ -225,7 +214,7 @@ const VoiceAssistant: React.FC = () => {
         setTranscription(finalTranscript || interimTranscript);
         
         if (finalTranscript) {
-          callOpenAI(finalTranscript);
+          callBackendAPI(finalTranscript);
         }
       };
       
