@@ -192,7 +192,8 @@ const VoiceAssistant: React.FC = () => {
       
       recognition.continuous = false;
       recognition.interimResults = true;
-      recognition.lang = 'en-KE';
+      // Support multiple languages: English, Swahili, and Sheng (mixed)
+      recognition.lang = 'sw-KE'; // Swahili (Kenya) - better for Sheng/mixed
       
       recognition.onstart = () => {
         setStatus(ConnectionStatus.LISTENING);
@@ -201,34 +202,65 @@ const VoiceAssistant: React.FC = () => {
       recognition.onresult = (event: any) => {
         let finalTranscript = '';
         let interimTranscript = '';
+        let confidence = 0;
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
+          const transcript = event.results[i][0].transcript.trim();
+          const isFinal = event.results[i].isFinal;
+          const conf = event.results[i][0].confidence || 0;
+          
+          if (isFinal) {
+            finalTranscript += transcript + ' ';
+            confidence = Math.max(confidence, conf);
           } else {
             interimTranscript += transcript;
           }
         }
         
+        finalTranscript = finalTranscript.trim();
+        
+        // Show interim results as user is speaking
         setTranscription(finalTranscript || interimTranscript);
         
-        if (finalTranscript) {
+        // Only send if we have confident final result (>40% confidence)
+        if (finalTranscript && confidence > 0.4) {
           callBackendAPI(finalTranscript);
+        } else if (finalTranscript && confidence <= 0.4) {
+          // Low confidence - ask user to repeat
+          setError('Sijasikia vizuri. Sema tena, karibu sana!');
+          setStatus(ConnectionStatus.IDLE);
         }
       };
       
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
-        setError(`Listening error: ${event.error}`);
+        const errorMessages: {[key: string]: string} = {
+          'no-speech': 'Sijasikia kitu. Tafadhali sema karibu na microphone.',
+          'audio-capture': 'Microphone haisemi. Tafadhali angalia ruhusa.',
+          'network': 'Hakuna mtandao. Tafadhali jaribu tena.',
+          'aborted': 'Ilibadilika. Tafadhali jaribu tena.',
+        };
+        const errorMsg = errorMessages[event.error] || `Kosa: ${event.error}`;
+        setError(errorMsg);
         setStatus(ConnectionStatus.ERROR);
       };
       
       recognition.onend = () => {
-        setStatus(ConnectionStatus.IDLE);
+        // Only set to IDLE if not already processing
+        if (status !== ConnectionStatus.PROCESSING) {
+          setStatus(ConnectionStatus.IDLE);
+        }
       };
       
+      // Start with longer timeout for better speech capture
       recognition.start();
+      
+      // Auto-stop after 8 seconds of silence (helps with Swahili/Sheng)
+      setTimeout(() => {
+        if (recognitionRef.current && status === ConnectionStatus.LISTENING) {
+          recognitionRef.current.stop();
+        }
+      }, 8000);
       
     } catch (err: any) {
       console.error('Speech recognition error:', err);
@@ -239,7 +271,11 @@ const VoiceAssistant: React.FC = () => {
 
   const stopListening = () => {
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.log('Already stopped');
+      }
     }
     setStatus(ConnectionStatus.IDLE);
   };
@@ -344,11 +380,11 @@ const VoiceAssistant: React.FC = () => {
           </Button>
         </div>
         <p className="text-center text-sm text-gray-600">
-          {status === ConnectionStatus.LISTENING && 'Listening...'}
-          {status === ConnectionStatus.PROCESSING && 'Processing...'}
-          {status === ConnectionStatus.SPEAKING && 'Speaking...'}
-          {status === ConnectionStatus.IDLE && 'Tap to call Mama Dennis'}
-          {status === ConnectionStatus.ERROR && 'Error - Tap to retry'}
+        {status === ConnectionStatus.LISTENING && 'Nakisikiliza... (Sema karibu)'}
+        {status === ConnectionStatus.PROCESSING && 'Ninafikiri... (Pole)'}
+        {status === ConnectionStatus.SPEAKING && 'Mama Dennis anasema...'}
+        {status === ConnectionStatus.IDLE && 'Bonyeza kupigia Mama Dennis'}
+        {status === ConnectionStatus.ERROR && 'Kosa - Bonyeza tena'}
         </p>
       </div>
     </div>
