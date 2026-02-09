@@ -11,56 +11,17 @@ enum ConnectionStatus {
   ERROR = 'ERROR'
 }
 
-const SYSTEM_INSTRUCTION = `You are "Mama Dennis," the warm, friendly, and highly capable AI voice assistant for CONEKTA (conekta.co.ke), Kenya's trusted property and services platform - currently serving Nakuru City and its environs.
+const SYSTEM_INSTRUCTION = `You are Mama Dennis, the warm and friendly AI voice assistant for CONEKTA (conekta.co.ke) - Kenya's trusted property rentals, service providers (fundis), short-stay accommodation, and verification platform.
 
-=== YOUR PERSONALITY ===
-- You are Mama Dennis - a wise, caring "mama" figure who has lived in Nakuru for 30+ years
-- You know every corner of Nakuru like the back of your hand
-- You speak like a trusted neighbor (jirani) - professional yet warm and conversational
-- You are fluent in English, Swahili, and Sheng. Switch naturally based on how the user speaks
-- Local phrases you use: "Sasa!", "Niaje", "Karibu sana", "Pole sana", "Haina wasiwasi", "Tuko pamoja", "Sawa kabisa", "Poa sana!", "Uko sawa?", "Twende!"
-- You celebrate wins: "Hongera!", "Umefanya vizuri!", "Wewe ni mzuri sana!"
-- You're empathetic: "Pole kwa hiyo", "Naelewa kabisa", "Tuko pamoja"
+You are helping users from Nakuru, Kenya. Be conversational, warm, and helpful. Speak in English, Swahili, and Sheng naturally - switch based on how the user speaks.
 
-=== CONEKTA PLATFORM - COMPLETE KNOWLEDGE ===
+CONEKTA Services:
+- CONEKTA Rentals: Find safe, verified rental homes in Nakuru
+- CONEKTA Fundis: Find verified service providers (plumbers, electricians, painters, etc.)
+- CONEKTA Stays: Short-term accommodation for visitors and travelers
+- CONEKTA Trust: Verification system that keeps everyone safe
 
-**CONEKTA RENTALS (Finding a Home)**
-- Bedsitters: Ksh 3,000-8,000/month
-- 1 Bedroom: Ksh 8,000-15,000/month  
-- 2 Bedroom: Ksh 12,000-25,000/month
-- 3+ Bedroom: Ksh 20,000-50,000+/month
-- Process: Browse conekta.co.ke → Filter by area/price → Contact landlord → View property → Pay deposit (usually 1 month) + first month rent
-
-**CONEKTA FUNDIS (Verified Service Providers)**
-- Categories: Plumbers, Electricians, Painters, Carpenters, Masons, Cleaners, Movers, AC Repair, Appliance Repair, Welders, Gardeners
-- Pricing guide: Small repairs Ksh 500-2,000, Installations Ksh 2,000-10,000, Major work negotiate
-- All fundis verified through CONEKTA Trust
-
-**CONEKTA STAYS (Short-Term Accommodation)**
-- For: Visitors, business travelers, weekend getaways
-- Pricing: Ksh 2,000-10,000 per night
-
-**CONEKTA TRUST (Verification System)**
-- What it means: ID verified, background checked, reviews validated
-- How to get verified: Go to conekta.co.ke/trust → Upload ID + selfie → AI verification → Badge issued same day
-
-=== NAKURU NEIGHBORHOODS ===
-- Milimani: Upmarket, quiet, Ksh 15,000-50,000
-- Section 58: Middle-class, near town, Ksh 8,000-20,000
-- Shabaab: Busy, affordable, students, Ksh 5,000-12,000
-- Lanet: Families, spacious, Ksh 8,000-25,000
-- Naka: Growing, affordable, Ksh 4,000-10,000
-- Free Area: Budget, students, Ksh 3,000-8,000
-- Kaptembwo: Dense, affordable, Ksh 3,000-7,000
-
-=== CONVERSATION RULES ===
-1. Keep responses SHORT - 2-3 sentences max
-2. Be conversational - use "sawa", "poa", natural fillers
-3. Always offer next steps
-4. Be empathetic
-5. End warmly
-
-When asked who you are: "Mimi ni Mama Dennis, msaidizi wako wa CONEKTA. Nimekuwa Nakuru miaka mingi - najua kila kona!"`;
+Keep responses SHORT (2-3 sentences max) and conversational. Be like a trusted neighbor who knows Nakuru well.`;
 
 const Visualizer: React.FC<{ status: ConnectionStatus }> = ({ status }) => {
   const isActive = status === ConnectionStatus.LISTENING || status === ConnectionStatus.SPEAKING;
@@ -99,8 +60,6 @@ const VoiceAssistant: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
-
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       synthRef.current = window.speechSynthesis;
@@ -134,29 +93,43 @@ const VoiceAssistant: React.FC = () => {
     synthRef.current.speak(utterance);
   };
 
-  const callBackendAPI = async (userMessage: string) => {
+  const callGemini = async (userMessage: string) => {
     setStatus(ConnectionStatus.PROCESSING);
     
     const newHistory = [...conversationHistory, { role: 'user', content: userMessage }];
     
     try {
-      const response = await fetch('/api/mama-dennis/chat', {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + import.meta.env.VITE_GEMINI_API_KEY, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage
+          system_instruction: {
+            parts: {
+              text: SYSTEM_INSTRUCTION
+            }
+          },
+          contents: [
+            ...newHistory.map(msg => ({
+              role: msg.role === 'user' ? 'user' : 'model',
+              parts: [{ text: msg.content }]
+            }))
+          ],
+          generationConfig: {
+            maxOutputTokens: 150,
+            temperature: 0.8,
+          }
         })
       });
 
       const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(data.error || 'API error');
+      if (data.error) {
+        throw new Error(data.error.message || 'API error');
       }
       
-      const aiResponse = data.response || 'Pole, sijasikia vizuri. Sema tena?';
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Pole, sijasikia vizuri. Sema tena?';
       
       setResponse(aiResponse);
       setConversationHistory([...newHistory, { role: 'assistant', content: aiResponse }]);
@@ -164,7 +137,7 @@ const VoiceAssistant: React.FC = () => {
       speak(aiResponse);
       
     } catch (err: any) {
-      console.error('Backend API error:', err);
+      console.error('Gemini error:', err);
       setError(`Error: ${err.message}`);
       setStatus(ConnectionStatus.ERROR);
     }
@@ -188,8 +161,7 @@ const VoiceAssistant: React.FC = () => {
       
       recognition.continuous = false;
       recognition.interimResults = true;
-      // Support multiple languages: English, Swahili, and Sheng (mixed)
-      recognition.lang = 'sw-KE'; // Swahili (Kenya) - better for Sheng/mixed
+      recognition.lang = 'sw-KE';
       
       recognition.onstart = () => {
         setStatus(ConnectionStatus.LISTENING);
@@ -198,29 +170,22 @@ const VoiceAssistant: React.FC = () => {
       recognition.onresult = (event: any) => {
         let finalTranscript = '';
         let interimTranscript = '';
-        let confidence = 0;
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript.trim();
-          const isFinal = event.results[i].isFinal;
-          const conf = event.results[i][0].confidence || 0;
           
-          if (isFinal) {
+          if (event.results[i].isFinal) {
             finalTranscript += transcript + ' ';
-            confidence = Math.max(confidence, conf);
           } else {
             interimTranscript += transcript;
           }
         }
         
         finalTranscript = finalTranscript.trim();
-        
-        // Show interim results as user is speaking
         setTranscription(finalTranscript || interimTranscript);
         
-        // Send any final transcript (even low confidence)
         if (finalTranscript) {
-          callBackendAPI(finalTranscript);
+          callGemini(finalTranscript);
         }
       };
       
@@ -238,16 +203,13 @@ const VoiceAssistant: React.FC = () => {
       };
       
       recognition.onend = () => {
-        // Only set to IDLE if not already processing
         if (status !== ConnectionStatus.PROCESSING) {
           setStatus(ConnectionStatus.IDLE);
         }
       };
       
-      // Start with longer timeout for better speech capture
       recognition.start();
       
-      // Auto-stop after 8 seconds of silence (helps with Swahili/Sheng)
       setTimeout(() => {
         if (recognitionRef.current && status === ConnectionStatus.LISTENING) {
           recognitionRef.current.stop();
@@ -372,11 +334,11 @@ const VoiceAssistant: React.FC = () => {
           </Button>
         </div>
         <p className="text-center text-sm text-gray-600">
-        {status === ConnectionStatus.LISTENING && 'Nakisikiliza... (Sema karibu)'}
-        {status === ConnectionStatus.PROCESSING && 'Ninafikiri... (Pole)'}
-        {status === ConnectionStatus.SPEAKING && 'Mama Dennis anasema...'}
-        {status === ConnectionStatus.IDLE && 'Bonyeza kupigia Mama Dennis'}
-        {status === ConnectionStatus.ERROR && 'Kosa - Bonyeza tena'}
+          {status === ConnectionStatus.LISTENING && 'Nakisikiliza... (Sema karibu)'}
+          {status === ConnectionStatus.PROCESSING && 'Ninafikiri... (Pole)'}
+          {status === ConnectionStatus.SPEAKING && 'Mama Dennis anasema...'}
+          {status === ConnectionStatus.IDLE && 'Bonyeza kupigia Mama Dennis'}
+          {status === ConnectionStatus.ERROR && 'Kosa - Bonyeza tena'}
         </p>
       </div>
     </div>
