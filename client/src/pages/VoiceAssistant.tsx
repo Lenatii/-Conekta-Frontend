@@ -99,7 +99,7 @@ const VoiceAssistant: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const apiKey = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -134,7 +134,7 @@ const VoiceAssistant: React.FC = () => {
     synthRef.current.speak(utterance);
   };
 
-  const callGemini = async (userMessage: string) => {
+  const callOpenAI = async (userMessage: string) => {
     if (!apiKey) {
       setError('API key not configured');
       return;
@@ -145,22 +145,23 @@ const VoiceAssistant: React.FC = () => {
     const newHistory = [...conversationHistory, { role: 'user', content: userMessage }];
     
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
         body: JSON.stringify({
-          contents: [
-            { role: 'user', parts: [{ text: SYSTEM_INSTRUCTION }] },
-            { role: 'model', parts: [{ text: 'Sawa! Mimi ni Mama Dennis, msaidizi wako. Niambie, unahitaji nini leo?' }] },
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: SYSTEM_INSTRUCTION },
             ...newHistory.map(msg => ({
-              role: msg.role === 'user' ? 'user' : 'model',
-              parts: [{ text: msg.content }]
+              role: msg.role === 'user' ? 'user' : 'assistant',
+              content: msg.content
             }))
           ],
-          generationConfig: {
-            maxOutputTokens: 150,
-            temperature: 0.8,
-          }
+          max_tokens: 150,
+          temperature: 0.8,
         })
       });
 
@@ -170,7 +171,7 @@ const VoiceAssistant: React.FC = () => {
         throw new Error(data.error.message || 'API error');
       }
       
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Pole, sijasikia vizuri. Sema tena?';
+      const aiResponse = data.choices?.[0]?.message?.content || 'Pole, sijasikia vizuri. Sema tena?';
       
       setResponse(aiResponse);
       setConversationHistory([...newHistory, { role: 'assistant', content: aiResponse }]);
@@ -178,7 +179,7 @@ const VoiceAssistant: React.FC = () => {
       speak(aiResponse);
       
     } catch (err: any) {
-      console.error('Gemini error:', err);
+      console.error('OpenAI error:', err);
       setError(`Error: ${err.message}`);
       setStatus(ConnectionStatus.ERROR);
     }
@@ -224,7 +225,7 @@ const VoiceAssistant: React.FC = () => {
         setTranscription(finalTranscript || interimTranscript);
         
         if (finalTranscript) {
-          callGemini(finalTranscript);
+          callOpenAI(finalTranscript);
         }
       };
       
