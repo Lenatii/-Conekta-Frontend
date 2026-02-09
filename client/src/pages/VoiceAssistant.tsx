@@ -105,12 +105,11 @@ const VoiceAssistant: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          system_instruction: {
-            parts: {
-              text: SYSTEM_INSTRUCTION
-            }
-          },
           contents: [
+            {
+              role: 'user',
+              parts: [{ text: SYSTEM_INSTRUCTION }]
+            },
             ...newHistory.map(msg => ({
               role: msg.role === 'user' ? 'user' : 'model',
               parts: [{ text: msg.content }]
@@ -123,6 +122,11 @@ const VoiceAssistant: React.FC = () => {
         })
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `API error: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.error) {
@@ -138,8 +142,10 @@ const VoiceAssistant: React.FC = () => {
       
     } catch (err: any) {
       console.error('Gemini error:', err);
-      setError(`Error: ${err.message}`);
+      const errorMsg = err.message || 'Connection error';
+      setError(`Error: ${errorMsg}`);
       setStatus(ConnectionStatus.ERROR);
+      setStatus(ConnectionStatus.IDLE);
     }
   };
 
