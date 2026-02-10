@@ -21,7 +21,6 @@ export default function StayDetailPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [contactRevealed, setContactRevealed] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(0);
 
   // Mock stays data - matches Stays.tsx
   const mockStays = [
