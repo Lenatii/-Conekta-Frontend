@@ -21,6 +21,7 @@ export default function StayDetailPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "failed">("idle");
   const [contactRevealed, setContactRevealed] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   // Mock stays data - matches Stays.tsx
   const mockStays = [
@@ -179,13 +180,11 @@ export default function StayDetailPage() {
 
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Filter out empty/placeholder images - only show actual uploaded photos
-  const actualImages = stay.images.filter(
-    (img) => img && img !== "" && !img.includes("/api/placeholder")
-  );
+  // Show all images including placeholders
+  const displayImages = stay.images.filter((img) => img && img !== "");
   
   // If no images, use a default placeholder
-  const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
+  const finalImages = displayImages.length > 0 ? displayImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
     setShowPaymentModal(true);
@@ -256,7 +255,7 @@ export default function StayDetailPage() {
               {/* Main Image */}
               <div className="relative h-96 bg-muted rounded-lg overflow-hidden">
                 <img
-                  src={displayImages[selectedImage]}
+                  src={finalImages[selectedImage]}
                   alt={stay.title}
                   className="w-full h-full object-cover"
                 />
@@ -269,9 +268,9 @@ export default function StayDetailPage() {
               </div>
 
               {/* Thumbnail Gallery - Only show if there are multiple images */}
-              {displayImages.length > 1 && (
+              {finalImages.length > 1 && (
                 <div className="grid grid-cols-5 gap-2">
-                  {displayImages.map((image, index) => (
+                  {finalImages.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}

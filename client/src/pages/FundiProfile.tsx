@@ -119,6 +119,17 @@ export default function FundiProfile() {
     mason: "🧱",
   };
 
+  const fundi = mockFundis[id || "1"];
+  
+  const serviceTypeIcons: Record<string, string> = {
+    plumber: "🔧",
+    electrician: "⚡",
+    carpenter: "🪛",
+    painter: "🎨",
+    mason: "🧱",
+    welder: "🔥",
+  };
+
   const handleRevealContact = () => {
     setShowPaymentModal(true);
   };
