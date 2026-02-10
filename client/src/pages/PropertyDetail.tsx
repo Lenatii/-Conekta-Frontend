@@ -54,13 +54,11 @@ export default function PropertyDetailPage() {
 
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Filter out empty/placeholder images - only show actual uploaded photos
-  const actualImages = property.images.filter(
-    (img) => img && img !== "" && !img.includes("/api/placeholder")
-  );
+  // Show all images including placeholders
+  const displayImages = property.images.filter((img) => img && img !== "");
   
   // If no images, use a default placeholder
-  const displayImages = actualImages.length > 0 ? actualImages : ["/api/placeholder/800/600"];
+  const finalImages = displayImages.length > 0 ? displayImages : ["/api/placeholder/800/600"];
 
   const handleRevealContact = () => {
     setShowPaymentModal(true);
@@ -131,7 +129,7 @@ export default function PropertyDetailPage() {
               {/* Main Image */}
               <div className="relative h-96 bg-muted rounded-lg overflow-hidden">
                 <img
-                  src={displayImages[selectedImage]}
+                  src={finalImages[selectedImage]}
                   alt={property.title}
                   className="w-full h-full object-cover"
                 />
@@ -144,9 +142,9 @@ export default function PropertyDetailPage() {
               </div>
 
               {/* Thumbnail Gallery - Only show if there are multiple images */}
-              {displayImages.length > 1 && (
+              {finalImages.length > 1 && (
                 <div className="grid grid-cols-5 gap-2">
-                  {displayImages.map((image, index) => (
+                  {finalImages.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
