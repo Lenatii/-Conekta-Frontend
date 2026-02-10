@@ -1,252 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'wouter';
-import { ArrowLeft, Mic, MicOff, Loader2 } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-enum ConnectionStatus {
-  IDLE = 'IDLE',
-  LISTENING = 'LISTENING',
-  PROCESSING = 'PROCESSING',
-  SPEAKING = 'SPEAKING',
-  ERROR = 'ERROR'
-}
-
-const SYSTEM_INSTRUCTION = `You are Mama Dennis, the warm and friendly AI voice assistant for CONEKTA (conekta.co.ke) - Kenya's trusted property rentals, service providers (fundis), short-stay accommodation, and verification platform.
-
-You are helping users from Nakuru, Kenya. Be conversational, warm, and helpful. Speak in English, Swahili, and Sheng naturally - switch based on how the user speaks.
-
-CONEKTA Services:
-- CONEKTA Rentals: Find safe, verified rental homes in Nakuru
-- CONEKTA Fundis: Find verified service providers (plumbers, electricians, painters, etc.)
-- CONEKTA Stays: Short-term accommodation for visitors and travelers
-- CONEKTA Trust: Verification system that keeps everyone safe
-
-Keep responses SHORT (2-3 sentences max) and conversational. Be like a trusted neighbor who knows Nakuru well.`;
-
-const Visualizer: React.FC<{ status: ConnectionStatus }> = ({ status }) => {
-  const isActive = status === ConnectionStatus.LISTENING || status === ConnectionStatus.SPEAKING;
-  const isSpeaking = status === ConnectionStatus.SPEAKING;
-  
-  return (
-    <div className="flex items-center justify-center space-x-1.5 h-16">
-      {[...Array(8)].map((_, i) => (
-        <div
-          key={i}
-          className={`w-2 rounded-full transition-all duration-200 ${
-            isActive 
-              ? isSpeaking 
-                ? 'bg-green-500 animate-bounce' 
-                : 'bg-red-400 animate-pulse' 
-              : 'h-2 bg-gray-300'
-          }`}
-          style={{
-            height: isActive ? `${Math.random() * 40 + 15}px` : '8px',
-            animationDelay: `${i * 0.1}s`,
-            animationDuration: isSpeaking ? '0.5s' : '1.2s'
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
 const VoiceAssistant: React.FC = () => {
-  const [status, setStatus] = useState<ConnectionStatus>(ConnectionStatus.IDLE);
-  const [transcription, setTranscription] = useState<string>('');
-  const [response, setResponse] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [conversationHistory, setConversationHistory] = useState<Array<{role: string, content: string}>>([]);
-  
-  const recognitionRef = useRef<any>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      synthRef.current = window.speechSynthesis;
-    }
-    
-    return () => {
-      stopListening();
-      if (synthRef.current) {
-        synthRef.current.cancel();
+    // Auto-scroll to chat widget on mount
+    setTimeout(() => {
+      const chatWidget = document.querySelector('[data-chat-widget]');
+      if (chatWidget) {
+        chatWidget.scrollIntoView({ behavior: 'smooth' });
       }
-    };
+    }, 500);
   }, []);
-
-  const speak = (text: string) => {
-    if (!synthRef.current) return;
-    
-    synthRef.current.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-KE';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.1;
-    
-    const voices = synthRef.current.getVoices();
-    const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google'));
-    if (femaleVoice) utterance.voice = femaleVoice;
-    
-    utterance.onstart = () => setStatus(ConnectionStatus.SPEAKING);
-    utterance.onend = () => setStatus(ConnectionStatus.IDLE);
-    utterance.onerror = () => setStatus(ConnectionStatus.IDLE);
-    
-    synthRef.current.speak(utterance);
-  };
-
-  const callGemini = async (userMessage: string) => {
-    setStatus(ConnectionStatus.PROCESSING);
-    
-    const newHistory = [...conversationHistory, { role: 'user', content: userMessage }];
-    
-    try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=' + import.meta.env.VITE_GEMINI_API_KEY, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: SYSTEM_INSTRUCTION }]
-            },
-            ...newHistory.map(msg => ({
-              role: msg.role === 'user' ? 'user' : 'model',
-              parts: [{ text: msg.content }]
-            }))
-          ],
-          generationConfig: {
-            maxOutputTokens: 150,
-            temperature: 0.8,
-          }
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || `API error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error.message || 'API error');
-      }
-      
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Pole, sijasikia vizuri. Sema tena?';
-      
-      setResponse(aiResponse);
-      setConversationHistory([...newHistory, { role: 'assistant', content: aiResponse }]);
-      
-      speak(aiResponse);
-      
-    } catch (err: any) {
-      console.error('Gemini error:', err);
-      const errorMsg = err.message || 'Connection error';
-      setError(`Error: ${errorMsg}`);
-      setStatus(ConnectionStatus.ERROR);
-      setStatus(ConnectionStatus.IDLE);
-    }
-  };
-
-  const startListening = async () => {
-    setError('');
-    setTranscription('');
-    
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
-    if (!SpeechRecognition) {
-      setError('Your browser does not support voice recognition. Please use Chrome, Safari, or Edge.');
-      setStatus(ConnectionStatus.ERROR);
-      return;
-    }
-    
-    try {
-      const recognition = new SpeechRecognition();
-      recognitionRef.current = recognition;
-      
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = 'sw-KE';
-      
-      recognition.onstart = () => {
-        setStatus(ConnectionStatus.LISTENING);
-      };
-      
-      recognition.onresult = (event: any) => {
-        let finalTranscript = '';
-        let interimTranscript = '';
-        
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript.trim();
-          
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript + ' ';
-          } else {
-            interimTranscript += transcript;
-          }
-        }
-        
-        finalTranscript = finalTranscript.trim();
-        setTranscription(finalTranscript || interimTranscript);
-        
-        if (finalTranscript) {
-          callGemini(finalTranscript);
-        }
-      };
-      
-      recognition.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-        const errorMessages: {[key: string]: string} = {
-          'no-speech': 'Sijasikia kitu. Tafadhali sema karibu na microphone.',
-          'audio-capture': 'Microphone haisemi. Tafadhali angalia ruhusa.',
-          'network': 'Hakuna mtandao. Tafadhali jaribu tena.',
-          'aborted': 'Ilibadilika. Tafadhali jaribu tena.',
-        };
-        const errorMsg = errorMessages[event.error] || `Kosa: ${event.error}`;
-        setError(errorMsg);
-        setStatus(ConnectionStatus.ERROR);
-      };
-      
-      recognition.onend = () => {
-        if (status !== ConnectionStatus.PROCESSING) {
-          setStatus(ConnectionStatus.IDLE);
-        }
-      };
-      
-      recognition.start();
-      
-      setTimeout(() => {
-        if (recognitionRef.current && status === ConnectionStatus.LISTENING) {
-          recognitionRef.current.stop();
-        }
-      }, 8000);
-      
-    } catch (err: any) {
-      console.error('Speech recognition error:', err);
-      setError('Could not start voice recognition. Please try again.');
-      setStatus(ConnectionStatus.ERROR);
-    }
-  };
-
-  const stopListening = () => {
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch (e) {
-        console.log('Already stopped');
-      }
-    }
-    setStatus(ConnectionStatus.IDLE);
-  };
-
-  const handleMicClick = () => {
-    if (status === ConnectionStatus.LISTENING) {
-      stopListening();
-    } else {
-      startListening();
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex flex-col">
@@ -265,87 +31,87 @@ const VoiceAssistant: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-8 space-y-6">
         {/* Welcome Message */}
-        {conversationHistory.length === 0 && (
-          <div className="text-center space-y-4 mt-8">
-            <h2 className="text-2xl font-bold text-gray-900">Ongea na Mama Dennis kwa sauti! 🎤</h2>
-            <p className="text-gray-600">Swahili • Sheng • English</p>
-          </div>
-        )}
-
-        {/* Conversation */}
-        {conversationHistory.map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-xs px-4 py-3 rounded-lg ${
-              msg.role === 'user' 
-                ? 'bg-green-500 text-white rounded-br-none' 
-                : 'bg-gray-200 text-gray-900 rounded-bl-none'
-            }`}>
-              <p className="text-sm">{msg.content}</p>
-            </div>
-          </div>
-        ))}
-
-        {/* Current Transcription */}
-        {transcription && (
-          <div className="flex justify-end">
-            <div className="max-w-xs px-4 py-3 rounded-lg bg-green-500 text-white rounded-br-none">
-              <p className="text-sm italic">{transcription}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Processing Indicator */}
-        {status === ConnectionStatus.PROCESSING && (
-          <div className="flex justify-start">
-            <div className="bg-gray-200 text-gray-900 px-4 py-3 rounded-lg rounded-bl-none">
-              <Loader2 className="w-5 h-5 animate-spin" />
-            </div>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-            <p className="text-sm text-red-700">{error}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Visualizer */}
-      {(status === ConnectionStatus.LISTENING || status === ConnectionStatus.SPEAKING) && (
-        <div className="px-4 py-4">
-          <Visualizer status={status} />
+        <div className="text-center space-y-4 mt-8">
+          <h2 className="text-2xl font-bold text-gray-900">Ongea na Mama Dennis! 💬</h2>
+          <p className="text-gray-600">Swahili • Sheng • English</p>
         </div>
-      )}
 
-      {/* Controls */}
-      <div className="bg-white border-t border-gray-200 px-4 py-6 space-y-4">
-        <div className="flex justify-center gap-4">
-          <Button
-            onClick={handleMicClick}
-            size="lg"
-            className={`rounded-full w-20 h-20 ${
-              status === ConnectionStatus.LISTENING
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-green-500 hover:bg-green-600'
-            }`}
+        {/* Information Card */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg px-6 py-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <MessageCircle className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-blue-900">Chat with Mama Dennis</h3>
+              <p className="text-sm text-blue-800 mt-1">
+                Our AI assistant is ready to help you with questions about CONEKTA Rentals, Fundis, Stays, and Trust verification.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div className="space-y-3">
+          <h3 className="font-semibold text-gray-900">What Mama Dennis can help with:</h3>
+          <ul className="space-y-2">
+            <li className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700">Find rental properties in your area</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700">Search for verified service providers (fundis)</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700">Book short-stay accommodation</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700">Learn about CONEKTA Trust verification</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700">Get support and answers to your questions</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Chat Widget Instructions */}
+        <div className="bg-green-50 border border-green-200 rounded-lg px-6 py-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <Smartphone className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-green-900">How to chat:</h3>
+              <p className="text-sm text-green-800 mt-1">
+                Scroll down to find the chat widget at the bottom right of your screen. Click it to start a conversation with Mama Dennis. She speaks Swahili, Sheng, and English!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Button */}
+        <div className="flex flex-col gap-3">
+          <Button 
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg"
+            onClick={() => {
+              const chatWidget = document.querySelector('[data-chat-widget]');
+              if (chatWidget) {
+                chatWidget.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
           >
-            {status === ConnectionStatus.LISTENING ? (
-              <MicOff className="w-8 h-8" />
-            ) : (
-              <Mic className="w-8 h-8" />
-            )}
+            <MessageCircle className="w-5 h-5 mr-2" />
+            Open Chat Widget
           </Button>
+          
+          <Link href="/">
+            <Button variant="outline" className="w-full py-6">
+              Back to Home
+            </Button>
+          </Link>
         </div>
-        <p className="text-center text-sm text-gray-600">
-          {status === ConnectionStatus.LISTENING && 'Nakisikiliza... (Sema karibu)'}
-          {status === ConnectionStatus.PROCESSING && 'Ninafikiri... (Pole)'}
-          {status === ConnectionStatus.SPEAKING && 'Mama Dennis anasema...'}
-          {status === ConnectionStatus.IDLE && 'Bonyeza kupigia Mama Dennis'}
-          {status === ConnectionStatus.ERROR && 'Kosa - Bonyeza tena'}
-        </p>
       </div>
     </div>
   );
