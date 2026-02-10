@@ -281,7 +281,7 @@ export default function PropertiesPage() {
                     </div>
 
                     {/* View Button */}
-                    <Button className="w-full" variant="outline">
+                    <Button className="w-full" variant="default">
                       <Eye className="h-4 w-4 mr-2" />
                       View Details
                     </Button>

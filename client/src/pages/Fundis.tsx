@@ -28,7 +28,7 @@ const MOCK_FUNDIS = [
     isVerified: true,
     isAvailable: true,
     phone: "+254712345678",
-    avatar: "/fundi-placeholder.jpg",
+    avatar: "https://api.placeholder.com/200/200?text=Fundi",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
     latitude: -0.3031,
     longitude: 36.0800
@@ -46,7 +46,7 @@ const MOCK_FUNDIS = [
     isVerified: true,
     isAvailable: true,
     phone: "+254723456789",
-    avatar: "/fundi-placeholder.jpg",
+    avatar: "https://api.placeholder.com/200/200?text=Fundi",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
     latitude: -0.2827,
     longitude: 36.0667
@@ -64,7 +64,7 @@ const MOCK_FUNDIS = [
     isVerified: true,
     isAvailable: false,
     phone: "+254734567890",
-    avatar: "/fundi-placeholder.jpg",
+    avatar: "https://api.placeholder.com/200/200?text=Fundi",
     certifications: ["CONEKTA Trust Certified", "Customer Service Training"],
     latitude: -0.3176,
     longitude: 36.0965
@@ -413,7 +413,7 @@ export default function FundisPage() {
 
                   {/* Actions */}
                   <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="default" size="sm" asChild>
                       <Link href={`/fundis/${fundi.id}`}>View Profile</Link>
                     </Button>
                     <Button size="sm" asChild>
