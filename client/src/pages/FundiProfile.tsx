@@ -114,16 +114,6 @@ export default function FundiProfile() {
   const serviceTypeIcons: Record<string, string> = {
     plumber: "🔧",
     electrician: "⚡",
-    carpenter: "🪚",
-    painter: "🎨",
-    mason: "🧱",
-  };
-
-  const fundi = mockFundis[id || "1"];
-  
-  const serviceTypeIcons: Record<string, string> = {
-    plumber: "🔧",
-    electrician: "⚡",
     carpenter: "🪛",
     painter: "🎨",
     mason: "🧱",
