@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   Search, Home as HomeIcon, Wrench, Hotel, Shield, ArrowRight, 
-  MessageCircle, Sparkles, Bot, ShieldCheck, Bed
+  MessageCircle, Sparkles, Bot, ShieldCheck, Bed, Eye, CreditCard, TrendingUp
 } from "lucide-react";
 import MamaDennisChatWidget from "@/components/MamaDennisChatWidget";
 
@@ -168,19 +168,25 @@ export default function HomePage() {
           
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { num: "1", title: "Discover", desc: "Browse rentals & services or say 'Hi' on WhatsApp" },
-              { num: "2", title: "Verify", desc: "CONEKTA Trust checks owners & providers. See the badge." },
-              { num: "3", title: "Book & Pay", desc: "Secure Conekta-Pay with M-Pesa. Funds on completion." },
-              { num: "4", title: "Rate & Grow", desc: "Reviews build reputation. AI learns & optimizes." }
-            ].map((step) => (
-              <div key={step.num} className="glass rounded-2xl p-8 text-center">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{background: 'linear-gradient(135deg,#7c5cff,#00e0b8)'}}>
-                  <span className="font-bold text-2xl">{step.num}</span>
+              { num: "1", title: "Discover", desc: "Browse rentals & services or say 'Hi' on WhatsApp", icon: Search, colorClass: "text-blue-400", borderClass: "border-blue-500/40 hover:border-blue-500/80 hover:shadow-blue-500/30", bgGradient: "rgba(59,130,246,.15)" },
+              { num: "2", title: "Verify", desc: "CONEKTA Trust checks owners & providers. See the badge.", icon: Shield, colorClass: "text-purple-400", borderClass: "border-purple-500/40 hover:border-purple-500/80 hover:shadow-purple-500/30", bgGradient: "rgba(168,85,247,.15)" },
+              { num: "3", title: "Book & Pay", desc: "Secure Conekta-Pay with M-Pesa. Funds on completion.", icon: CreditCard, colorClass: "text-green-400", borderClass: "border-green-500/40 hover:border-green-500/80 hover:shadow-green-500/30", bgGradient: "rgba(34,197,94,.15)" },
+              { num: "4", title: "Rate & Grow", desc: "Reviews build reputation. AI learns & optimizes.", icon: TrendingUp, colorClass: "text-orange-400", borderClass: "border-orange-500/40 hover:border-orange-500/80 hover:shadow-orange-500/30", bgGradient: "rgba(249,115,22,.15)" }
+            ].map((step) => {
+              const IconComponent = step.icon;
+              return (
+                <div key={step.num} className={`rounded-2xl p-8 text-center border ${step.borderClass} hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden relative`} style={{background: `linear-gradient(135deg, ${step.bgGradient}, rgba(255,255,255,.02))`}}>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background: `radial-gradient(circle at top right, ${step.bgGradient}, transparent)`}}></div>
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" style={{background: `linear-gradient(135deg, ${step.bgGradient}, rgba(255,255,255,.1))`}}>
+                      <IconComponent className={`w-8 h-8 ${step.colorClass}`} />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                    <p className="text-sm text-slate-300">{step.desc}</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                <p className="text-sm text-slate-300">{step.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
