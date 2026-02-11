@@ -91,42 +91,54 @@ export default function HomePage() {
             <div className="glass rounded-3xl p-8 float-animation" style={{position: 'relative', overflow: 'hidden'}}>
               <div className="grid grid-cols-2 gap-4">
                 <Link href="/properties">
-                  <div className="rounded-2xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition cursor-pointer">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">CONEKTA Rentals</h4>
-                      <HomeIcon className="w-6 h-6 text-purple-400" />
+                  <div className="rounded-2xl p-6 border border-green-500/40 hover:border-green-500/80 hover:shadow-lg hover:shadow-green-500/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden relative" style={{background: 'linear-gradient(135deg, rgba(34,197,94,.15), rgba(34,197,94,.05))'}}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background: 'radial-gradient(circle at top right, rgba(34,197,94,.1), transparent)'}}></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-bold text-lg">CONEKTA Rentals</h4>
+                        <HomeIcon className="w-6 h-6 text-green-400" />
+                      </div>
+                      <p className="text-sm text-slate-300">Verified rentals with 360° tours</p>
                     </div>
-                    <p className="text-sm text-slate-300">Verified rentals with 360° tours</p>
                   </div>
                 </Link>
                 
                 <Link href="/fundis">
-                  <div className="rounded-2xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition cursor-pointer">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">CONEKTA Fundis</h4>
-                      <Wrench className="w-6 h-6 text-teal-400" />
+                  <div className="rounded-2xl p-6 border border-teal-500/40 hover:border-teal-500/80 hover:shadow-lg hover:shadow-teal-500/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden relative" style={{background: 'linear-gradient(135deg, rgba(20,184,166,.15), rgba(20,184,166,.05))'}}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background: 'radial-gradient(circle at top right, rgba(20,184,166,.1), transparent)'}}></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-bold text-lg">CONEKTA Fundis</h4>
+                        <Wrench className="w-6 h-6 text-teal-400" />
+                      </div>
+                      <p className="text-sm text-slate-300">Hire vetted fundis safely</p>
                     </div>
-                    <p className="text-sm text-slate-300">Hire vetted fundis safely</p>
                   </div>
                 </Link>
                 
                 <Link href="/verify">
-                  <div className="rounded-2xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition cursor-pointer">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">CONEKTA Trust</h4>
-                      <ShieldCheck className="w-6 h-6 text-purple-400" />
+                  <div className="rounded-2xl p-6 border border-purple-500/40 hover:border-purple-500/80 hover:shadow-lg hover:shadow-purple-500/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden relative" style={{background: 'linear-gradient(135deg, rgba(168,85,247,.15), rgba(168,85,247,.05))'}}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background: 'radial-gradient(circle at top right, rgba(168,85,247,.1), transparent)'}}></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-bold text-lg">CONEKTA Trust</h4>
+                        <ShieldCheck className="w-6 h-6 text-purple-400" />
+                      </div>
+                      <p className="text-sm text-slate-300">Trust certification system</p>
                     </div>
-                    <p className="text-sm text-slate-300">Trust certification system</p>
                   </div>
                 </Link>
                 
                 <Link href="/stays">
-                  <div className="rounded-2xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition cursor-pointer">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-lg">CONEKTA Stays</h4>
-                      <Bed className="w-6 h-6 text-teal-400" />
+                  <div className="rounded-2xl p-6 border border-orange-500/40 hover:border-orange-500/80 hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden relative" style={{background: 'linear-gradient(135deg, rgba(249,115,22,.15), rgba(249,115,22,.05))'}}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{background: 'radial-gradient(circle at top right, rgba(249,115,22,.1), transparent)'}}></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-bold text-lg">CONEKTA Stays</h4>
+                        <Bed className="w-6 h-6 text-orange-400" />
+                      </div>
+                      <p className="text-sm text-slate-300">Host & book stays easily</p>
                     </div>
-                    <p className="text-sm text-slate-300">Host & book stays easily</p>
                   </div>
                 </Link>
               </div>
