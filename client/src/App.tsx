@@ -21,6 +21,8 @@ import Dashboard from "./pages/Dashboard";
 import AddProperty from "./pages/AddProperty";
 import EditProfile from "./pages/EditProfile";
 import VoiceAssistant from "./pages/VoiceAssistant";
+import Jobs from "./pages/Jobs";
+import FundiJobs from "./pages/FundiJobs";
 import MamaDennisChatWidget from "./components/MamaDennisChatWidget";
 
 function Router() {
@@ -45,6 +47,8 @@ function Router() {
       <Route path="/dashboard/add-property" component={AddProperty} />
       <Route path="/dashboard/edit-profile" component={EditProfile} />
       <Route path="/voice" component={VoiceAssistant} />
+      <Route path="/jobs" component={Jobs} />
+      <Route path="/fundi-jobs" component={FundiJobs} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
