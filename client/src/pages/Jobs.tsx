@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { CheckCircle, Clock, AlertCircle, Star, MessageSquare } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Star, MessageSquare, Loader2 } from "lucide-react";
+import { api } from "@/lib/api";
 
 interface Job {
   id: number;
@@ -131,42 +132,40 @@ export default function Jobs() {
 
   const handleConfirmCompletion = async () => {
     if (!selectedJob) return;
-    // In production, call backend API
-    console.log("Confirming completion for job:", selectedJob.id);
-    setIsConfirmDialogOpen(false);
+    try {
+      await api.confirmJobCompletion(selectedJob.id, true);
+      setJobs(jobs.map(j => 
+        j.id === selectedJob.id 
+          ? { ...j, completion_status: { ...j.completion_status, user_confirmed: true } }
+          : j
+      ));
+      setIsConfirmDialogOpen(false);
+    } catch (error) {
+      console.error("Error confirming completion:", error);
+      alert("Failed to confirm completion");
+    }
   };
 
   const handleSubmitRating = async () => {
     if (!selectedJob) return;
     setIsSubmittingRating(true);
     
-    // In production, call backend API
-    console.log("Submitting rating:", {
-      jobId: selectedJob.id,
-      rating,
-      comment: ratingComment,
-    });
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmittingRating(false);
+    try {
+      await api.submitJobRating(selectedJob.id, rating, ratingComment);
+      setJobs(jobs.map(j => 
+        j.id === selectedJob.id 
+          ? { ...j, completion_status: { ...j.completion_status, rating_submitted: true, rating } }
+          : j
+      ));
       setIsRatingDialogOpen(false);
       setRating(5);
       setRatingComment("");
-      // Update job in list
-      setJobs(jobs.map(j => 
-        j.id === selectedJob.id 
-          ? {
-              ...j,
-              completion_status: {
-                user_confirmed: j.completion_status?.user_confirmed || false,
-                rating_submitted: true,
-                rating,
-              }
-            }
-          : j
-      ));
-    }, 1000);
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+      alert("Failed to submit rating");
+    } finally {
+      setIsSubmittingRating(false);
+    }
   };
 
   const activeJobs = jobs.filter(j => j.status === "in_progress" || (j.status === "completed" && !j.completion_status?.rating_submitted));

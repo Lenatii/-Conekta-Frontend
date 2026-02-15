@@ -48,6 +48,35 @@ export interface ChatResponse {
   session_id?: string;
 }
 
+export interface Job {
+  id: number;
+  title: string;
+  status: string;
+  price: number;
+  scheduled_date: string;
+  created_at: string;
+  fundi_name?: string;
+  service_type?: string;
+  completion_status?: {
+    user_confirmed?: boolean;
+    rating_submitted?: boolean;
+    rating?: number;
+  };
+}
+
+export interface JobCompletionResponse {
+  success: boolean;
+  message: string;
+  job_id: number;
+}
+
+export interface RatingResponse {
+  success: boolean;
+  message: string;
+  rating_id: number;
+  trust_score_updated: boolean;
+}
+
 class APIClient {
   private baseURL: string;
 
@@ -142,6 +171,49 @@ class APIClient {
         property_id: propertyId,
         phone_number: phoneNumber,
       }),
+    });
+  }
+
+  // Job Completion APIs
+  async markJobComplete(jobId: number, notes: string): Promise<JobCompletionResponse> {
+    return this.request(`/api/jobs/${jobId}/mark-complete`, {
+      method: "POST",
+      body: JSON.stringify({ notes }),
+    });
+  }
+
+  async confirmJobCompletion(jobId: number, confirmed: boolean, notes?: string): Promise<JobCompletionResponse> {
+    return this.request(`/api/jobs/${jobId}/confirm-completion`, {
+      method: "POST",
+      body: JSON.stringify({ confirmed, notes }),
+    });
+  }
+
+  async submitJobRating(jobId: number, rating: number, comment: string): Promise<RatingResponse> {
+    return this.request(`/api/jobs/${jobId}/rate`, {
+      method: "POST",
+      body: JSON.stringify({ rating, comment }),
+    });
+  }
+
+  async logCallAttempt(jobId: number): Promise<JobCompletionResponse> {
+    return this.request(`/api/jobs/${jobId}/log-call`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+  }
+
+  async reportFundiCancellation(jobId: number, reason: string): Promise<JobCompletionResponse> {
+    return this.request(`/api/jobs/${jobId}/report-cancellation`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
+    });
+  }
+
+  async reportFundiNoShow(jobId: number, reason: string): Promise<JobCompletionResponse> {
+    return this.request(`/api/jobs/${jobId}/report-no-show`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
     });
   }
 
